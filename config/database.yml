@@ -17,7 +17,7 @@ development:
   encoding: unicode
   database: prophets_development
   pool: 5
-  username: prophets
+  username: <%= ENV['USER'] %>
   password:
 
   # Connect on a TCP socket. Omitted by default since the client uses a
@@ -43,7 +43,7 @@ test:
   encoding: unicode
   database: prophets_test
   pool: 5
-  username: prophets
+  username: <%= ENV['USER'] %>
   password:
 
 production:
