@@ -9,6 +9,7 @@ gem 'unicorn'
 
 gem 'devise', '~> 2.1'
 gem 'omniauth-facebook'
+gem 'cancan', '~>1.6'
 
 # Gems used only for assets and not required
 # in production environments by default.
