@@ -2,6 +2,8 @@ Prophets::Application.routes.draw do
   
   devise_for :users, :controllers => { :registrations => "registrations" }
 
+  resources :tokens, :only => :create
+  
   root :to => "users#show"
 
   # The priority is based upon order of creation:

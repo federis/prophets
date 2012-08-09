@@ -11,6 +11,8 @@ gem 'devise', '~> 2.1'
 gem 'omniauth-facebook'
 gem 'cancan', '~>1.6'
 
+gem 'rabl', '~>0.7'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
