@@ -25,15 +25,20 @@ describe Ability do
     let(:user) { nil }
     let(:ability) { Ability.new(user) }
 
-    let(:owned_league){ League.new(FactoryGirl.attributes_for(:league)) }
-    can_perform_actions("trips owned by the user", :create){  }
-    cannot_perform_actions("trips not owned by the user", :create, :update, :destroy){ not_owned_trip }
+    
+    cannot_perform_actions("a league", :create){ League }
   end
 
   context "a logged in user" do
     let(:user) { FactoryGirl.create(:user) }
     let(:other_user) { FactoryGirl.create(:user) }
     let(:ability) { Ability.new(user) }
+
+    let(:owned_league){ l=League.new(FactoryGirl.attributes_for(:league)); l.creator = user; l }
+    let(:not_owned_league){ l=League.new(FactoryGirl.attributes_for(:league)); l.creator = other_user; l }
+
+    can_perform_actions("a league of their own", :create){ owned_league }
+    cannot_perform_actions("a league owned by someone else", :create){ not_owned_league }
   end
 
   context "a super user" do
