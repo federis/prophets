@@ -34,8 +34,8 @@ describe Ability do
     let(:other_user) { FactoryGirl.create(:user) }
     let(:ability) { Ability.new(user) }
 
-    let(:owned_league){ l=League.new(FactoryGirl.attributes_for(:league)); l.creator = user; l }
-    let(:not_owned_league){ l=League.new(FactoryGirl.attributes_for(:league)); l.creator = other_user; l }
+    let(:owned_league){ l=League.new(FactoryGirl.attributes_for(:league)); l.user = user; l }
+    let(:not_owned_league){ l=League.new(FactoryGirl.attributes_for(:league)); l.user = other_user; l }
 
     can_perform_actions("a league of their own", :create){ owned_league }
     cannot_perform_actions("a league owned by someone else", :create){ not_owned_league }

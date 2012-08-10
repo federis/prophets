@@ -9,5 +9,6 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name
 
+  has_many :created_leagues, :class_name => "League"
   before_save :ensure_authentication_token
 end

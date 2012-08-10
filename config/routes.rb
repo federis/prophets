@@ -1,6 +1,6 @@
 Prophets::Application.routes.draw do
   
-  resources :leagues, :only => :create
+  resources :leagues
 
   devise_for :users, :controllers => { :registrations => "registrations" }
 

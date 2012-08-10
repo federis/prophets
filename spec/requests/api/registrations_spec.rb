@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe "Registrations" do
-  it "creates a user via JSON" do
+describe "Registrations API" do
+  it "creates a user" do
     expect{
       post user_registration_path, :user => FactoryGirl.attributes_for(:user).merge(:password_confirmation => "password"), 
                                    :registration_secret => RegistrationsController::REGISTRATION_SECRET, 
@@ -9,7 +9,7 @@ describe "Registrations" do
     }.to change{ User.count }.by(1)
   end
 
-  it "requires registration secret for user creation via JSON" do
+  it "requires registration secret for user creation" do
     count = User.count
     expect{
       post user_registration_path, :user => FactoryGirl.attributes_for(:user).merge(:password_confirmation => "password"), :format => "json"

@@ -45,6 +45,10 @@ group :development, :test do
   gem 'mysql2'
 end
 
+group :development do
+  gem 'thin'
+end
+
 group :production do
   gem 'pg'
 end

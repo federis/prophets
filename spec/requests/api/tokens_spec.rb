@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Tokens" do
+describe "Tokens API" do
   describe "POST /tokens.json" do
 
     let(:user){ FactoryGirl.create(:user) }

@@ -1,5 +1,5 @@
 class League < ActiveRecord::Base
-  belongs_to :creator, :foreign_key => "user_id", :class_name => "User"
+  belongs_to :user #the league creator
   attr_accessible :name, :priv
 
   validates :name, :presence => true
