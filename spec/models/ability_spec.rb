@@ -37,11 +37,10 @@ describe Ability do
     let(:other_user) { FactoryGirl.create(:user) }
     let(:ability) { Ability.new(user) }
 
-    let(:owned_league){ FactoryGirl.build(:league, :user => user) }
-    let(:not_owned_league){ FactoryGirl.build(:league, :user => other_user) }
-    can_perform_actions("a league of their own", :create){ owned_league }
-    cannot_perform_actions("a league owned by someone else", :create, :update, :destroy){ not_owned_league }
-
+    let(:own_league){ FactoryGirl.build(:league, :user => user) }
+    let(:not_own_league){ FactoryGirl.build(:league, :user => other_user) }
+    can_perform_actions("a league of their own", :create){ own_league }
+    cannot_perform_actions("a league owned by someone else", :create, :update, :destroy){ not_own_league }
 
     let(:public_league){ FactoryGirl.create(:league, :priv => false) }
     can_perform_actions("a public league", :read){ public_league }
@@ -64,6 +63,18 @@ describe Ability do
     end
     can_perform_actions("a league the user is an admin of", :manage){ league_where_admin }
 
+    let(:own_membership_in_private_league){ FactoryGirl.build(:membership, :league => private_league, :user => user) }
+    cannot_perform_actions("their own membership in private league", :create){ own_membership_in_private_league }
+    can_perform_actions("their own membership in private league", :delete){ own_membership_in_private_league }
+
+    let(:not_own_membership_in_private_league){ FactoryGirl.build(:membership, :league => private_league, :user => other_user) }
+    cannot_perform_actions("a membership for another user in private league", :create, :delete){ not_own_membership_in_private_league }
+
+    let(:own_membership_in_public_league){ FactoryGirl.build(:membership, :league => public_league, :user => user) }
+    can_perform_actions("their own membership in public league", :create, :delete){ own_membership_in_public_league }
+
+    let(:not_own_membership_in_public_league){ FactoryGirl.build(:membership, :league => public_league, :user => other_user) }
+    cannot_perform_actions("a membership for another user in public league", :create, :delete){ not_own_membership_in_public_league }
   end
 
   context "a super user" do
