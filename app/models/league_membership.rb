@@ -12,6 +12,8 @@ class LeagueMembership < ActiveRecord::Base
 
   before_save :ensure_role
 
+  scope :admins, where(:role => ROLES[:admin])
+
   def ensure_role
     self.role ||= ROLES[:member]
   end

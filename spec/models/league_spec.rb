@@ -1,5 +1,12 @@
 require 'spec_helper'
 
 describe League do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "makes the league creator an admin after creation" do
+    u = FactoryGirl.create(:user)
+    l = League.new(:name => "the league")
+    l.user = u
+    l.save
+
+    l.admins.should include(u)
+  end
 end
