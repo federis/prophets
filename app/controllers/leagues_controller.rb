@@ -1,4 +1,6 @@
 class LeaguesController < ApplicationController
+  load_and_authorize_resource :except => [:index, :create]
+
   self.responder = ApiResponder
   respond_to :json
 
@@ -14,6 +16,11 @@ class LeaguesController < ApplicationController
     authorize! :create, @league
     @league.save
     
+    respond_with @league
+  end
+
+  def update
+    @league.update_attributes(params[:league])
     respond_with @league
   end
 

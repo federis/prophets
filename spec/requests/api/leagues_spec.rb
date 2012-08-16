@@ -48,4 +48,27 @@ describe "Leagues API" do
     league_ids.should_not include(league_where_not_member.id)
   end
 
+  it "updates a league" do
+    league = FactoryGirl.create(:league_with_admin, :user => user)
+
+    put league_path(league), :league => { :name => "updated name" },
+                             :auth_token => auth_token,
+                             :format => "json"
+
+    response.status.should == 204
+  end
+
+  # it "provides error messages when update fails" do
+  #   league = FactoryGirl.create(:league_with_admin, :user => user)
+
+  #   put league_path(league), :league => { :user_id => user.id+1 },
+  #                            :auth_token => auth_token,
+  #                            :format => "json"
+  #   debugger                        
+  #   response.status.should == 422
+
+  #   json = decode_json(response.body)
+  #   json["errors"].should include("user")
+  # end
+
 end
