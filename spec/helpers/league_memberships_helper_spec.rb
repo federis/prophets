@@ -10,6 +10,6 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe LeagueMembershipsHelper do
+describe MembershipsHelper do
   
 end

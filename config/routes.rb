@@ -1,13 +1,13 @@
 Prophets::Application.routes.draw do
   
-  resources :league_memberships
-
-  resources :leagues
+  resources :leagues do
+    resources :memberships
+  end
 
   devise_for :users, :controllers => { :registrations => "registrations" }
 
   resources :tokens, :only => :create
   
-  root :to => "users#show"
+  root :to => "leagues#index"
 
 end

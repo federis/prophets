@@ -51,7 +51,7 @@ describe Ability do
     
     let(:league_where_member) do
       l=FactoryGirl.create(:league, :priv => true)
-      FactoryGirl.create(:league_membership, :user => user, :league => l)
+      FactoryGirl.create(:membership, :user => user, :league => l)
       l
     end
     can_perform_actions("a private league the user is a member of", :read){ league_where_member }
@@ -59,7 +59,7 @@ describe Ability do
 
     let(:league_where_admin) do
       l=FactoryGirl.create(:league, :priv => true)
-      FactoryGirl.create(:league_membership, :user => user, :league => l, :role => LeagueMembership::ROLES[:admin])
+      FactoryGirl.create(:membership, :user => user, :league => l, :role => Membership::ROLES[:admin])
       l
     end
     can_perform_actions("a league the user is an admin of", :manage){ league_where_admin }

@@ -10,8 +10,8 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name
 
   has_many :created_leagues, :class_name => "League"
-  has_many :league_memberships
-  has_many :leagues, :through => :league_memberships
+  has_many :memberships
+  has_many :leagues, :through => :memberships
 
   before_save :ensure_authentication_token
 end

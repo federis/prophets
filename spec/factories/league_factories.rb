@@ -6,13 +6,13 @@ FactoryGirl.define do
 
     factory :league_with_member do
       after(:create) do |league, evaluator|
-        FactoryGirl.create(:league_membership, :user => evaluator.user, :league => league)
+        FactoryGirl.create(:membership, :user => evaluator.user, :league => league)
       end
     end
 
     factory :league_with_admin do
       after(:create) do |league, evaluator|
-        FactoryGirl.create(:league_membership, :user => evaluator.user, :league => league, :role => LeagueMembership::ROLES[:admin])
+        FactoryGirl.create(:membership, :user => evaluator.user, :league => league, :role => Membership::ROLES[:admin])
       end
     end
   end
