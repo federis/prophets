@@ -8,7 +8,9 @@ class Membership < ActiveRecord::Base
     :member => 2
   }
 
-  validate :role, :presence => :true
+  validates :role, :presence => :true
+  validates :user_id, :presence => :true, :uniqueness => { :scope => :league_id, :message => "is already a member of that league" }
+  validates :league_id, :presence => :true
 
   scope :admins, where(:role => ROLES[:admin])
   

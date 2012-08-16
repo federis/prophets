@@ -31,9 +31,9 @@ describe "Leagues API" do
 
   it "lists the user's leagues" do
     league_where_not_member = FactoryGirl.create(:league, :priv => false)
-    public_league = FactoryGirl.create(:league_with_member, :priv => false, :user => user)
-    league_where_member = FactoryGirl.create(:league_with_member, :priv => true, :user => user)
-    league_where_admin = FactoryGirl.create(:league_with_admin, :priv => true, :user => user)
+    public_league = FactoryGirl.create(:league_with_member, :priv => false, :member => user)
+    league_where_member = FactoryGirl.create(:league_with_member, :priv => true, :member => user)
+    league_where_admin = FactoryGirl.create(:league_with_admin, :priv => true, :admin => user)
 
     get leagues_path, :auth_token => auth_token, :format => "json"
 
@@ -49,7 +49,7 @@ describe "Leagues API" do
   end
 
   it "updates a league" do
-    league = FactoryGirl.create(:league_with_admin, :user => user)
+    league = FactoryGirl.create(:league_with_admin, :admin => user)
 
     put league_path(league), :league => { :name => "updated name" },
                              :auth_token => auth_token,
@@ -59,7 +59,7 @@ describe "Leagues API" do
   end
 
   # it "provides error messages when update fails" do
-  #   league = FactoryGirl.create(:league_with_admin, :user => user)
+  #   league = FactoryGirl.create(:league_with_admin, :admin => user)
 
   #   put league_path(league), :league => { :user_id => user.id+1 },
   #                            :auth_token => auth_token,
