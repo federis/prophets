@@ -10,12 +10,6 @@ class Membership < ActiveRecord::Base
 
   validate :role, :presence => :true
 
-  before_save :ensure_role
-
   scope :admins, where(:role => ROLES[:admin])
-
-  def ensure_role
-    self.role ||= ROLES[:member]
-  end
   
 end

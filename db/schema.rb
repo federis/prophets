@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120816205816) do
+ActiveRecord::Schema.define(:version => 20120816224626) do
 
   create_table "leagues", :force => true do |t|
     t.string   "name"
@@ -27,10 +27,10 @@ ActiveRecord::Schema.define(:version => 20120816205816) do
     t.integer  "user_id"
     t.integer  "league_id"
     t.string   "name"
-    t.integer  "role"
+    t.integer  "role",                                      :default => 2
     t.decimal  "balance",    :precision => 15, :scale => 2
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",                                               :null => false
+    t.datetime "updated_at",                                               :null => false
   end
 
   add_index "memberships", ["league_id"], :name => "index_league_memberships_on_league_id"
