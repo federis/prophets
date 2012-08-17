@@ -1,7 +1,7 @@
 class Membership < ActiveRecord::Base
   belongs_to :user
   belongs_to :league
-  attr_accessible :name
+  attr_accessible :name, :user_id
 
   ROLES = {
     :admin => 1,

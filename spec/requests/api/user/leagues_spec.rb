@@ -1,9 +1,10 @@
 require 'spec_helper'
 
-describe "Leagues API" do
+describe "As normal user, Leagues" do
   let(:user){ FactoryGirl.create(:user) }
   let(:auth_token){ user.authentication_token }
   let(:league_attrs){ FactoryGirl.attributes_for(:league) }
+  
   it "creates a league" do
     expect{
       post leagues_path, :league => league_attrs, 
@@ -47,28 +48,5 @@ describe "Leagues API" do
     league_ids.should include(league_where_admin.id)
     league_ids.should_not include(league_where_not_member.id)
   end
-
-  it "updates a league" do
-    league = FactoryGirl.create(:league_with_admin, :admin => user)
-
-    put league_path(league), :league => { :name => "updated name" },
-                             :auth_token => auth_token,
-                             :format => "json"
-
-    response.status.should == 204
-  end
-
-  # it "provides error messages when update fails" do
-  #   league = FactoryGirl.create(:league_with_admin, :admin => user)
-
-  #   put league_path(league), :league => { :user_id => user.id+1 },
-  #                            :auth_token => auth_token,
-  #                            :format => "json"
-  #   debugger                        
-  #   response.status.should == 422
-
-  #   json = decode_json(response.body)
-  #   json["errors"].should include("user")
-  # end
 
 end

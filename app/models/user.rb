@@ -14,4 +14,8 @@ class User < ActiveRecord::Base
   has_many :leagues, :through => :memberships
 
   before_save :ensure_authentication_token
+
+  def membership_in_league(league)
+    memberships.where(:league_id => league.id).first
+  end
 end

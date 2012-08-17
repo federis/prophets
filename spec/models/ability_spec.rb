@@ -56,26 +56,38 @@ describe Ability do
     can_perform_actions("a private league the user is a member of", :read){ league_where_member }
     cannot_perform_actions("a league the user is a member of", :create, :update, :destroy){ league_where_member }
 
-    let(:league_where_admin) do
-      l=FactoryGirl.create(:league, :priv => true)
-      FactoryGirl.create(:membership, :user => user, :league => l, :role => Membership::ROLES[:admin])
-      l
-    end
-    can_perform_actions("a league the user is an admin of", :manage){ league_where_admin }
-
     let(:own_membership_in_private_league){ FactoryGirl.build(:membership, :league => private_league, :user => user) }
     cannot_perform_actions("their own membership in private league", :create){ own_membership_in_private_league }
-    can_perform_actions("their own membership in private league", :delete){ own_membership_in_private_league }
+    can_perform_actions("their own membership in private league", :destroy){ own_membership_in_private_league }
 
     let(:not_own_membership_in_private_league){ FactoryGirl.build(:membership, :league => private_league, :user => other_user) }
-    cannot_perform_actions("a membership for another user in private league", :create, :delete){ not_own_membership_in_private_league }
+    cannot_perform_actions("a membership for another user in private league", :create, :destroy){ not_own_membership_in_private_league }
 
     let(:own_membership_in_public_league){ FactoryGirl.build(:membership, :league => public_league, :user => user) }
-    can_perform_actions("their own membership in public league", :create, :delete){ own_membership_in_public_league }
+    can_perform_actions("their own membership in public league", :create, :destroy){ own_membership_in_public_league }
 
     let(:not_own_membership_in_public_league){ FactoryGirl.build(:membership, :league => public_league, :user => other_user) }
-    cannot_perform_actions("a membership for another user in public league", :create, :delete){ not_own_membership_in_public_league }
+    cannot_perform_actions("a membership for another user in public league", :create, :destroy){ not_own_membership_in_public_league }
   end
+
+
+  context "a league admin" do
+    let(:admin) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    let(:ability) { Ability.new(admin) }
+    let(:public_league) { FactoryGirl.create(:league, :user => admin) } #will automatically get admin privs on create
+    let(:private_league) { FactoryGirl.create(:league, :user => admin, :priv => true) }
+
+    can_perform_actions("a league the user is an admin of", :manage){ private_league }
+
+    let(:not_own_membership_in_private_league){ FactoryGirl.build(:membership, :league => private_league, :user => other_user) }
+    can_perform_actions("a membership for another user in private league", :create, :destroy){ not_own_membership_in_private_league }
+
+    let(:not_own_membership_in_public_league){ FactoryGirl.build(:membership, :league => public_league, :user => other_user) }
+    can_perform_actions("a membership for another user in public league", :create, :destroy){ not_own_membership_in_public_league }
+
+  end
+
 
   context "a super user" do
 
