@@ -2,6 +2,7 @@ class League < ActiveRecord::Base
   attr_accessible :name, :priv
 
   belongs_to :user #the league creator
+  has_many :questions
   has_many :memberships
   has_many :users, :through => :memberships
   has_many :admins, :through => :memberships, 

@@ -1,5 +1,7 @@
 Prophets::Application.routes.draw do
   
+  resources :questions
+
   resources :leagues do
     resources :memberships
   end
