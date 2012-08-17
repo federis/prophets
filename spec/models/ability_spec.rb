@@ -48,11 +48,7 @@ describe Ability do
     let(:private_league){ FactoryGirl.create(:league, :priv => true) }
     cannot_perform_actions("a private league", :read){ private_league }
     
-    let(:league_where_member) do
-      l=FactoryGirl.create(:league, :priv => true)
-      FactoryGirl.create(:membership, :user => user, :league => l)
-      l
-    end
+    let(:league_where_member) { FactoryGirl.create(:league_with_member, :priv => true, :member => user) }
     can_perform_actions("a private league the user is a member of", :read){ league_where_member }
     cannot_perform_actions("a league the user is a member of", :create, :update, :destroy){ league_where_member }
 
@@ -68,6 +64,12 @@ describe Ability do
 
     let(:not_own_membership_in_public_league){ FactoryGirl.build(:membership, :league => public_league, :user => other_user) }
     cannot_perform_actions("a membership for another user in public league", :create, :destroy){ not_own_membership_in_public_league }
+
+    let(:question){ FactoryGirl.build(:question, :user => user, :league => league_where_member) }
+    cannot_perform_actions("questions in a league where the user is a member", :read, :create, :update, :destroy){ question }
+
+    let(:question_in_public_league){ FactoryGirl.build(:question, :user => user, :league => public_league) }
+    cannot_perform_actions("questions in a public league", :read, :create, :update, :destroy){ question }
   end
 
 
@@ -86,6 +88,8 @@ describe Ability do
     let(:not_own_membership_in_public_league){ FactoryGirl.build(:membership, :league => public_league, :user => other_user) }
     can_perform_actions("a membership for another user in public league", :create, :destroy){ not_own_membership_in_public_league }
 
+    let(:question){ FactoryGirl.build(:question, :user => admin, :league => public_league) }
+    can_perform_actions("questions", :read, :create, :update, :destroy){ question }
   end
 
 

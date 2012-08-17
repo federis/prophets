@@ -16,6 +16,7 @@ class Ability
       #where user is league admin
       can :manage, League, :memberships => { :user_id => user.id, :role => Membership::ROLES[:admin] }
       can :manage, Membership, :league => { :memberships => { :user_id => user.id, :role => Membership::ROLES[:admin] } }
+      can :manage, Question, :league => { :memberships => { :user_id => user.id, :role => Membership::ROLES[:admin] } }
     end
     
   end
