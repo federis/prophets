@@ -15,7 +15,16 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
 
+  delegate :can?, :cannot?, :to => :ability
+
   def membership_in_league(league)
     memberships.where(:league_id => league.id).first
   end
+
+private
+  
+  def ability
+    @ability ||= Ability.new(self)
+  end
+  
 end

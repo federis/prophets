@@ -21,16 +21,19 @@ describe Ability do
     end
   end
 
-  context "an anonymous user" do
-    let(:user) { nil }
-    let(:ability) { Ability.new(user) }
-    let(:public_league) { League.new(:priv => false) }
-    let(:private_league) { l=League.new; l.priv=true; l }
+  # context "an anonymous user" do
+  #   let(:user) { nil }
+  #   let(:ability) { Ability.new(user) }
+  #   let(:public_league) { League.new(:priv => false) }
+  #   let(:private_league) { l=League.new; l.priv=true; l }
 
-    can_perform_actions("a public league", :read){ League }
-    cannot_perform_actions("a private league", :read){ private_league }
-    cannot_perform_actions("a league", :create, :update, :destroy){ League }
-  end
+  #   cannot_perform_actions("a league", :read){ League }
+  #   cannot_perform_actions("a private league", :read){ private_league }
+  #   cannot_perform_actions("a league", :create, :update, :destroy){ League }
+
+  #   let(:question_in_public_league){ FactoryGirl.build(:question, :league => public_league) }
+  #   cannot_perform_actions("questions in a public league", :read, :create, :update, :destroy){ question_in_public_league }
+  # end
 
   context "a logged in user" do
     let(:user) { FactoryGirl.create(:user) }
@@ -65,11 +68,15 @@ describe Ability do
     let(:not_own_membership_in_public_league){ FactoryGirl.build(:membership, :league => public_league, :user => other_user) }
     cannot_perform_actions("a membership for another user in public league", :create, :destroy){ not_own_membership_in_public_league }
 
-    let(:question){ FactoryGirl.build(:question, :user => user, :league => league_where_member) }
-    cannot_perform_actions("questions in a league where the user is a member", :read, :create, :update, :destroy){ question }
+    let(:question_in_league_where_member){ FactoryGirl.build(:question, :user => user, :league => league_where_member) }
+    cannot_perform_actions("questions in a league where the user is a member", :update, :destroy){ question_in_league_where_member }
+    can_perform_actions("questions in a league where the user is a member", :read){ question_in_league_where_member }
+
+    let(:unapproved_question_in_league_where_member){ FactoryGirl.build(:question, :user => user, :league => league_where_member, :approver => nil, :approved_at => nil) }
+    can_perform_actions("unapproved questions in a league where the user is a member", :create){ unapproved_question_in_league_where_member }
 
     let(:question_in_public_league){ FactoryGirl.build(:question, :user => user, :league => public_league) }
-    cannot_perform_actions("questions in a public league", :read, :create, :update, :destroy){ question }
+    cannot_perform_actions("questions in a public league", :create, :update, :destroy){ question_in_public_league }
   end
 
 

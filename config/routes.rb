@@ -1,9 +1,7 @@
 Prophets::Application.routes.draw do
-  
-  resources :questions
-
   resources :leagues do
     resources :memberships
+    resources :questions
   end
 
   devise_for :users, :controllers => { :registrations => "registrations" }

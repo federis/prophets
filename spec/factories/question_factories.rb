@@ -4,6 +4,6 @@ FactoryGirl.define do
     desc ""
     league
     user
-    approver nil
+    association :approver, :factory => :user
   end
 end
