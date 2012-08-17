@@ -20,7 +20,9 @@ class LeaguesController < ApplicationController
   end
 
   def update
-    @league.update_attributes(params[:league])
+    @league.assign_attributes(params[:league])
+    authorize! :update, @league
+    @league.save
     respond_with @league
   end
 

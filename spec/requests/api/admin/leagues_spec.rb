@@ -12,6 +12,9 @@ describe "As an admin, Leagues" do
                              :format => "json"
 
     response.status.should == 204
+
+    league.reload
+    league.name.should == "updated name"
   end
 
 end
