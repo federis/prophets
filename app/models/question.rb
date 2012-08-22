@@ -9,6 +9,7 @@ class Question < ActiveRecord::Base
   validates :content, :presence => true
 
   scope :approved, where('questions.approved_at IS NOT NULL')
+  scope :unapproved, where('questions.approved_at IS NULL')
 
   before_create :attempt_self_approval!
 

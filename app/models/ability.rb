@@ -11,7 +11,7 @@ class Ability
       can :read, Question, :league => { :priv => false }
 
       #where user is a league member
-      can :read, League, :memberships => { :user_id => user.id }
+      can [:read, :read_approved_questions], League, :memberships => { :user_id => user.id }
       can :read, Question, :league => { :memberships => { :user_id => user.id } }
       can :create, Question, :approver_id => nil, :approved_at => nil, :user_id => user.id, :league => { :memberships => { :user_id => user.id } }
 

@@ -1,13 +1,21 @@
 class QuestionsController < ApplicationController
   load_and_authorize_resource :league
   load_and_authorize_resource :through => :league, :except => :index
-  authorize_resource :only => :index
 
   self.responder = ApiResponder
   respond_to :json
 
   def index
-    @questions = @league.questions.approved
+    authorize! "read_#{type}_questions".to_sym, @league
+
+    @questions = if params[:type] == "unapproved"
+      @league.questions.unapproved
+    elsif params[:type] == "all"
+      @league.questions
+    else
+      @league.questions.approved
+    end
+
     respond_with @league, @questions
   end
 
@@ -24,5 +32,15 @@ class QuestionsController < ApplicationController
 
     @question.save
     respond_with @league, @question
+  end
+
+private
+
+  def type
+    if params[:type] == "unapproved" || params[:type] == "all"
+      params[:type]
+    else
+      "approved"
+    end
   end
 end

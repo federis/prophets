@@ -40,4 +40,34 @@ describe "As an admin, Questions" do
     question.content.should == "updated content"
   end
 
+  it "lists the unapproved questions in a league" do
+    q1 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
+    q2 = FactoryGirl.create(:question, :league => league)
+
+    get league_questions_path(league), :auth_token => admin.authentication_token,
+                                       :type => "unapproved",
+                                       :format => "json"
+
+    response.status.should == 200
+    json = decode_json(response.body) 
+    question_ids = json.map{|l| l["question"]["id"] }
+    question_ids.should_not include(q1.id)
+    question_ids.should include(q2.id)
+  end
+
+  it "lists all questions in a league" do
+    q1 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
+    q2 = FactoryGirl.create(:question, :league => league)
+
+    get league_questions_path(league), :auth_token => admin.authentication_token,
+                                       :type => "all",
+                                       :format => "json"
+
+    response.status.should == 200
+    json = decode_json(response.body) 
+    question_ids = json.map{|l| l["question"]["id"] }
+    question_ids.should include(q1.id)
+    question_ids.should include(q2.id)
+  end
+
 end

@@ -52,8 +52,8 @@ describe Ability do
     cannot_perform_actions("a private league", :read){ private_league }
     
     let(:league_where_member) { FactoryGirl.create(:league_with_member, :priv => true, :member => user) }
-    can_perform_actions("a private league the user is a member of", :read){ league_where_member }
-    cannot_perform_actions("a league the user is a member of", :create, :update, :destroy){ league_where_member }
+    can_perform_actions("a private league the user is a member of", :read, :read_approved_questions){ league_where_member }
+    cannot_perform_actions("a league the user is a member of", :create, :update, :destroy, :read_unapproved_questions, :read_all_questions){ league_where_member }
 
     let(:own_membership_in_private_league){ FactoryGirl.build(:membership, :league => private_league, :user => user) }
     cannot_perform_actions("their own membership in private league", :create){ own_membership_in_private_league }
@@ -87,7 +87,7 @@ describe Ability do
     let(:public_league) { FactoryGirl.create(:league, :user => admin) } #will automatically get admin privs on create
     let(:private_league) { FactoryGirl.create(:league, :user => admin, :priv => true) }
 
-    can_perform_actions("a league the user is an admin of", :manage){ private_league }
+    can_perform_actions("a league the user is an admin of", :manage, :read_unapproved_questions, :read_all_questions){ private_league }
 
     let(:not_own_membership_in_private_league){ FactoryGirl.build(:membership, :league => private_league, :user => other_user) }
     can_perform_actions("a membership for another user in private league", :create, :destroy){ not_own_membership_in_private_league }
