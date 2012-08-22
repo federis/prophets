@@ -69,7 +69,7 @@ describe Ability do
     cannot_perform_actions("a membership for another user in public league", :create, :destroy){ not_own_membership_in_public_league }
 
     let(:question_in_league_where_member){ FactoryGirl.build(:question, :user => user, :league => league_where_member) }
-    cannot_perform_actions("questions in a league where the user is a member", :update, :destroy){ question_in_league_where_member }
+    cannot_perform_actions("questions in a league where the user is a member", :approve, :update, :destroy){ question_in_league_where_member }
     can_perform_actions("questions in a league where the user is a member", :read){ question_in_league_where_member }
 
     let(:unapproved_question_in_league_where_member){ FactoryGirl.build(:question, :user => user, :league => league_where_member, :approver => nil, :approved_at => nil) }
@@ -96,7 +96,7 @@ describe Ability do
     can_perform_actions("a membership for another user in public league", :create, :destroy){ not_own_membership_in_public_league }
 
     let(:question){ FactoryGirl.build(:question, :user => admin, :league => public_league) }
-    can_perform_actions("questions", :read, :create, :update, :destroy){ question }
+    can_perform_actions("questions", :approve, :read, :create, :update, :destroy){ question }
   end
 
 

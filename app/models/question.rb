@@ -10,15 +10,19 @@ class Question < ActiveRecord::Base
 
   scope :approved, where('questions.approved_at IS NOT NULL')
 
-  before_save :approve_if_created_by_admin
+  before_create :attempt_self_approval!
+
+  def approved_by=(approving_user)
+    if approving_user.can? :approve, self
+      self.approver = approving_user
+      self.approved_at = Time.now
+    end
+  end
 
 private
 
-  def approve_if_created_by_admin 
-    if user.can? :approve, self
-      self.approver = user
-      self.approved_at = Time.now
-    end
+  def attempt_self_approval! 
+    self.approved_by = user 
   end
 
 end
