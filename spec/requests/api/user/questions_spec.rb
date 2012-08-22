@@ -27,4 +27,22 @@ describe "As a normal user, Questions" do
     json['approved_at'].should be_nil
   end
 
+  it "lists the approved questions in a league" do
+    q1 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
+    q2 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
+    q3 = FactoryGirl.create(:question, :league => league)
+    q4 = FactoryGirl.create(:question, :approved_at => Time.now)
+
+    get league_questions_path(league), :auth_token => user.authentication_token,
+                                       :format => "json"
+
+    response.status.should == 200
+    json = decode_json(response.body) 
+    question_ids = json.map{|l| l["question"]["id"] }
+    question_ids.should include(q1.id)
+    question_ids.should include(q2.id)
+    question_ids.should_not include(q3.id)
+    question_ids.should_not include(q4.id)
+  end
+
 end

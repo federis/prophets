@@ -1,9 +1,15 @@
 class QuestionsController < ApplicationController
   load_and_authorize_resource :league
-  load_and_authorize_resource :through => :league
+  load_and_authorize_resource :through => :league, :except => :index
+  authorize_resource :only => :index
 
   self.responder = ApiResponder
   respond_to :json
+
+  def index
+    @questions = @league.questions.approved
+    respond_with @league, @questions
+  end
 
   def create
     @question.user = current_user
