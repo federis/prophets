@@ -109,6 +109,16 @@ describe Ability do
         let(:own_unapproved_question){ FactoryGirl.build(:question, :user => user, :league => league, :approver => nil, :approved_at => nil) }
         cannot_perform_actions("questions owned by user", :approve, :update){ own_approved_question }
         can_perform_actions("unapproved questions", :create, :destroy){ own_unapproved_question }
+
+        context "in an approved question created by the user" do
+          let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }  
+          cannot_perform_actions("answers", :create, :update, :destroy){ answer }
+        end
+
+        context "in an unapproved question created by the user" do
+          let(:answer){ FactoryGirl.build(:answer, :question => own_unapproved_question) }  
+          can_perform_actions("answers", :create, :update, :destroy){ answer }
+        end
       end
 
       context "where user is not a member" do
@@ -120,6 +130,17 @@ describe Ability do
 
         let(:own_unapproved_question){ FactoryGirl.build(:question, :user => user, :league => league, :approver => nil, :approved_at => nil) }
         cannot_perform_actions("questions owned by user", :read, :create, :destroy, :approve, :update){ own_approved_question }
+
+        context "in an approved question created by the user" do
+          let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }  
+          cannot_perform_actions("answers", :create, :update, :destroy){ answer }
+        end
+
+        context "in an unapproved question created by the user" do
+          let(:answer){ FactoryGirl.build(:answer, :question => own_unapproved_question) }  
+          cannot_perform_actions("answers", :create, :update, :destroy){ answer }
+        end
+        
       end
     end
 
@@ -143,6 +164,9 @@ describe Ability do
 
       let(:question){ FactoryGirl.build(:question, :user => admin, :league => league) }
       can_perform_actions("questions", :approve, :read, :create, :update, :destroy){ question }
+
+      let(:answer){ FactoryGirl.build(:answer, :question => question) }
+      can_perform_actions("answers", :create, :update, :destroy){ answer }
     end
 
     context "in a private league" do
@@ -157,6 +181,9 @@ describe Ability do
 
       let(:question){ FactoryGirl.build(:question, :user => admin, :league => league) }
       can_perform_actions("questions", :approve, :read, :create, :update, :destroy){ question }
+
+      let(:answer){ FactoryGirl.build(:answer, :question => question) }
+      can_perform_actions("answers", :create, :update, :destroy){ answer }
     end
   end
 

@@ -35,7 +35,7 @@ class Ability
           can [:read, :read_approved_questions], League
           can :read, Question
           can [:create, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id
-          #can :create, Answer, :question => { :user_id => user.id, :approved_at => nil }
+          can [:create, :update, :destroy], Answer, :question => { :user_id => user.id, :approved_at => nil }
         end
 
         if user.is_admin_of_league?(league)
