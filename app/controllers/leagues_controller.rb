@@ -1,13 +1,11 @@
 class LeaguesController < ApplicationController
-  load_and_authorize_resource :except => [:index, :create]
+  authorize_resource :except => [:create]
 
   self.responder = ApiResponder
   respond_to :json
 
   def index
     @leagues = current_user.leagues
-    authorize! :index, League
-
     respond_with @leagues
   end
 
@@ -24,6 +22,12 @@ class LeaguesController < ApplicationController
     authorize! :update, @league
     @league.save
     respond_with @league
+  end
+
+private
+
+  def current_league
+    @league ||= League.find(params[:id]) unless params[:id].nil?
   end
 
 end

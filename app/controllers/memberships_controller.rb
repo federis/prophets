@@ -1,5 +1,5 @@
 class MembershipsController < ApplicationController
-  load_and_authorize_resource :league
+  authorize_resource :league
   load_and_authorize_resource :except => :create, :through => :league
 
   self.responder = ApiResponder

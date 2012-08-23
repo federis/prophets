@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  load_and_authorize_resource :league
+  authorize_resource :league
   load_and_authorize_resource :through => :league, :except => :index
 
   self.responder = ApiResponder

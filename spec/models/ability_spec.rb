@@ -47,6 +47,7 @@ describe Ability do
     
     context "in a public league" do
       let(:league){ FactoryGirl.create(:league, :priv => false) }
+      let(:ability) { Ability.new(user, league) }
       
       let(:own_membership){ FactoryGirl.build(:membership, :league => league, :user => user) }
       can_perform_actions("their own membership", :read, :create, :destroy){ own_membership }
@@ -79,6 +80,7 @@ describe Ability do
 
     context "in a private league" do
       let(:league){ FactoryGirl.create(:league, :priv => true) }
+      let(:ability) { Ability.new(user, league) }
 
       let(:own_membership){ FactoryGirl.build(:membership, :league => league, :user => user) }
       cannot_perform_actions("their own membership", :create){ own_membership }
@@ -131,6 +133,8 @@ describe Ability do
 
     context "in a public league" do
       let(:league) { FactoryGirl.create(:league, :user => admin, :priv => false) } #will automatically get admin privs on create
+      let(:ability) { Ability.new(admin, league) }
+
       can_perform_actions("the league", :manage){ league }
       can_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
 
@@ -143,6 +147,8 @@ describe Ability do
 
     context "in a private league" do
       let(:league) { FactoryGirl.create(:league, :user => admin, :priv => true) } #will automatically get admin privs on create
+      let(:ability) { Ability.new(admin, league) }
+
       can_perform_actions("the league", :manage){ league }
       can_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
 

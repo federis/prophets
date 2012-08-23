@@ -15,10 +15,25 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
 
-  delegate :can?, :cannot?, :to => :ability
-
   def membership_in_league(league)
     memberships.where(:league_id => league.id).first
+  end
+
+  def is_admin_of_league?(league)
+    memberships.where(:league_id => league.id, :role => Membership::ROLES[:admin]).count > 0
+  end
+
+  def is_member_of_league?(league)
+    memberships.where(:league_id => league.id).count > 0
+  end
+
+  def can?(action, object)
+    a = defined?(object.league) ? Ability.new(self, object.league) : ability
+    a.can?(action, object)
+  end
+
+  def cannot?(action, object)
+    !can?(action, object)
   end
 
 private
