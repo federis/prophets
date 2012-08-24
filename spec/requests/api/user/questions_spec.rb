@@ -45,4 +45,16 @@ describe "As a normal user, Questions" do
     question_ids.should_not include(q4.id)
   end
 
+  it "deletes an unapproved question" do
+    q = FactoryGirl.create(:question, :league => league, :user => user, :approved_at => nil, :approver => nil)
+    count = league.questions.count
+
+    delete league_question_path(league, q),
+           :auth_token => user.authentication_token,
+           :format => "json"
+    
+    response.status.should == 204
+    league.questions.count.should == count - 1
+  end
+
 end
