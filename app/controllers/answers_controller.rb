@@ -20,6 +20,13 @@ class AnswersController < ApplicationController
     respond_with @question, @answer
   end
 
+  def destroy
+    @answer = @question.answers.find(params[:id])
+    authorize! :destroy, @answer
+    @answer.destroy
+    respond_with @league, @answer
+  end
+
 
 private
 

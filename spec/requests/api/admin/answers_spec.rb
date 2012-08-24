@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe "As a normal user, Answers" do
-  let(:user){ FactoryGirl.create(:user) }
-  let(:league){ FactoryGirl.create(:league_with_member, :member => user) }
-  let(:question){ FactoryGirl.create(:question, :user => user, :league => league, :approved_at => nil) }
-  let(:answer){ FactoryGirl.create(:answer, :question => question, :user => user) }
-  let(:answer_attrs){ FactoryGirl.attributes_for(:answer, :user => user, :question => question) }
+  let(:admin){ FactoryGirl.create(:user, :name => "Admin") }
+  let(:league){ FactoryGirl.create(:league_with_admin, :admin => admin) }
+  let(:question){ FactoryGirl.create(:question, :user => admin, :league => league, :approved_at => Time.now) }
+  let(:answer){ FactoryGirl.create(:answer, :question => question) }
+  let(:answer_attrs){ FactoryGirl.attributes_for(:answer, :user => admin, :question => question) }
 
-  it "creates an answer in an unapproved question" do
+  it "creates an answer in an approved question" do
     count = question.answers.count
     
     post question_answers_path(question), :answer => answer_attrs,
-                                          :auth_token => user.authentication_token,
+                                          :auth_token => admin.authentication_token,
                                           :format => "json"
 
     response.status.should == 201
@@ -20,13 +20,13 @@ describe "As a normal user, Answers" do
     json = decode_json(response.body)['answer']
     json['id'].should_not be_nil
     json['content'].should == answer_attrs[:content]
-    json['user_id'].should == user.id
+    json['user_id'].should == admin.id
     json['question_id'].should == question.id
   end
 
-  it "updates an answer in an unapproved question" do
+  it "updates an answer in an approved question" do
     put question_answer_path(question, answer), :answer => { :content => "updated content" },
-                                                :auth_token => user.authentication_token,
+                                                :auth_token => admin.authentication_token,
                                                 :format => "json"
 
     response.status.should == 204
@@ -35,12 +35,13 @@ describe "As a normal user, Answers" do
     answer.content.should == "updated content"
   end
 
-  it "deletes an answer in an unapproved question" do
+
+  it "deletes an answer in an approved question" do
     answer #trigger answer creation
     count = question.answers.count
 
     delete question_answer_path(question, answer),
-           :auth_token => user.authentication_token,
+           :auth_token => admin.authentication_token,
            :format => "json"
     
     response.status.should == 204
