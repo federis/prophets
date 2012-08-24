@@ -10,7 +10,7 @@ class LeaguesController < ApplicationController
   end
 
   def create
-    @league = current_user.created_leagues.new(params[:league])
+    @league = current_user.created_leagues.build(params[:league])
     authorize! :create, @league
     @league.save
     
