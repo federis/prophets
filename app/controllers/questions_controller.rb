@@ -36,6 +36,11 @@ class QuestionsController < ApplicationController
     respond_with @league, @question
   end
 
+  def destroy
+    @question.destroy
+    respond_with @league, @question
+  end
+
 private
 
   def type

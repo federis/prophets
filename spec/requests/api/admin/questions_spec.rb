@@ -70,4 +70,16 @@ describe "As an admin, Questions" do
     question_ids.should include(q2.id)
   end
 
+  it "deletes an already approved question" do
+    q = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
+    count = league.questions.count
+
+    delete league_question_path(league, q),
+           :auth_token => admin.authentication_token,
+           :format => "json"
+    
+    response.status.should == 204
+    league.questions.count.should == count - 1
+  end
+
 end

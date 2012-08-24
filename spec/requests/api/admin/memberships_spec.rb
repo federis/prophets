@@ -33,5 +33,6 @@ describe "As an admin, Memberships" do
            :format => "json"
     
     response.status.should == 204
+    other_user.memberships.count.should == count - 1
   end
 end
