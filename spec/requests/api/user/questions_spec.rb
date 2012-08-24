@@ -27,6 +27,31 @@ describe "As a normal user, Questions" do
     json['approved_at'].should be_nil
   end
 
+  it "shows an approved question" do
+    question = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
+    answer = FactoryGirl.create(:answer, :question => question)
+
+    get league_question_path(league, question), :auth_token => user.authentication_token,
+                                                :format => "json"
+
+    response.status.should == 200
+
+    json = decode_json(response.body)['question']
+    json['id'].should_not be_nil
+    json['content'].should == question.content
+    json['user_id'].should == question.user_id
+    json['league_id'].should == league.id
+    json['desc'].should == question_attrs[:desc]
+    json['approver_id'].should == question.approver_id
+    json['approved_at'].should == question.approved_at.iso8601
+    
+    answer_json = json['answers'][0]['answer']
+    answer_json['id'].should == answer.id
+    answer_json['content'].should == answer.content
+    answer_json['question_id'].should == question.id
+    answer_json['user_id'].should == answer.user_id
+  end
+
   it "lists the approved questions in a league" do
     q1 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
     q2 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
@@ -43,6 +68,17 @@ describe "As a normal user, Questions" do
     question_ids.should include(q2.id)
     question_ids.should_not include(q3.id)
     question_ids.should_not include(q4.id)
+  end
+
+  it "doesn't include answers in index json" do
+    q = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
+    answer = FactoryGirl.create(:answer, :question => q)
+
+    get league_questions_path(league), :auth_token => user.authentication_token,
+                                       :format => "json"
+
+    json = decode_json(response.body)[0]["question"] 
+    json["answers"].should be_nil
   end
 
   it "deletes an unapproved question" do

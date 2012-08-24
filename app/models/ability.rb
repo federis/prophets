@@ -33,7 +33,9 @@ class Ability
       unless league.nil?
         if user.is_member_of_league?(league)
           can [:read, :read_approved_questions], League
-          #can :read, Question
+          can :show, Question do |q| 
+            !q.approved_at.nil? 
+          end
           can [:create, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id, :league_id => league.id
           can [:create, :update, :destroy], Answer, :question => { :user_id => user.id, :approved_at => nil }
         end

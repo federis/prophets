@@ -19,6 +19,10 @@ class QuestionsController < ApplicationController
     respond_with @league, @questions
   end
 
+  def show
+    respond_with @league, @question
+  end
+
   def create
     @question = @league.questions.build(params[:question])
     @question.user = current_user
