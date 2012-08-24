@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   authorize_resource :league
-  load_and_authorize_resource :through => :league, :except => :index
+  load_and_authorize_resource :through => :league, :except => [:index, :create]
 
   self.responder = ApiResponder
   respond_to :json
@@ -20,7 +20,9 @@ class QuestionsController < ApplicationController
   end
 
   def create
+    @question = @league.questions.build(params[:question])
     @question.user = current_user
+    authorize! :create, @question
     @question.save
     respond_with @league, @question
   end
