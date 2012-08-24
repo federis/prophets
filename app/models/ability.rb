@@ -28,13 +28,13 @@ class Ability
       can [:read, :read_approved_questions], League, :priv => false
       can [:read, :destroy], Membership, :user_id => user.id
       can :create, Membership, :user_id => user.id, :league => { :priv => false }, :role => Membership::ROLES[:member]
-      can :read, Question, :league => { :priv => false }
+      #can :read, Question, :league => { :priv => false }
 
       unless league.nil?
         if user.is_member_of_league?(league)
           can [:read, :read_approved_questions], League
-          can :read, Question
-          can [:create, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id
+          #can :read, Question
+          can [:create, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id, :league_id => league.id
           can [:create, :update, :destroy], Answer, :question => { :user_id => user.id, :approved_at => nil }
         end
 

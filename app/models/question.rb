@@ -2,6 +2,8 @@ class Question < ActiveRecord::Base
   belongs_to :league
   belongs_to :user
   belongs_to :approver, :class_name => "User"
+  has_many :answers
+  
   attr_accessible :content, :desc
 
   validates :user_id, :presence => true

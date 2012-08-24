@@ -104,7 +104,6 @@ describe Ability do
 
         let(:own_approved_question){ FactoryGirl.build(:question, :user => user, :league => league, :approved_at => Time.now) }
         cannot_perform_actions("questions owned by user", :create, :approve, :update, :destroy){ own_approved_question }
-        can_perform_actions("questions owned by user", :read){ own_approved_question }
 
         let(:own_unapproved_question){ FactoryGirl.build(:question, :user => user, :league => league, :approver => nil, :approved_at => nil) }
         cannot_perform_actions("questions owned by user", :approve, :update){ own_approved_question }
