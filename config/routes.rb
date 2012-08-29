@@ -1,4 +1,6 @@
 Prophets::Application.routes.draw do
+  resources :bets
+
   resources :leagues do
     resources :memberships
     resources :questions

@@ -11,25 +11,44 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120823191121) do
+ActiveRecord::Schema.define(:version => 20120829214805) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
     t.integer  "question_id"
     t.integer  "user_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
+    t.decimal  "initial_probability", :precision => 6,  :scale => 5
+    t.decimal  "current_probability", :precision => 6,  :scale => 5
+    t.boolean  "correct"
+    t.decimal  "bet_total",           :precision => 15, :scale => 2
   end
 
   add_index "answers", ["question_id"], :name => "index_answers_on_question_id"
   add_index "answers", ["user_id"], :name => "index_answers_on_user_id"
 
+  create_table "bets", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "answer_id"
+    t.decimal  "amount",      :precision => 12, :scale => 2
+    t.decimal  "probability", :precision => 6,  :scale => 5
+    t.decimal  "bonus",       :precision => 7,  :scale => 5
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+  end
+
+  add_index "bets", ["answer_id"], :name => "index_bets_on_answer_id"
+  add_index "bets", ["user_id"], :name => "index_bets_on_user_id"
+
   create_table "leagues", :force => true do |t|
     t.string   "name"
-    t.boolean  "priv",       :default => false
+    t.boolean  "priv",                                           :default => false
     t.integer  "user_id"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.decimal  "max_bet",         :precision => 12, :scale => 2
+    t.decimal  "initial_balance", :precision => 12, :scale => 2
   end
 
   add_index "leagues", ["user_id"], :name => "index_leagues_on_user_id"
@@ -54,8 +73,9 @@ ActiveRecord::Schema.define(:version => 20120823191121) do
     t.integer  "user_id"
     t.integer  "approver_id"
     t.datetime "approved_at"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
+    t.decimal  "initial_pool", :precision => 15, :scale => 2
   end
 
   add_index "questions", ["approver_id"], :name => "index_questions_on_approver_id"
