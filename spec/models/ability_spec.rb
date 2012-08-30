@@ -109,6 +109,14 @@ describe Ability do
         cannot_perform_actions("questions owned by user", :approve, :update){ own_approved_question }
         can_perform_actions("unapproved questions", :create, :destroy){ own_unapproved_question }
 
+        let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }
+        let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
+        can_perform_actions("bets", :create){ bet }
+        cannot_perform_actions("bets", :destroy){ bet }
+
+        let(:not_own_bet){ FactoryGirl.build(:bet, :answer => answer) }
+        cannot_perform_actions("bets owned by someone else", :create, :destroy){ not_own_bet }
+
         context "in an approved question created by the user" do
           let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }  
           cannot_perform_actions("answers", :create, :update, :destroy){ answer }
@@ -121,6 +129,7 @@ describe Ability do
           let(:not_own_answer){ FactoryGirl.build(:answer, :question => own_unapproved_question) }  
           cannot_perform_actions("answer owned by someone else", :create, :update, :destroy){ not_own_answer }
         end
+
       end
 
       context "where user is not a member" do
@@ -132,6 +141,13 @@ describe Ability do
 
         let(:own_unapproved_question){ FactoryGirl.build(:question, :user => user, :league => league, :approver => nil, :approved_at => nil) }
         cannot_perform_actions("questions owned by user", :read, :create, :destroy, :approve, :update){ own_approved_question }
+
+        let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }
+        let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
+        cannot_perform_actions("bets", :create, :destroy){ bet }
+
+        let(:not_own_bet){ FactoryGirl.build(:bet, :answer => answer) }
+        cannot_perform_actions("bets", :create, :destroy){ not_own_bet }
 
         context "in an approved question created by the user" do
           let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }  
@@ -186,6 +202,10 @@ describe Ability do
 
       let(:answer){ FactoryGirl.build(:answer, :question => question) }
       can_perform_actions("answers", :create, :update, :destroy){ answer }
+
+      let(:bet){ FactoryGirl.build(:bet, :answer => answer) }
+      can_perform_actions("bets", :create, :destroy){ bet }
+      
     end
   end
 

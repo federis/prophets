@@ -38,6 +38,7 @@ class Ability
           end
           can [:create, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id, :league_id => league.id
           can [:create, :update, :destroy], Answer, :question => { :user_id => user.id, :approved_at => nil }, :user_id => user.id
+          can :create, Bet, :user_id => user.id
         end
 
         if user.is_admin_of_league?(league)
@@ -45,6 +46,7 @@ class Ability
           can :manage, Membership
           can :manage, Question
           can :manage, Answer
+          can :manage, Bet
         end
       end
     end
