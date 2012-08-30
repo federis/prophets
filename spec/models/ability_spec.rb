@@ -115,8 +115,11 @@ describe Ability do
         end
 
         context "in an unapproved question created by the user" do
-          let(:answer){ FactoryGirl.build(:answer, :question => own_unapproved_question) }  
+          let(:answer){ FactoryGirl.build(:answer, :user => user, :question => own_unapproved_question) }  
           can_perform_actions("answers", :create, :update, :destroy){ answer }
+
+          let(:not_own_answer){ FactoryGirl.build(:answer, :question => own_unapproved_question) }  
+          cannot_perform_actions("answer owned by someone else", :create, :update, :destroy){ not_own_answer }
         end
       end
 
