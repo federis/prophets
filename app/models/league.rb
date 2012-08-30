@@ -1,7 +1,7 @@
 class League < ActiveRecord::Base
   POOL_MULTIPLIER = 10
 
-  attr_accessible :name, :priv
+  attr_accessible :name, :priv, :max_bet, :initial_balance
 
   belongs_to :user #the league creator
   has_many :questions
@@ -11,10 +11,11 @@ class League < ActiveRecord::Base
                     :source => :user, 
                     :conditions => { :memberships => {:role => Membership::ROLES[:admin]} }
 
-  validates :name, :presence => true
+
+  validates :name, :presence => true, :length => { :in => 3..250 }
   validates :user_id, :presence => true
-  validates :max_bet, :presence => true, :inclusion => { :in => 1..1000000} # $1 to $1 mil
-  validates :initial_balance, :presence => true, :inclusion => { :in => 1..100000 } # $1 to $100k
+  validates :max_bet, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 1000000 } # $1 to $1 mil
+  validates :initial_balance, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 100000 } # $1 to $100k
 
   after_create :give_creator_admin_membership
 

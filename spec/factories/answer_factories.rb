@@ -3,5 +3,6 @@ FactoryGirl.define do
     sequence(:content) { |i| "answer #{i}" }
     question
     user
+    initial_probability 0.2
   end
 end

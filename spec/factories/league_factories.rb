@@ -3,6 +3,8 @@ FactoryGirl.define do
     sequence(:name) { |i| "League #{i}" }
     priv false
     user
+    max_bet 1000
+    initial_balance 10000
 
     ignore do
       member nil
