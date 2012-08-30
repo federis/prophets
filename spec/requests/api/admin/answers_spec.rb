@@ -22,6 +22,11 @@ describe "As a normal user, Answers" do
     json['content'].should == answer_attrs[:content]
     json['user_id'].should == admin.id
     json['question_id'].should == question.id
+    json['initial_probability'].should == answer_attrs[:initial_probability]
+    json['current_probability'].should == answer_attrs[:initial_probability]
+    json['bet_total'].should == 0
+    json['correct'].should be_nil
+    json['judged_at'].should be_nil
   end
 
   it "updates an answer in an approved question" do

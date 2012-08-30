@@ -50,6 +50,11 @@ describe "As a normal user, Questions" do
     answer_json['content'].should == answer.content
     answer_json['question_id'].should == question.id
     answer_json['user_id'].should == answer.user_id
+    answer_json['initial_probability'].should == answer.initial_probability
+    answer_json['current_probability'].should == answer.initial_probability
+    answer_json['bet_total'].should == 0
+    answer_json['correct'].should be_nil
+    answer_json['judged_at'].should be_nil
   end
 
   it "lists the approved questions in a league" do
