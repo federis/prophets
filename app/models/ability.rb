@@ -34,11 +34,13 @@ class Ability
         if user.is_member_of_league?(league)
           can [:read, :read_approved_questions], League
           can :show, Question do |q| 
-            !q.approved_at.nil? 
+            q.approved? 
           end
           can [:create, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id, :league_id => league.id
           can [:create, :update, :destroy], Answer, :question => { :user_id => user.id, :approved_at => nil }, :user_id => user.id
-          can :create, Bet, :user_id => user.id
+          can :create, Bet do |b|
+            b.user == user && b.answer.question.approved?
+          end
         end
 
         if user.is_admin_of_league?(league)

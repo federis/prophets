@@ -10,6 +10,10 @@ Prophets::Application.routes.draw do
     resources :answers
   end
 
+  resources :answers, :only => nil do
+    resources :bets
+  end
+
   devise_for :users, :controllers => { :registrations => "registrations" }
 
   resources :tokens, :only => :create

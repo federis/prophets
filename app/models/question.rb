@@ -24,6 +24,10 @@ class Question < ActiveRecord::Base
       self.approved_at = Time.now
     end
   end
+  
+  def approved?
+    !approved_at.nil?
+  end
 
 private
 

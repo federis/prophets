@@ -10,7 +10,16 @@ class Bet < ActiveRecord::Base
   validates :bonus, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 2 }, 
                     :unless => Proc.new{|b| b.bonus.nil? }
 
+  before_validation :set_probability_to_answer_current, :on => :create
+
   def league_max_bet
     answer.question.league.max_bet
   end
+
+private
+
+  def set_probability_to_answer_current
+    self.probability = answer.current_probability
+  end
+
 end

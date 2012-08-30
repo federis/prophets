@@ -130,6 +130,15 @@ describe Ability do
           cannot_perform_actions("answer owned by someone else", :create, :update, :destroy){ not_own_answer }
         end
 
+        context "in an unapproved question created by someone else" do
+          let(:question){ FactoryGirl.build(:question, :league => league, :approver => nil, :approved_at => nil) }
+          let(:answer){ FactoryGirl.build(:answer, :question => question) }
+          cannot_perform_actions("answers", :create, :update, :destroy){ answer }
+
+          let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
+          cannot_perform_actions("bets", :create){ bet }
+        end
+
       end
 
       context "where user is not a member" do
