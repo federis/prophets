@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120830185622) do
+ActiveRecord::Schema.define(:version => 20120831171216) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(:version => 20120830185622) do
     t.integer  "user_id"
     t.datetime "created_at",                                                          :null => false
     t.datetime "updated_at",                                                          :null => false
-    t.decimal  "initial_probability", :precision => 6,  :scale => 5
+    t.decimal  "initial_probability", :precision => 6,  :scale => 5, :default => 0.0
     t.decimal  "current_probability", :precision => 6,  :scale => 5
     t.boolean  "correct"
     t.decimal  "bet_total",           :precision => 15, :scale => 2, :default => 0.0

@@ -11,11 +11,13 @@ class Question < ActiveRecord::Base
   validates :content, :presence => true, :length => { :in => 10..250 }
   validates :desc, :length => { :in => 0..2000 }
   validates :initial_pool, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 10000000 } # $1 to $10 mil
+  validates :answers, :length => { :minimum => 2 }, :if => Proc.new{|q| q.approved_at_changed? } 
+
+  validate :check_answer_initial_probabilities, :if => Proc.new{|q| q.approved_at_changed? } 
 
   scope :approved, where('questions.approved_at IS NOT NULL')
   scope :unapproved, where('questions.approved_at IS NULL')
 
-  before_create :attempt_self_approval
   before_validation :set_initial_pool, :on => :create
 
   def approve!(approving_user)
@@ -36,12 +38,13 @@ class Question < ActiveRecord::Base
 
 private
 
-  def attempt_self_approval
-    approve(user)
-  end
-
   def set_initial_pool
     self.initial_pool = league.max_bet * League::POOL_MULTIPLIER
+  end
+
+  def check_answer_initial_probabilities
+    prob_sum = (answers.map(&:initial_probability).reduce(:+) * 1000).round rescue 0
+    errors[:answers] << errors.generate_message(:answers, :invalid_initial_probabilities_sum) if prob_sum != 1000
   end
 
 end

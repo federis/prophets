@@ -21,8 +21,8 @@ describe "As an admin, Questions" do
     json['user_id'].should == admin.id
     json['league_id'].should == league.id
     json['desc'].should == question_attrs[:desc]
-    json['approver_id'].should == admin.id
-    json['approved_at'].should_not be_nil
+    json['approver_id'].should be_nil
+    json['approved_at'].should be_nil
   end
 
   it "updates a question" do
@@ -39,7 +39,7 @@ describe "As an admin, Questions" do
   end
 
   it "approves a question" do
-    question = FactoryGirl.create(:question, :league => league)
+    question = FactoryGirl.create(:question_with_answers, :league => league)
 
     put approve_league_question_path(league, question), :auth_token => admin.authentication_token,
                                                         :format => "json"
