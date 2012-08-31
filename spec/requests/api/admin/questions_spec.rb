@@ -25,19 +25,30 @@ describe "As an admin, Questions" do
     json['approved_at'].should_not be_nil
   end
 
-  it "updates and approves a question" do
+  it "updates a question" do
     question = FactoryGirl.create(:question, :league => league)
 
-    put league_question_path(league, question), :question => { :approved => "true", :content => "updated content" },
+    put league_question_path(league, question), :question => { :content => "updated content" },
                                                 :auth_token => admin.authentication_token,
                                                 :format => "json"
 
     response.status.should == 204
 
     question.reload
+    question.content.should == "updated content"
+  end
+
+  it "approves a question" do
+    question = FactoryGirl.create(:question, :league => league)
+
+    put approve_league_question_path(league, question), :auth_token => admin.authentication_token,
+                                                        :format => "json"
+
+    response.status.should == 204
+
+    question.reload
     question.approver.should == admin
     question.approved_at.should_not be_nil
-    question.content.should == "updated content"
   end
 
   it "lists the unapproved questions in a league" do

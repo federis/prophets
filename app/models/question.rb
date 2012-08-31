@@ -18,7 +18,12 @@ class Question < ActiveRecord::Base
   before_create :attempt_self_approval
   before_validation :set_initial_pool, :on => :create
 
-  def approved_by=(approving_user)
+  def approve!(approving_user)
+    approve(approving_user)
+    save!
+  end
+
+  def approve(approving_user)
     if approving_user.can? :approve, self
       self.approver = approving_user
       self.approved_at = Time.now
@@ -32,7 +37,7 @@ class Question < ActiveRecord::Base
 private
 
   def attempt_self_approval
-    self.approved_by = user 
+    approve(user)
   end
 
   def set_initial_pool

@@ -3,7 +3,9 @@ Prophets::Application.routes.draw do
 
   resources :leagues do
     resources :memberships
-    resources :questions
+    resources :questions do
+      put "approve", :on => :member
+    end
   end
 
   resources :questions, :only => nil do

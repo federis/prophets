@@ -32,11 +32,15 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    @question.approved_by = current_user if params[:question].delete(:approved) == "true"
     @question.assign_attributes(params[:question])
     authorize! :update, @question
 
     @question.save
+    respond_with @league, @question
+  end
+
+  def approve
+    @question.approve!(current_user)
     respond_with @league, @question
   end
 
