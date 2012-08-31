@@ -36,6 +36,10 @@ class Question < ActiveRecord::Base
     !approved_at.nil?
   end
 
+  def total_pool
+    answers.map(&:bet_total).reduce(:+) + initial_pool
+  end
+
 private
 
   def set_initial_pool

@@ -13,6 +13,10 @@ class Answer < ActiveRecord::Base
 
   before_validation :set_current_probability_to_intial, :on => :create
 
+  def total_pool_share
+    bet_total + initial_probability * question.initial_pool
+  end
+
 private
 
   def set_current_probability_to_intial

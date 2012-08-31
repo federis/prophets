@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Question do
+
   it "#approve approves question but doesn't save it" do
     admin = FactoryGirl.create(:user)
     league = FactoryGirl.create(:league_with_admin, :admin => admin)
@@ -47,6 +48,13 @@ describe Question do
 
     question.should_not be_valid
     question.errors[:answers].should include(I18n.t('activerecord.errors.models.question.attributes.answers.invalid_initial_probabilities_sum'))
+  end
+
+  it "#total_pool gives the sum of the bets made in the question plus the question's initial pool" do
+    question = FactoryGirl.create(:question_with_answers, :answer_count => 3)
+    question.answers.each{|a| a.bet_total = 1000; a.save }
+
+    question.total_pool.should == 3000 + question.initial_pool
   end
 
 end
