@@ -18,6 +18,14 @@ class Bet < ActiveRecord::Base
     answer.question.league.max_bet
   end
 
+  def probability
+    self[:probability].nil? ? nil : self[:probability].round(Bet.probability_scale)
+  end
+
+  def self.probability_scale
+    @probability_scale ||= columns.find {|r| r.name == 'probability'}.scale
+  end
+
 private
 
   def set_probability_to_answer_current

@@ -17,6 +17,18 @@ class Answer < ActiveRecord::Base
     bet_total + initial_probability * question.initial_pool
   end
 
+  ["current", "initial"].each do |type|
+    class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def #{type}_probability
+        self[:#{type}_probability].nil? ? nil : self[:#{type}_probability].round(Answer.#{type}_probability_scale)
+      end
+
+      def self.#{type}_probability_scale
+        @#{type}_probability_scale ||= columns.find {|r| r.name == '#{type}_probability'}.scale
+      end
+    RUBY
+  end
+
 private
 
   def set_current_probability_to_intial
