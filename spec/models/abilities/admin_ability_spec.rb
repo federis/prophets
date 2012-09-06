@@ -40,7 +40,7 @@ describe "As a league admin," do
     can_perform_actions("questions", :approve, :read, :create, :update, :destroy){ question }
 
     let(:answer){ FactoryGirl.build(:answer, :question => question) }
-    can_perform_actions("answers", :create, :update, :destroy){ answer }
+    can_perform_actions("answers", :create, :update, :destroy, :judge){ answer }
 
     let(:bet){ FactoryGirl.build(:bet, :answer => answer) }
     can_perform_actions("bets", :create, :destroy){ bet }

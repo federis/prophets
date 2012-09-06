@@ -88,21 +88,22 @@ describe "As a normal user," do
 
       context "in an approved question created by the user" do
         let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }  
-        cannot_perform_actions("answers", :create, :update, :destroy){ answer }
+        cannot_perform_actions("answers", :create, :update, :destroy, :judge){ answer }
       end
 
       context "in an unapproved question created by the user" do
         let(:answer){ FactoryGirl.build(:answer, :user => user, :question => own_unapproved_question) }  
         can_perform_actions("answers", :create, :update, :destroy){ answer }
+        cannot_perform_actions("answers", :judge){ answer }
 
         let(:not_own_answer){ FactoryGirl.build(:answer, :question => own_unapproved_question) }  
-        cannot_perform_actions("answer owned by someone else", :create, :update, :destroy){ not_own_answer }
+        cannot_perform_actions("answer owned by someone else", :create, :update, :destroy, :judge){ not_own_answer }
       end
 
       context "in an unapproved question created by someone else" do
         let(:question){ FactoryGirl.build(:question, :league => league, :approver => nil, :approved_at => nil) }
         let(:answer){ FactoryGirl.build(:answer, :question => question) }
-        cannot_perform_actions("answers", :create, :update, :destroy){ answer }
+        cannot_perform_actions("answers", :create, :update, :destroy, :judge){ answer }
 
         let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
         cannot_perform_actions("bets", :create){ bet }
