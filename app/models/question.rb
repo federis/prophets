@@ -37,7 +37,14 @@ class Question < ActiveRecord::Base
   end
 
   def total_pool
-    answers.map(&:bet_total).reduce(:+) + initial_pool
+    @total_pool ||= answers.map(&:bet_total).reduce(:+) + initial_pool
+  end
+
+  def update_answer_probabilities!
+    answers.each do |a|
+      a.current_probability = a.total_pool_share / total_pool
+      a.save!
+    end
   end
 
 private

@@ -57,4 +57,25 @@ describe Question do
     question.total_pool.should == 3000 + question.initial_pool
   end
 
+  it "#update_answer_probabilities! recalculates and saves the probabilities for the question's answers" do
+    question = FactoryGirl.create(:question)
+    init_probs = [0.5, 0.3, 0.2]
+    for i in 1..3
+      eval <<-RUBY
+        @answer#{i} = question.answers.build(:content => 'answer #{i}')
+        @answer#{i}.user = question.user
+        @answer#{i}.initial_probability = init_probs[i-1]
+        @answer#{i}.save
+      RUBY
+    end
+
+    @answer1.bet_total = 1000
+
+    question.update_answer_probabilities!
+
+    @answer1.current_probability.should == 0.54545
+    @answer2.current_probability.should == 0.27273
+    @answer3.current_probability.should == 0.18182
+  end
+
 end
