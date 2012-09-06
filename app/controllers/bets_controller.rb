@@ -15,7 +15,7 @@ class BetsController < ApplicationController
   def destroy
     @bet = @answer.bets.find(params[:id])
     authorize! :destroy, @bet
-    @bet.destroy
+    @bet.invalidate!
     respond_with @answer, @bet
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120831171216) do
+ActiveRecord::Schema.define(:version => 20120906202648) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
@@ -32,11 +32,12 @@ ActiveRecord::Schema.define(:version => 20120831171216) do
   create_table "bets", :force => true do |t|
     t.integer  "user_id"
     t.integer  "answer_id"
-    t.decimal  "amount",      :precision => 12, :scale => 2
-    t.decimal  "probability", :precision => 6,  :scale => 5
-    t.decimal  "bonus",       :precision => 7,  :scale => 5
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.decimal  "amount",         :precision => 12, :scale => 2
+    t.decimal  "probability",    :precision => 6,  :scale => 5
+    t.decimal  "bonus",          :precision => 7,  :scale => 5
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
+    t.datetime "invalidated_at"
   end
 
   add_index "bets", ["answer_id"], :name => "index_bets_on_answer_id"

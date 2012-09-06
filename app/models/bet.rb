@@ -15,8 +15,20 @@ class Bet < ActiveRecord::Base
   after_create :increment_answer_bet_total!
   after_create :update_question_answer_probabilities!
 
+  after_destroy :decrement_answer_bet_total!
+
   def league_max_bet
     answer.question.league.max_bet
+  end
+
+  def invalidated?
+    !invalidated_at.nil?
+  end
+
+  def invalidate!
+    self.invalidated_at = Time.now
+    decrement_answer_bet_total!
+    save!
   end
 
   def probability
@@ -35,6 +47,11 @@ private
 
   def increment_answer_bet_total!
     answer.bet_total += amount 
+    answer.save
+  end
+
+  def decrement_answer_bet_total!
+    answer.bet_total -= amount 
     answer.save
   end
 
