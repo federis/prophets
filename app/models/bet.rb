@@ -13,6 +13,7 @@ class Bet < ActiveRecord::Base
   before_validation :set_probability_to_answer_current, :on => :create
 
   after_create :increment_answer_bet_total!
+  after_create :update_question_answer_probabilities!
 
   def league_max_bet
     answer.question.league.max_bet
@@ -35,6 +36,10 @@ private
   def increment_answer_bet_total!
     answer.bet_total += amount 
     answer.save
+  end
+
+  def update_question_answer_probabilities!
+    answer.question.update_answer_probabilities!
   end
 
 end

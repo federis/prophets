@@ -19,4 +19,13 @@ describe Bet do
     answer.bet_total.should == before_total + bet.amount
   end
 
+  it "updates probabilities for all answers in the question after creation" do
+    question = FactoryGirl.create(:question_with_answers)
+    answer = question.answers.first
+    answer_prob = answer.current_probability
+    
+    bet = question.user.bets.build(:answer_id => answer.id, :amount => 1000)
+    bet.answer.question.should_receive(:update_answer_probabilities!)
+    bet.save
+  end
 end

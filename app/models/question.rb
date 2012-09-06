@@ -37,7 +37,7 @@ class Question < ActiveRecord::Base
   end
 
   def total_pool
-    @total_pool ||= answers.map(&:bet_total).reduce(:+) + initial_pool
+    answers.map(&:bet_total).reduce(:+) + initial_pool
   end
 
   def update_answer_probabilities!
