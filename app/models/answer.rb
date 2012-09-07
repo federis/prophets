@@ -17,6 +17,13 @@ class Answer < ActiveRecord::Base
     bet_total + initial_probability * question.initial_pool
   end
 
+  def judge(is_correct)
+    raise ArgumentError, "Correct must be true or false. #{is_correct.inspect} given." unless is_correct == true || is_correct == false
+
+    self.correct = is_correct
+    self.judged_at = Time.now
+  end
+
   ["current", "initial"].each do |type|
     class_eval <<-RUBY, __FILE__, __LINE__ + 1
       def #{type}_probability

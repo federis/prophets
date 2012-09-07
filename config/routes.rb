@@ -9,7 +9,9 @@ Prophets::Application.routes.draw do
   end
 
   resources :questions, :only => nil do
-    resources :answers
+    resources :answers do
+      put "judge", :on => :member
+    end
   end
 
   resources :answers, :only => nil do

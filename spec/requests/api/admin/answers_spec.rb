@@ -53,4 +53,14 @@ describe "As a normal user, Answers" do
     question.answers.count.should == count - 1
   end
 
+  it "judges an answer" do
+    put judge_question_answer_path(question, answer), :answer => { :correct => "true" },
+                                                :auth_token => admin.authentication_token,
+                                                :format => "json"
+
+    answer.reload
+    answer.should be_correct
+    answer.judged_at.should_not be_nil
+  end
+
 end

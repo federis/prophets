@@ -24,7 +24,15 @@ class AnswersController < ApplicationController
     @answer = @question.answers.find(params[:id])
     authorize! :destroy, @answer
     @answer.destroy
-    respond_with @league, @answer
+    respond_with @question, @answer
+  end
+
+  def judge
+    @answer = @question.answers.find(params[:id])
+    @answer.judge(params[:answer][:correct] == "true")
+    authorize! :judge, @answer
+    @answer.save
+    respond_with @question, @answer
   end
 
 
