@@ -14,8 +14,10 @@ class Bet < ActiveRecord::Base
 
   after_create :increment_answer_bet_total!
   after_create :update_question_answer_probabilities!
+  after_create :decrement_user_balance_by_bet_amount!
 
   after_destroy :decrement_answer_bet_total!
+  after_destroy :refund_bet_to_user!
 
   def league_max_bet
     answer.question.league.max_bet
@@ -27,8 +29,11 @@ class Bet < ActiveRecord::Base
 
   def invalidate!
     self.invalidated_at = Time.now
-    decrement_answer_bet_total!
-    save!
+    Bet.transaction do
+      decrement_answer_bet_total!
+      refund_bet_to_user!
+      save!
+    end
   end
 
   def probability
@@ -39,6 +44,10 @@ class Bet < ActiveRecord::Base
     @probability_scale ||= columns.find {|r| r.name == 'probability'}.scale
   end
 
+  def payout
+    
+  end
+
 private
 
   def set_probability_to_answer_current
@@ -47,16 +56,28 @@ private
 
   def increment_answer_bet_total!
     answer.bet_total += amount 
-    answer.save
+    answer.save!
   end
 
   def decrement_answer_bet_total!
     answer.bet_total -= amount 
-    answer.save
+    answer.save!
+  end
+
+  def decrement_user_balance_by_bet_amount!
+    membership = user.membership_in_league(answer.question.league)
+    membership.balance -= amount
+    membership.save!
   end
 
   def update_question_answer_probabilities!
     answer.question.update_answer_probabilities!
+  end
+
+  def refund_bet_to_user!
+    membership = user.membership_in_league(answer.question.league)
+    membership.balance += amount
+    membership.save!
   end
 
 end
