@@ -21,16 +21,18 @@ class Answer < ActiveRecord::Base
 
   def judge!(is_correct, judging_user)
     raise ArgumentError, "Correct must be true or false. #{is_correct.inspect} given." unless is_correct == true || is_correct == false
-    raise CanCan::AccessDenied unless judging_user.can? :judge, self
+    raise CanCan::AccessDenied unless judging_user.can? :judge, self, question.league
 
     self.correct = is_correct
     self.judged_at = Time.now
     self.judge = judging_user
 
-    if is_correct
-      pay_bettors!
-    else
-      zero_bet_payouts!
+    Answer.delay.process_bets_for_judged_answer(self.id, is_correct)
+
+    if is_correct #if this is the correct answer, the others are implicitly incorrect
+      question.answers.each do |a|
+        a.judge!(false, judging_user) unless a == self
+      end
     end
 
     save!
@@ -57,6 +59,15 @@ class Answer < ActiveRecord::Base
   def zero_bet_payouts!
     bets.each do |bet|
       bet.zero_payout!
+    end
+  end
+
+  def self.process_bets_for_judged_answer(id, is_correct)
+    answer = find(id)
+    if is_correct
+      answer.pay_bettors!
+    else
+      answer.zero_bet_payouts!
     end
   end
 

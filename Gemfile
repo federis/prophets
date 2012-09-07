@@ -6,6 +6,7 @@ gem 'rails', '3.2.7'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'unicorn'
+gem 'delayed_job_active_record'
 
 gem 'devise', '~> 2.1'
 gem 'omniauth-facebook'

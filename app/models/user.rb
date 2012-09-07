@@ -28,8 +28,14 @@ class User < ActiveRecord::Base
     memberships.where(:league_id => league.id).count > 0
   end
 
-  def can?(action, object)
-    a = defined?(object.league) ? Ability.new(self, object.league) : ability
+  def can?(action, object, league = nil)
+    a = if league
+      Ability.new(self, league)
+    elsif defined?(object.league)
+      Ability.new(self, object.league)
+    else 
+      ability
+    end
     a.can?(action, object)
   end
 

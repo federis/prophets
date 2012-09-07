@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "As a normal user, Answers" do
+describe "As an admin, Answers" do
   let(:admin){ FactoryGirl.create(:user, :name => "Admin") }
   let(:league){ FactoryGirl.create(:league_with_admin, :admin => admin) }
   let(:question){ FactoryGirl.create(:question, :user => admin, :league => league, :approved_at => Time.now) }
@@ -55,12 +55,14 @@ describe "As a normal user, Answers" do
 
   it "judges an answer" do
     put judge_question_answer_path(question, answer), :answer => { :correct => "true" },
-                                                :auth_token => admin.authentication_token,
-                                                :format => "json"
+                                                      :auth_token => admin.authentication_token,
+                                                      :format => "json"
 
     answer.reload
     answer.should be_correct
     answer.judged_at.should_not be_nil
+    answer.judge.should == admin
   end
+
 
 end
