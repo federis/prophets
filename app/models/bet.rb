@@ -6,7 +6,7 @@ class Bet < ActiveRecord::Base
   validates :user_id, :presence => true
   validates :answer_id, :presence => true
   validates :amount, :numericality => { :greater_than_or_equal_to => 0, :less_than_or_equal_to => :league_max_bet }
-  validates :probability, :numericality => { :greater_than_or_equal_to => 0, :less_than_or_equal_to => 1 }
+  validates :probability, :numericality => { :greater_than => 0, :less_than => 1 }
   validates :bonus, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 2 }, 
                     :unless => Proc.new{|b| b.bonus.nil? }
 
@@ -44,8 +44,21 @@ class Bet < ActiveRecord::Base
     @probability_scale ||= columns.find {|r| r.name == 'probability'}.scale
   end
 
-  def payout
-    
+  def pay_bettor!
+    self.payout = amount + amount * (1/probability - 1)
+    membership = user.membership_in_league(answer.question.league)
+    if membership # in case they left the league
+      membership.balance += payout
+      Bet.transaction do
+        membership.save!
+        save!
+      end
+    end
+  end
+
+  def zero_payout!
+    self.payout = 0
+    save!
   end
 
 private
