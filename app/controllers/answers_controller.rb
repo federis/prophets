@@ -29,9 +29,8 @@ class AnswersController < ApplicationController
 
   def judge
     @answer = @question.answers.find(params[:id])
-    @answer.judge(params[:answer][:correct] == "true")
     authorize! :judge, @answer
-    @answer.save
+    @answer.judge!(params[:answer][:correct] == "true", current_user)
     respond_with @question, @answer
   end
 
