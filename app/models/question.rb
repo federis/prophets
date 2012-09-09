@@ -21,15 +21,12 @@ class Question < ActiveRecord::Base
   before_validation :set_initial_pool, :on => :create
 
   def approve!(approving_user)
-    approve(approving_user)
-    save!
-  end
+    raise CanCan::AccessDenied unless approving_user.can? :approve, self
 
-  def approve(approving_user)
-    if approving_user.can? :approve, self
-      self.approver = approving_user
-      self.approved_at = Time.now
-    end
+    self.approver = approving_user
+    self.approved_at = Time.now
+
+    save!
   end
   
   def approved?

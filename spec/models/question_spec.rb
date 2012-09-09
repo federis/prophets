@@ -2,26 +2,14 @@ require 'spec_helper'
 
 describe Question do
 
-  it "#approve approves question but doesn't save it" do
-    admin = FactoryGirl.create(:user)
-    league = FactoryGirl.create(:league_with_admin, :admin => admin)
-    question = FactoryGirl.create(:question, :user => admin, :league => league, :approver => nil)
-    
-    question.approve(admin)
-    question.approver.should == admin
-    question.approved_at.should_not be_nil
-
-    question.reload
-    question.approved_at.should be_nil
-  end
-
-  it "#approve doesn't approve question if approving_user isn't an admin" do
+  it "#approve raises an exception and doesn't approve question if approving_user isn't an admin" do
     user = FactoryGirl.create(:user)
     league = FactoryGirl.create(:league)
     question = FactoryGirl.create(:question, :league => league, :approver => nil)
     
-    question.approve(user)
-    question.approver.should be_nil
+    expect{ question.approve!(user) }.to raise_error(CanCan::AccessDenied)
+
+    question.reload.approver.should be_nil
     question.approved_at.should be_nil
   end
 
@@ -44,9 +32,8 @@ describe Question do
     answer.initial_probability = 0.5
     answer.save
     
-    question.approve(question.league.user)
-
-    question.should_not be_valid
+    expect{ question.approve!(question.league.user) }.to raise_error(ActiveRecord::RecordInvalid)
+    
     question.errors[:answers].should include(I18n.t('activerecord.errors.models.question.attributes.answers.invalid_initial_probabilities_sum'))
   end
 
