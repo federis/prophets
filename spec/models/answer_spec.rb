@@ -1,6 +1,14 @@
 require 'spec_helper'
 
 describe Answer do
+  let(:question){ FactoryGirl.create(:question) }
+  let(:answer_with_bets){ FactoryGirl.create(:answer_with_bets, :bet_user => user, :question => question) }
+  let(:user) do
+    user = FactoryGirl.create(:user)
+    user.leagues << question.league
+    user
+  end
+
   it "sets current prob to initial prob on creation" do
     a = FactoryGirl.build(:answer)
     a.current_probability.should be_nil
@@ -10,10 +18,82 @@ describe Answer do
 
   it "#total_pool_share gives answer's total bet value plus the answer's portion of the initial pool" do
     question = FactoryGirl.create(:question_with_answers, :answer_count => 3)
-    answer = question.answers.first
-    answer.bet_total = 1000
-    answer.save
+    a = question.answers.first
+    a.bet_total = 1000
+    a.save
 
-    answer.total_pool_share.should == 1000 + question.initial_pool * answer.initial_probability
+    a.total_pool_share.should == 1000 + question.initial_pool * a.initial_probability
   end
+
+  it "#pay_bettors! pays the user for each bet made in the answer" do
+    answer_with_bets.bets.each do |bet|
+      bet.should_receive(:pay_bettor!)
+    end
+
+    answer_with_bets.pay_bettors!
+  end
+
+  it "#zero_bet_payouts! zeroes the payout on each bet made in the answer" do
+    answer_with_bets.bets.each do |bet|
+      bet.should_receive(:zero_payout!)
+    end
+
+    answer_with_bets.zero_bet_payouts!
+  end
+
+  it "#process_bets_for_judged_answer pays bettors for a correct answer" do
+    Answer.stub(:find).and_return(answer_with_bets)
+    answer_with_bets.should_receive(:pay_bettors!)
+    Answer.process_bets_for_judged_answer(answer_with_bets.id, true)
+  end
+
+  it "#process_bets_for_judged_answer zeros the payouts for bets in an incorrect answer" do
+    Answer.stub(:find).and_return(answer_with_bets)
+    answer_with_bets.should_receive(:zero_bet_payouts!)
+    Answer.process_bets_for_judged_answer(answer_with_bets.id, false)
+  end
+
+  describe "#judge!" do
+    let(:question){ FactoryGirl.create(:question_with_answers) }
+    before do
+      @answer = question.answers.first
+      membership = user.membership_in_league(question.league)
+      membership.role = Membership::ROLES[:admin]
+      membership.save
+    end
+
+    it "sets the judged info and processes bets" do
+      dj = mock("DelayProxy")
+      Answer.should_receive(:delay).any_number_of_times.and_return(dj)
+      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, true).once
+      dj.should_receive(:process_bets_for_judged_answer).any_number_of_times
+
+      @answer.judge!(true, user)
+
+      @answer.reload.should be_correct
+      @answer.judged_at.should_not be_nil
+      @answer.judge.should == user
+    end
+
+    it "calls judge! for other answers in the same question when it is the correct answer" do
+      dj = mock("DelayProxy")
+      Answer.should_receive(:delay).any_number_of_times.and_return(dj)
+      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, true).once
+
+      @answer.question.answers.each do |a|
+        a.should_receive(:judge!).with(false, user) unless a == @answer
+      end
+
+      @answer.judge!(true, user)
+    end
+
+    it "doesn't call judge! for other answers in the same question when it is the incorrect answer" do
+      dj = mock("DelayProxy")
+      Answer.should_receive(:delay).and_return(dj)
+      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, false).once
+
+      @answer.judge!(false, user)
+    end
+  end
+
 end
