@@ -55,7 +55,7 @@ describe Answer do
 
   describe "#judge!" do
     let(:question){ FactoryGirl.create(:question_with_answers) }
-    before do
+    before(:each) do
       @answer = question.answers.first
       membership = user.membership_in_league(question.league)
       membership.role = Membership::ROLES[:admin]
@@ -65,7 +65,7 @@ describe Answer do
     it "sets the judged info and processes bets" do
       dj = mock("DelayProxy")
       Answer.should_receive(:delay).any_number_of_times.and_return(dj)
-      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, true).once
+      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, true, nil).once
       dj.should_receive(:process_bets_for_judged_answer).any_number_of_times
 
       @answer.judge!(true, user)
@@ -78,10 +78,10 @@ describe Answer do
     it "calls judge! for other answers in the same question when it is the correct answer" do
       dj = mock("DelayProxy")
       Answer.should_receive(:delay).any_number_of_times.and_return(dj)
-      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, true).once
+      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, true, nil).once
 
       @answer.question.answers.each do |a|
-        a.should_receive(:judge!).with(false, user) unless a == @answer
+        a.should_receive(:judge!).with(false, user, nil) unless a == @answer
       end
 
       @answer.judge!(true, user)
@@ -90,9 +90,22 @@ describe Answer do
     it "doesn't call judge! for other answers in the same question when it is the incorrect answer" do
       dj = mock("DelayProxy")
       Answer.should_receive(:delay).and_return(dj)
-      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, false).once
+      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, false, nil).once
 
       @answer.judge!(false, user)
+    end
+
+    it "invalidates bets made after the known_at date" do
+      bet1 = FactoryGirl.create(:bet, :answer => @answer, :user => user, :created_at => 1.week.ago)
+      bet2 = FactoryGirl.create(:bet, :answer => @answer, :user => user)
+      
+      @answer.judge!(true, user, 2.days.ago)
+
+      bet1.reload.should_not be_invalidated
+      bet1.should be_judged
+
+      bet2.reload.should be_invalidated
+      bet2.should_not be_judged
     end
   end
 

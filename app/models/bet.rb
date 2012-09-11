@@ -19,8 +19,14 @@ class Bet < ActiveRecord::Base
   after_destroy :decrement_answer_bet_total!
   after_destroy :refund_bet_to_user!
 
+  scope :made_after, lambda{|after_date| where("created_at > ?", after_date)}
+
   def league_max_bet
     answer.question.league.max_bet
+  end
+
+  def judged?
+    !payout.nil?
   end
 
   def invalidated?

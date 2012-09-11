@@ -30,7 +30,7 @@ class AnswersController < ApplicationController
   def judge
     @answer = @question.answers.find(params[:id])
     authorize! :judge, @answer
-    @answer.judge!(params[:answer][:correct] == "true", current_user)
+    @answer.judge!(params[:answer][:correct] == "true", current_user, params[:answer][:correctness_known_at])
     respond_with @question, @answer
   end
 

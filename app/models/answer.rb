@@ -19,19 +19,20 @@ class Answer < ActiveRecord::Base
     bet_total + initial_probability * question.initial_pool
   end
 
-  def judge!(is_correct, judging_user)
+  def judge!(is_correct, judging_user, known_at = nil)
     raise ArgumentError, "Correct must be true or false. #{is_correct.inspect} given." unless is_correct == true || is_correct == false
     raise CanCan::AccessDenied unless judging_user.can? :judge, self, question.league
 
     self.correct = is_correct
     self.judged_at = Time.now
     self.judge = judging_user
+    self.correctness_known_at = known_at
 
-    Answer.delay.process_bets_for_judged_answer(self.id, is_correct)
+    Answer.delay.process_bets_for_judged_answer(self.id, is_correct, known_at)
 
     if is_correct #if this is the correct answer, the others are implicitly incorrect
       question.answers.each do |a|
-        a.judge!(false, judging_user) unless a == self
+        a.judge!(false, judging_user, known_at) unless a == self
       end
     end
 
@@ -52,18 +53,20 @@ class Answer < ActiveRecord::Base
 
   def pay_bettors!
     bets.each do |bet|
-      bet.pay_bettor!
+      bet.pay_bettor! unless bet.invalidated?
     end
   end
 
   def zero_bet_payouts!
     bets.each do |bet|
-      bet.zero_payout!
+      bet.zero_payout! unless bet.invalidated?
     end
   end
 
-  def self.process_bets_for_judged_answer(id, is_correct)
+  def self.process_bets_for_judged_answer(id, is_correct, known_at = nil)
     answer = find(id)
+    answer.bets.made_after(known_at).each{|bet| bet.invalidate! } unless known_at.nil?
+    
     if is_correct
       answer.pay_bettors!
     else
