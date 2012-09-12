@@ -18,9 +18,14 @@ Prophets::Application.routes.draw do
     resources :bets
   end
 
-  devise_for :users, :controllers => { :registrations => "registrations" }
+  devise_for :users, :controllers => { :registrations => "registrations",
+                                       :omniauth_callbacks => "omniauth_callbacks" }
 
-  resources :tokens, :only => :create
+  resources :tokens, :only => :create do
+    collection do
+      post "facebook"
+    end
+  end
   
   root :to => "leagues#index"
 

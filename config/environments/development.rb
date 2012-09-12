@@ -36,4 +36,7 @@ Prophets::Application.configure do
   config.assets.debug = true
 
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+
+  ENV['fb_app_id'] = "143566672452467"
+  ENV['fb_app_secret'] = "b4b349d5b2422e453a2a90587d9be7c7"
 end

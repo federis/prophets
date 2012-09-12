@@ -1,7 +1,11 @@
-<h2>Sign up</h2>
+<% if @fb_registration %>
+  <h2>Complete Sign up</h2>
+<% else %>
+  <h2>Sign up</h2>
+<% end %>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
+  <%= devise_error_messages! unless @fb_registration %>
 
   <div><%= f.label :email %><br />
   <%= f.email_field :email %></div>

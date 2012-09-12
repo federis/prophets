@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120909224144) do
+ActiveRecord::Schema.define(:version => 20120912132442) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
@@ -118,6 +118,9 @@ ActiveRecord::Schema.define(:version => 20120909224144) do
     t.string   "authentication_token"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
+    t.string   "fb_uid"
+    t.string   "fb_token"
+    t.datetime "fb_token_expires_at"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

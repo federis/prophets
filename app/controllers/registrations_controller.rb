@@ -4,6 +4,12 @@ class RegistrationsController < Devise::RegistrationsController
 
   skip_before_filter :verify_authenticity_token, :only => :create
   before_filter :verify_authentic_request, :only => :create
+
+  def new    
+    @fb_registration = params[:fb] == "true" && session['devise.user_attributes']
+    session.delete('devise.user_attributes') unless @fb_registration 
+    super
+  end
   
 private
 
