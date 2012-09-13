@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
          :token_authenticatable, :omniauthable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :fb_uid, :fb_token, :fb_token_expires_at
 
   has_many :created_leagues, :class_name => "League"
   has_many :memberships
@@ -43,18 +43,15 @@ class User < ActiveRecord::Base
     !can?(action, object)
   end
 
-  def self.from_facebook(fb, source)
-    user = where(:fb_uid => fb[:uid]).first_or_initialize
-    user.fb_uid = fb[:uid]
-
-    if source == :mobile
-      user.fb_token = fb[:fb_token]
-      user.fb_token_expires_at = Time.at(fb[:fb_token_expires_at])
-    elsif source == :omniauth
-      user.fb_token = fb[:credentials][:token]
-      user.fb_token_expires_at = Time.at(fb[:credentials][:expires_at])
-    end
-
+  def self.find_or_create_omniauth_facebook_user(fb)
+    user = where(:fb_uid => fb.uid).first_or_initialize
+    
+    user.fb_uid = fb.uid
+    user.fb_token = fb.credentials.token
+    user.fb_token_expires_at = Time.at(fb.credentials.expires_at)
+    user.email = fb.info.email if user.email.blank?
+    user.name = fb.info.name if user.name.blank?
+  
     user.save
     user
   end 

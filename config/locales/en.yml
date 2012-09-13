@@ -9,3 +9,5 @@ en:
           attributes:
             answers:
               invalid_initial_probabilities_sum: "must have probabilities summing to 100% for publication"
+  tokens:
+    fb_user_not_found: "Facebook user does not exist"

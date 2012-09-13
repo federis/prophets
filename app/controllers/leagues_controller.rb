@@ -3,6 +3,7 @@ class LeaguesController < ApplicationController
 
   self.responder = ApiResponder
   respond_to :json
+  respond_to :html, :only => :index
 
   def index
     @leagues = current_user.leagues

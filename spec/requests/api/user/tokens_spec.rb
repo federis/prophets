@@ -26,12 +26,13 @@ describe "Tokens API" do
   end
 
   describe "POST /tokens/facebook.json" do
-    let(:user){ FactoryGirl.create(:user, :fb_uid => "123") }
+    let(:user){ FactoryGirl.create(:user, :fb_uid => "100004368094432") }
+    let(:fb_user_attrs){ {"id"=>"100004368094432", "name"=>"Barbara Amdcfhjiddcb Narayananson", "first_name"=>"Barbara", "middle_name"=>"Amdcfhjiddcb", "last_name"=>"Narayananson", "link"=>"http://www.facebook.com/profile.php?id=100004368094432", "gender"=>"female", "timezone"=>-5, "locale"=>"en_US", "updated_time"=>"2012-09-13T13:18:41+0000"} }
 
     it "gives the user with token when valid facebook oauth token is provided" do
       fb = mock("Koala::Facebook::API")
       Koala::Facebook::API.stub(:new).and_return(fb)
-      fb.stub(:get_object).and_return({:uid => "123"})
+      fb.stub(:get_object).and_return(fb_user_attrs)
 
       user #trigger user creation
 
@@ -51,22 +52,25 @@ describe "Tokens API" do
       post facebook_tokens_path :fb_token => "abc", :format => "json"
 
       response.status.should == 401
-      response.body.should_not include("user")
-      response.body.should_not include("authentication_token")
-      response.body.should include("error")
+      resp = decode_json(response.body)
+      resp.keys.should include("error")
+      resp.keys.should_not include("user")
+      resp["error"].should == I18n.t('devise.failure.unauthenticated')
+      
     end
 
     it "doesn't give user with token when user with the fb uid doesn't exist" do
       fb = mock("Koala::Facebook::API")
       Koala::Facebook::API.stub(:new).and_return(fb)
-      fb.stub(:get_object).and_return({:uid => "123"})
+      fb.stub(:get_object).and_return(fb_user_attrs)
 
       post facebook_tokens_path :fb_token => "abc", :format => "json"
-      debugger
-      response.status.should == 401
-      response.body.should_not include("user")
-      response.body.should_not include("authentication_token")
-      response.body.should include("error")
+      
+      response.status.should == 404
+      resp = decode_json(response.body)
+      resp.keys.should include("error")
+      resp.keys.should_not include("user")
+      resp["error"].should == I18n.t('tokens.fb_user_not_found')
     end
   end
 end
