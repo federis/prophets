@@ -50,6 +50,7 @@ end
 
 group :development do
   gem 'thin'
+  gem 'sinatra' #for ios tests
 end
 
 group :production do
