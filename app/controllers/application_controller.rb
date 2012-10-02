@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 private
 
   def current_league
-    @league ||= League.find(params[:league_id])
+    @league ||= League.find(params[:league_id]) if params[:league_id]
   end
 
   def current_ability

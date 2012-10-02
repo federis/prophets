@@ -1,9 +1,16 @@
 class MembershipsController < ApplicationController
-  authorize_resource :league
-  load_and_authorize_resource :except => :create, :through => :league
+  authorize_resource :league, :except => :index
+  load_and_authorize_resource :except => [:create, :index], :through => :league
 
   self.responder = ApiResponder
   respond_to :json
+
+  def index
+    @memberships = current_user.memberships.includes(:league)
+    authorize! :index, Membership
+    @include_leagues = true
+    respond_with @memberships
+  end
 
   def create
     @membership = @league.memberships.build(params[:membership])

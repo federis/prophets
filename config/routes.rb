@@ -1,8 +1,9 @@
 Prophets::Application.routes.draw do
-  resources :bets
+  
+  resources :memberships, :only => :index
 
   resources :leagues do
-    resources :memberships
+    resources :memberships, :except => :index
     resources :questions do
       put "approve", :on => :member
     end
