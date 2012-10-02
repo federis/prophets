@@ -27,6 +27,7 @@ describe "As an admin, Answers" do
     json['bet_total'].should == 0
     json['correct'].should be_nil
     json['judged_at'].should be_nil
+    json['judge_id'].should be_nil
   end
 
   it "updates an answer in an approved question" do
