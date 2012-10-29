@@ -20,6 +20,8 @@ describe "As normal user, Leagues" do
     json['max_bet'].should == league_attrs[:max_bet]
     json['priv'].should == league_attrs[:priv]
     json['initial_balance'].should == league_attrs[:initial_balance]
+    json['memberships_count'].should == 1
+    json['questions_count'].should == 0
   end
 
   it "provides error messages when league is invalid" do
