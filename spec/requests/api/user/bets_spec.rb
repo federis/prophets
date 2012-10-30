@@ -27,6 +27,7 @@ describe "As a normal user, Bets" do
     json['id'].should_not be_nil
     json['user_id'].should == user.id
     json['answer_id'].should == answer.id
+    json['league_id'].should == answer.question.league_id
     json['amount'].should == bet_attrs[:amount]
     json['probability'].should == before_prob
     json['bonus'].should be_nil
@@ -45,6 +46,9 @@ describe "As a normal user, Bets" do
     question_ids = json.map{|l| l["bet"]["id"] }
     question_ids.should_not include(not_own_bet.id)
     question_ids.should include(bet1.id, bet2.id)
+    
+    json.first["bet"]["answer"].should_not be_nil
+    json.first["bet"]["answer"]["question"].should_not be_nil
   end
 
 end

@@ -7,6 +7,8 @@ class BetsController < ApplicationController
   def index
     authorize! :index, Bet
     @bets = current_user.bets.where(:league_id => current_league.id)
+    @include_answer = true
+    @include_question = true
     respond_with current_league, @bets
   end
 

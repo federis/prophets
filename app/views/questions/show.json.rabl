@@ -1,6 +1,8 @@
 object @question
 attributes :id, :content, :desc, :league_id, :user_id, :approver_id, :approved_at, :created_at, :updated_at
 
-child :answers do
-  extends "answers/show"
+if @include_answers
+  child :answers do
+    extends "answers/show"
+  end
 end

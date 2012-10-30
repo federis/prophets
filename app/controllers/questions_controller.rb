@@ -16,10 +16,13 @@ class QuestionsController < ApplicationController
       @league.questions.approved
     end
 
+    @include_answers = true
+
     respond_with @league, @questions
   end
 
   def show
+    @include_answers = true
     respond_with @league, @question
   end
 
