@@ -7,6 +7,8 @@ Prophets::Application.routes.draw do
     resources :questions do
       put "approve", :on => :member
     end
+
+    resources :bets, :only => :index
   end
 
   resources :questions, :only => nil do

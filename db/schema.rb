@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120912132442) do
+ActiveRecord::Schema.define(:version => 20121029190925) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20120912132442) do
     t.datetime "updated_at",                                    :null => false
     t.datetime "invalidated_at"
     t.decimal  "payout",         :precision => 15, :scale => 2
+    t.integer  "league_id"
   end
 
   add_index "bets", ["answer_id"], :name => "index_bets_on_answer_id"

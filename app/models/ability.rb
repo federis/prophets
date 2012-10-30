@@ -38,6 +38,7 @@ class Ability
           end
           can [:create, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id, :league_id => league.id
           can [:create, :update, :destroy], Answer, :question => { :user_id => user.id, :approved_at => nil }, :user_id => user.id
+          can :index, Bet
           can :create, Bet do |b|
             b.user == user && b.answer.question.approved?
           end

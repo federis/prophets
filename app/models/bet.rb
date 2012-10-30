@@ -1,6 +1,7 @@
 class Bet < ActiveRecord::Base
   belongs_to :answer
   belongs_to :user
+  belongs_to :league #this is denormalized to make it easier to get a list of bets in a league
   attr_accessible :amount, :answer_id
 
   validates :user_id, :presence => true
@@ -20,6 +21,12 @@ class Bet < ActiveRecord::Base
   after_destroy :refund_bet_to_user!
 
   scope :made_after, lambda{|after_date| where("created_at > ?", after_date)}
+
+  # league_id is included in bets so that we can easily get a list of bets in a league
+  def answer=(val)
+    super
+    self.league_id = answer.question.league_id 
+  end
 
   def league_max_bet
     answer.question.league.max_bet

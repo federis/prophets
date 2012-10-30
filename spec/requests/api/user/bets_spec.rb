@@ -6,6 +6,11 @@ describe "As a normal user, Bets" do
   let(:question){ FactoryGirl.create(:question, :user => user, :league => league, :approved_at => Time.now) }
   let(:answer){ FactoryGirl.create(:answer, :question => question, :user => user) }
   let(:bet_attrs){ FactoryGirl.attributes_for(:bet, :user => user, :answer => answer).except(:probability) }
+  let(:other_user){ 
+    u = FactoryGirl.create(:user)
+    league.users << u
+    u
+  }
 
   it "creates a bet in an approved question" do
     count = answer.bets.count
@@ -25,6 +30,21 @@ describe "As a normal user, Bets" do
     json['amount'].should == bet_attrs[:amount]
     json['probability'].should == before_prob
     json['bonus'].should be_nil
+  end
+
+  it "gets a list of the user's bets in a league" do
+    bet1 = FactoryGirl.create(:bet, :user => user, :answer => answer)
+    bet2 = FactoryGirl.create(:bet, :user => user, :answer => answer)
+    not_own_bet = FactoryGirl.create(:bet, :user => other_user, :answer => answer)
+
+    get league_bets_path(league), :auth_token => user.authentication_token,
+                                  :format => "json"
+
+    response.status.should == 200
+    json = decode_json(response.body) 
+    question_ids = json.map{|l| l["bet"]["id"] }
+    question_ids.should_not include(not_own_bet.id)
+    question_ids.should include(bet1.id, bet2.id)
   end
 
 end

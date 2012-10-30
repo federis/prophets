@@ -81,6 +81,7 @@ describe "As a normal user," do
       let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }
       let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
       can_perform_actions("bets", :create){ bet }
+      can_perform_actions("bets", :index){ Bet }
       cannot_perform_actions("bets", :destroy){ bet }
 
       let(:not_own_bet){ FactoryGirl.build(:bet, :answer => answer) }
@@ -124,6 +125,7 @@ describe "As a normal user," do
       let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }
       let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
       cannot_perform_actions("bets", :create, :destroy){ bet }
+      cannot_perform_actions("bets", :index){ Bet }
 
       let(:not_own_bet){ FactoryGirl.build(:bet, :answer => answer) }
       cannot_perform_actions("bets", :create, :destroy){ not_own_bet }

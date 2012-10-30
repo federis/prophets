@@ -6,6 +6,7 @@ class League < ActiveRecord::Base
   belongs_to :user #the league creator
   has_many :questions
   has_many :memberships
+  has_many :bets
   has_many :users, :through => :memberships
   has_many :admins, :through => :memberships, 
                     :source => :user, 

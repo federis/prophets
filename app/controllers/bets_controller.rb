@@ -1,12 +1,19 @@
 class BetsController < ApplicationController
-  before_filter :load_answer
+  before_filter :load_answer, :except => :index
 
   self.responder = ApiResponder
   respond_to :json
 
+  def index
+    authorize! :index, Bet
+    @bets = current_user.bets.where(:league_id => current_league.id)
+    respond_with current_league, @bets
+  end
+
   def create
     @bet = @answer.bets.build(params[:bet])
     @bet.user = current_user
+    @bet.league = @answer.question.league
     authorize! :create, @bet
     @bet.save
     respond_with @answer, @bet
@@ -26,6 +33,6 @@ private
   end
   
   def current_league
-    @answer.question.league
+    params[:action] == "index" ? League.find(params[:league_id]) : @answer.question.league
   end
 end

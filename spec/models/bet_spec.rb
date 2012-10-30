@@ -116,4 +116,11 @@ describe Bet do
     bet.reload.payout.should == 0
   end
 
+  it "sets the league_id whenever the bet's answer is set" do
+    bet = Bet.new(:amount => 2)
+    bet.answer.should be_nil
+    bet.answer = answer
+    bet.league_id.should == answer.question.league_id
+  end
+
 end
