@@ -58,7 +58,7 @@ describe "As a normal user, Questions" do
   end
 
   it "lists the approved questions in a league" do
-    q1 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
+    q1 = FactoryGirl.create(:question_with_answers, :league => league, :approved_at => Time.now)
     q2 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
     q3 = FactoryGirl.create(:question, :league => league)
     q4 = FactoryGirl.create(:question, :approved_at => Time.now)
@@ -73,17 +73,8 @@ describe "As a normal user, Questions" do
     question_ids.should include(q2.id)
     question_ids.should_not include(q3.id)
     question_ids.should_not include(q4.id)
-  end
 
-  it "doesn't include answers in index json" do
-    q = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
-    answer = FactoryGirl.create(:answer, :question => q)
-
-    get league_questions_path(league), :auth_token => user.authentication_token,
-                                       :format => "json"
-
-    json = decode_json(response.body)[0]["question"] 
-    json["answers"].should be_nil
+    json.first["question"]["answers"].should_not be_nil
   end
 
   it "deletes an unapproved question" do
