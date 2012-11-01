@@ -21,6 +21,7 @@ class Bet < ActiveRecord::Base
   after_destroy :refund_bet_to_user!
 
   scope :made_after, lambda{|after_date| where("created_at > ?", after_date)}
+  scope :outstanding, where(:payout => nil)
 
   # league_id is included in bets so that we can easily get a list of bets in a league
   def answer=(val)
@@ -57,8 +58,12 @@ class Bet < ActiveRecord::Base
     @probability_scale ||= columns.find {|r| r.name == 'probability'}.scale
   end
 
+  def payout_when_correct
+    amount + amount * (1/probability - 1)
+  end
+
   def pay_bettor!
-    self.payout = amount + amount * (1/probability - 1)
+    self.payout = payout_when_correct
     membership = user.membership_in_league(answer.question.league)
     if membership # in case they left the league
       membership.balance += payout

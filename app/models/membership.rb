@@ -14,6 +14,9 @@ class Membership < ActiveRecord::Base
 
   before_validation :set_balance_to_league_initial, :on => :create
 
+  def outstanding_bets_value
+    user.bets.outstanding.where(:league_id => league.id).reduce(0){|sum, bet| sum + bet.amount }
+  end
 
 private
 

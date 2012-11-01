@@ -123,4 +123,10 @@ describe Bet do
     bet.league_id.should == answer.question.league_id
   end
 
+  it "#payout_when_correct gives the correct payout" do
+    bet = Bet.new(:amount => 2)
+    bet.probability = 0.2 # 4:1 odds
+    bet.payout_when_correct.should == 10
+  end
+
 end
