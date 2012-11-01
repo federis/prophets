@@ -28,6 +28,8 @@ describe "As a normal user, Answers" do
     json['correct'].should be_nil
     json['judged_at'].should be_nil
     json['judge_id'].should be_nil
+    json['correctness_known_at'].should be_nil
+    json.keys.should include('correct', 'judged_at', 'judge_id', 'correctness_known_at')
   end
 
   it "updates an answer in an unapproved question" do
