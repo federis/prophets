@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121029190925) do
+ActiveRecord::Schema.define(:version => 20121101155243) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
@@ -95,9 +95,10 @@ ActiveRecord::Schema.define(:version => 20121029190925) do
     t.integer  "user_id"
     t.integer  "approver_id"
     t.datetime "approved_at"
-    t.datetime "created_at",                                  :null => false
-    t.datetime "updated_at",                                  :null => false
-    t.decimal  "initial_pool", :precision => 15, :scale => 2
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
+    t.decimal  "initial_pool",      :precision => 15, :scale => 2
+    t.datetime "betting_closes_at"
   end
 
   add_index "questions", ["approver_id"], :name => "index_questions_on_approver_id"

@@ -15,8 +15,16 @@ class Answer < ActiveRecord::Base
 
   before_validation :set_current_probability_to_intial, :on => :create
 
+  def open_for_betting?
+    !judged? && question.open_for_betting?
+  end
+
   def total_pool_share
     bet_total + initial_probability * question.initial_pool
+  end
+
+  def judged?
+    !judged_at.nil?
   end
 
   def judge!(is_correct, judging_user, known_at = nil)

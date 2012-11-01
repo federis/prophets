@@ -8,32 +8,44 @@ describe Bet do
     user
   end
   let(:membership){ user.membership_in_league(answer.question.league) }
+  let(:new_bet){ FactoryGirl.build(:bet, :answer => answer, :user => user) }
 
-  it "can't make a bet with an amount larger than the league's max bet" do
-    bet = FactoryGirl.build(:bet, :answer => answer, :amount => answer.question.league.max_bet+1)
+  it "can't be made when betting is closed" do
+    answer.stub(:open_for_betting?).and_return(false)
+
+    new_bet.should_not be_valid
+    new_bet.errors[:base].should include(I18n.t('activerecord.errors.models.bet.betting_has_been_closed'))
+  end
+
+  it "can't be made with an amount greater than that of the user's balance in that league" do
+    new_bet.amount = membership.balance + 1
+    new_bet.should_not be_valid
+    new_bet.errors[:base].should include(I18n.t('activerecord.errors.models.bet.insufficient_funds_to_cover_bet'))
+  end
+
+  it "can't be made with an amount larger than the league's max bet" do
+    new_bet.amount = answer.question.league.max_bet+1
     
-    bet.should_not be_valid
-    bet.errors_on(:amount).should include("must be less than or equal to #{answer.question.league.max_bet}")
+    new_bet.should_not be_valid
+    new_bet.errors_on(:amount).should include("must be less than or equal to #{answer.question.league.max_bet}")
   end  
 
   it "increments the answer's bet total by the bet amount after creation" do
-    bet = FactoryGirl.build(:bet, :answer => answer, :user => user)
     before_total = answer.bet_total
-    bet.save
+    new_bet.save
     answer.reload
 
-    answer.bet_total.should == before_total + bet.amount
+    answer.bet_total.should == before_total + new_bet.amount
   end
 
   it "decrements the user's balance in that league by the bet amount after creation" do
     membership = user.membership_in_league(answer.question.league)
 
-    bet = FactoryGirl.build(:bet, :answer => answer, :user => user)
     before_balance = membership.balance
-    bet.save
+    new_bet.save
     
     membership.reload
-    membership.balance.should == before_balance - bet.amount
+    membership.balance.should == before_balance - new_bet.amount
   end
 
   it "decrements the answer's bet total by the bet amount and refunds the bet to the user after destruction" do
@@ -94,7 +106,6 @@ describe Bet do
     membership.reload.balance.should == before_balance + payout
     bet.reload.payout.should == payout
   end
-
 
   it "#pay_bettor! doesn't increment the user's balance or set the bet's payout if the save fails" do
     bet = FactoryGirl.create(:bet, :answer => answer, :user => user)

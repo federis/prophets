@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe "As a normal user, Questions" do
   let(:user){ FactoryGirl.create(:user) }
-  let(:question_attrs){ FactoryGirl.attributes_for(:question) }
   let(:league){ FactoryGirl.create(:league_with_member, :member => user) }
 
   it "creates a question but doesn't approve it" do
+    question_attrs = FactoryGirl.attributes_for(:question).except(:approved_at, :approver_id)
     count = league.questions.count
     approved_count = league.questions.approved.count
     
@@ -25,6 +25,7 @@ describe "As a normal user, Questions" do
     json['desc'].should == question_attrs[:desc]
     json['approver_id'].should be_nil
     json['approved_at'].should be_nil
+    json['betting_closes_at'].should == question_attrs[:betting_closes_at].iso8601
   end
 
   it "shows an approved question" do
@@ -41,7 +42,7 @@ describe "As a normal user, Questions" do
     json['content'].should == question.content
     json['user_id'].should == question.user_id
     json['league_id'].should == league.id
-    json['desc'].should == question_attrs[:desc]
+    json['desc'].should == question.desc
     json['approver_id'].should == question.approver_id
     json['approved_at'].should == question.approved_at.iso8601
     
@@ -58,9 +59,9 @@ describe "As a normal user, Questions" do
   end
 
   it "lists the approved questions in a league" do
-    q1 = FactoryGirl.create(:question_with_answers, :league => league, :approved_at => Time.now)
+    q1 = FactoryGirl.create(:question, :with_answers, :league => league, :approved_at => Time.now)
     q2 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
-    q3 = FactoryGirl.create(:question, :league => league)
+    q3 = FactoryGirl.create(:question, :unapproved, :league => league)
     q4 = FactoryGirl.create(:question, :approved_at => Time.now)
 
     get league_questions_path(league), :auth_token => user.authentication_token,

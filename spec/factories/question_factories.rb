@@ -4,20 +4,26 @@ FactoryGirl.define do
     desc ""
     league
     user
+    betting_closes_at { 1.month.from_now }
+    approved_at { 1.day.ago }
+    approver
 
-    after(:build) do |question, evaluator|
-      unless evaluator.approved_at.nil?
-        question.stub(:approved_at_changed?).and_return(false)
-      end
+    before(:create) do |question, evaluator|
+      question.stub(:approved?).and_return(false)
+      question.stub(:check_answer_initial_probabilities).and_return(true)
     end
 
     after(:create) do |question, evaluator|
-      unless evaluator.approved_at.nil?
-        question.unstub(:approved_at_changed?)
-      end
+      question.unstub(:approved?)
+      question.unstub(:check_answer_initial_probabilities)
     end
 
-    factory :question_with_answers do
+    trait :unapproved do
+      approved_at nil
+      approver nil
+    end
+
+    trait :with_answers do
       ignore do
         answer_count 3
       end

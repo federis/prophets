@@ -7,7 +7,12 @@ en:
       models:
         question:
           attributes:
+            betting_closes_at:
+              cant_be_in_past: "can't be in the past"
             answers:
               invalid_initial_probabilities_sum: "must have probabilities summing to 100% for publication"
+        bet:
+          betting_has_been_closed: "Betting has been closed"
+          insufficient_funds_to_cover_bet: "User does not have sufficient funds to make this bet"
   tokens:
     fb_user_not_found: "Facebook user does not exist"

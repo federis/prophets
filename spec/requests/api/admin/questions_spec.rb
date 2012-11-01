@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe "As an admin, Questions" do
   let(:admin){ FactoryGirl.create(:user, :name => "Admin") }
-  let(:question_attrs){ FactoryGirl.attributes_for(:question) }
   let(:league){ FactoryGirl.create(:league_with_admin, :admin => admin) }
 
   it "creates a question" do
+    question_attrs = FactoryGirl.attributes_for(:question).except(:approved_at, :approver_id)
     count = league.questions.count
     
     post league_questions_path(league), :question => question_attrs,
@@ -26,7 +26,7 @@ describe "As an admin, Questions" do
   end
 
   it "updates a question" do
-    question = FactoryGirl.create(:question, :league => league)
+    question = FactoryGirl.create(:question, :with_answers, :league => league)
 
     put league_question_path(league, question), :question => { :content => "updated content" },
                                                 :auth_token => admin.authentication_token,
@@ -39,7 +39,7 @@ describe "As an admin, Questions" do
   end
 
   it "approves a question" do
-    question = FactoryGirl.create(:question_with_answers, :league => league)
+    question = FactoryGirl.create(:question, :with_answers, :league => league)
 
     put approve_league_question_path(league, question), :auth_token => admin.authentication_token,
                                                         :format => "json"
@@ -53,7 +53,7 @@ describe "As an admin, Questions" do
 
   it "lists the unapproved questions in a league" do
     q1 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
-    q2 = FactoryGirl.create(:question, :league => league)
+    q2 = FactoryGirl.create(:question, :unapproved, :league => league)
 
     get league_questions_path(league), :auth_token => admin.authentication_token,
                                        :type => "unapproved",

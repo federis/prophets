@@ -11,6 +11,9 @@ class Bet < ActiveRecord::Base
   validates :bonus, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 2 }, 
                     :unless => Proc.new{|b| b.bonus.nil? }
 
+  validate :ensure_user_has_necessary_funds, :on => :create
+  validate :ensure_betting_is_open, :on => :create
+
   before_validation :set_probability_to_answer_current, :on => :create
 
   after_create :increment_answer_bet_total!
@@ -79,6 +82,10 @@ class Bet < ActiveRecord::Base
     save!
   end
 
+  def membership
+    @membership ||= user.membership_in_league(answer.question.league)
+  end
+
 private
 
   def set_probability_to_answer_current
@@ -96,7 +103,6 @@ private
   end
 
   def decrement_user_balance_by_bet_amount!
-    membership = user.membership_in_league(answer.question.league)
     membership.balance -= amount
     membership.save!
   end
@@ -106,9 +112,16 @@ private
   end
 
   def refund_bet_to_user!
-    membership = user.membership_in_league(answer.question.league)
     membership.balance += amount
     membership.save!
+  end
+
+  def ensure_user_has_necessary_funds 
+    errors[:base] << errors.generate_message(:base, :insufficient_funds_to_cover_bet) unless membership.balance >= amount
+  end
+  
+  def ensure_betting_is_open
+    errors[:base] << errors.generate_message(:base, :betting_has_been_closed) unless answer.open_for_betting?
   end
 
 end

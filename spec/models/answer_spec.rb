@@ -17,7 +17,7 @@ describe Answer do
   end
 
   it "#total_pool_share gives answer's total bet value plus the answer's portion of the initial pool" do
-    question = FactoryGirl.create(:question_with_answers, :answer_count => 3)
+    question = FactoryGirl.create(:question, :with_answers, :answer_count => 3)
     a = question.answers.first
     a.bet_total = 1000
     a.save
@@ -53,8 +53,24 @@ describe Answer do
     Answer.process_bets_for_judged_answer(answer_with_bets.id, false)
   end
 
+  it "is open for betting if the question is open for betting and the answer has not been judged" do
+    answer = FactoryGirl.build(:answer, :judged_at => 1.day.ago)
+    answer.question.stub(:open_for_betting?).and_return(false)
+    answer.should_not be_open_for_betting
+
+    answer.judged_at = nil
+    answer.should_not be_open_for_betting
+
+    answer.judged_at = 1.day.ago
+    answer.question.stub(:open_for_betting?).and_return(true)
+    answer.should_not be_open_for_betting
+
+    answer.judged_at = nil
+    answer.should be_open_for_betting
+  end
+
   describe "#judge!" do
-    let(:question){ FactoryGirl.create(:question_with_answers) }
+    let(:question){ FactoryGirl.create(:question, :with_answers) }
     before(:each) do
       @answer = question.answers.first
       membership = user.membership_in_league(question.league)
