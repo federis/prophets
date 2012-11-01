@@ -45,7 +45,7 @@ describe "As a normal user, Questions" do
     json['approver_id'].should == question.approver_id
     json['approved_at'].should == question.approved_at.iso8601
     
-    answer_json = json['answers'][0]['answer']
+    answer_json = json['answers'].first
     answer_json['id'].should == answer.id
     answer_json['content'].should == answer.content
     answer_json['question_id'].should == question.id
