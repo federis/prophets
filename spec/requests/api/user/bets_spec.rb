@@ -31,6 +31,8 @@ describe "As a normal user, Bets" do
     json['amount'].should == bet_attrs[:amount]
     json['probability'].should == before_prob
     json['bonus'].should be_nil
+    json['payout'].should be_nil
+    json.keys.should include('payout', 'bonus')
   end
 
   it "gets a list of the user's bets in a league" do
