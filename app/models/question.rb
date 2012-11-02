@@ -28,6 +28,10 @@ class Question < ActiveRecord::Base
     approved? && betting_closes_at > Time.now
   end
 
+  def bet_count
+    @bet_count ||= answers.reduce(0){|sum, answer| sum + answer.bets.count }
+  end
+
   def approve!(approving_user)
     raise CanCan::AccessDenied unless approving_user.can? :approve, self
 

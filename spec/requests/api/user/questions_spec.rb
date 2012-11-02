@@ -25,6 +25,8 @@ describe "As a normal user, Questions" do
     json['desc'].should == question_attrs[:desc]
     json['approver_id'].should be_nil
     json['approved_at'].should be_nil
+    json['comment_count'].should == 0
+    json['bet_count'].should == 0
     json['betting_closes_at'].should == question_attrs[:betting_closes_at].iso8601
   end
 
