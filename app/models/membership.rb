@@ -18,6 +18,10 @@ class Membership < ActiveRecord::Base
     user.bets.outstanding.where(:league_id => league.id).reduce(0){|sum, bet| sum + bet.amount }
   end
 
+  def rank
+    @rank ||= league.memberships.where(["memberships.balance > ?", balance]).count + 1
+  end
+
 private
 
   def set_balance_to_league_initial

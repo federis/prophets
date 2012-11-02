@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121101155243) do
+ActiveRecord::Schema.define(:version => 20121102141310) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(:version => 20121101155243) do
     t.datetime "updated_at",                                               :null => false
   end
 
+  add_index "memberships", ["league_id", "balance"], :name => "index_memberships_on_league_id_and_balance"
   add_index "memberships", ["league_id"], :name => "index_league_memberships_on_league_id"
   add_index "memberships", ["user_id"], :name => "index_league_memberships_on_user_id"
 

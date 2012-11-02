@@ -46,6 +46,7 @@ describe "As a normal user, Memberships" do
     json['user_id'].should == user.id
     json['role'].should == Membership::ROLES[:member]
     json['balance'].should == public_league.initial_balance
+    json['rank'].should == 1
   end
 
   it "deletes a league membership" do
