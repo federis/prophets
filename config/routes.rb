@@ -9,12 +9,16 @@ Prophets::Application.routes.draw do
     end
 
     resources :bets, :only => :index
+
+    resources :comments
   end
 
   resources :questions, :only => nil do
     resources :answers do
       put "judge", :on => :member
     end
+
+    resources :comments
   end
 
   resources :answers, :only => nil do

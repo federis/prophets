@@ -35,6 +35,17 @@ describe "As a normal user," do
       can_perform_actions("the league", :read){ league }        
       can_perform_actions("", :read_approved_questions){ league }
       cannot_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
+
+      let(:own_league_comment){ FactoryGirl.build(:comment, :for_league, :user => user, :commentable => league) }
+      can_perform_actions("league comments", :create, :update, :destroy){ own_league_comment }
+      let(:own_question_comment){ FactoryGirl.build(:comment, :for_question, :user => user, :commentable => league) }
+      can_perform_actions("question comments", :create, :update, :destroy){ own_question_comment }
+      can_perform_actions("comments", :index){ Comment }
+
+      let(:not_own_league_comment){ FactoryGirl.build(:comment, :for_league, :commentable => league) }
+      cannot_perform_actions("league comments owned by another user", :create, :update, :destroy){ not_own_league_comment }
+      let(:not_own_question_comment){ FactoryGirl.build(:comment, :for_question, :commentable => league) }
+      cannot_perform_actions("question comments owned by another user", :create, :update, :destroy){ not_own_question_comment }
     end
 
     context "where user is not a member" do
@@ -44,6 +55,12 @@ describe "As a normal user," do
       can_perform_actions("the league", :read){ league }        
       can_perform_actions("", :read_approved_questions){ league }
       cannot_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
+
+      let(:own_league_comment){ FactoryGirl.build(:comment, :for_league, :user => user, :commentable => league) }
+      cannot_perform_actions("league comments", :create, :update, :destroy){ own_league_comment }
+      let(:own_question_comment){ FactoryGirl.build(:comment, :for_question, :user => user, :commentable => league) }
+      cannot_perform_actions("question comments", :create, :update, :destroy){ own_question_comment }
+      cannot_perform_actions("comments", :index){ Comment }
     end
   end
 

@@ -42,6 +42,9 @@ class Ability
           can :create, Bet do |b|
             b.user == user && b.answer.question.approved?
           end
+
+          can :index, Comment
+          can [:create, :update, :destroy], Comment, :user_id => user.id
         end
 
         if user.is_admin_of_league?(league)
@@ -50,6 +53,7 @@ class Ability
           can :manage, Question
           can :manage, Answer
           can :manage, Bet
+          can :manage, Comment
         end
       end
     end

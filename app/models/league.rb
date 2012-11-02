@@ -1,6 +1,8 @@
 class League < ActiveRecord::Base
   POOL_MULTIPLIER = 10
 
+  acts_as_commentable
+
   attr_accessible :name, :priv, :max_bet, :initial_balance
 
   belongs_to :user #the league creator

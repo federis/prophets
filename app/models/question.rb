@@ -1,10 +1,12 @@
 class Question < ActiveRecord::Base
+  acts_as_commentable
+
+  attr_accessible :content, :desc, :betting_closes_at
+
   belongs_to :league
   belongs_to :user
   belongs_to :approver, :class_name => "User"
   has_many :answers
-  
-  attr_accessible :content, :desc, :betting_closes_at
 
   validates :user_id, :presence => true
   validates :league_id, :presence => true

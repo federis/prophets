@@ -45,6 +45,10 @@ describe "As a league admin," do
     let(:bet){ FactoryGirl.build(:bet, :answer => answer) }
     can_perform_actions("bets", :create, :destroy){ bet }
     
+    let(:league_comment){ FactoryGirl.build(:comment, :for_league) }
+    can_perform_actions("league comments", :create, :update, :destroy){ league_comment }
+    let(:question_comment){ FactoryGirl.build(:comment, :for_question) }
+    can_perform_actions("question comments", :create, :update, :destroy){ question_comment }
   end
 
 
