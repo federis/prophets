@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121102153357) do
+ActiveRecord::Schema.define(:version => 20121109190912) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
@@ -32,7 +32,6 @@ ActiveRecord::Schema.define(:version => 20121102153357) do
   add_index "answers", ["user_id"], :name => "index_answers_on_user_id"
 
   create_table "bets", :force => true do |t|
-    t.integer  "user_id"
     t.integer  "answer_id"
     t.decimal  "amount",         :precision => 12, :scale => 2
     t.decimal  "probability",    :precision => 6,  :scale => 5
@@ -41,11 +40,10 @@ ActiveRecord::Schema.define(:version => 20121102153357) do
     t.datetime "updated_at",                                    :null => false
     t.datetime "invalidated_at"
     t.decimal  "payout",         :precision => 15, :scale => 2
-    t.integer  "league_id"
+    t.integer  "membership_id"
   end
 
   add_index "bets", ["answer_id"], :name => "index_bets_on_answer_id"
-  add_index "bets", ["user_id"], :name => "index_bets_on_user_id"
 
   create_table "comments", :force => true do |t|
     t.string   "title",            :limit => 50, :default => ""

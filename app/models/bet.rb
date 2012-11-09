@@ -1,10 +1,8 @@
 class Bet < ActiveRecord::Base
   belongs_to :answer
-  belongs_to :user
-  belongs_to :league #this is denormalized to make it easier to get a list of bets in a league
-  attr_accessible :amount, :answer_id
+  belongs_to :membership
+  attr_accessible :amount
 
-  validates :user_id, :presence => true
   validates :answer_id, :presence => true
   validates :amount, :numericality => { :greater_than_or_equal_to => 0, :less_than_or_equal_to => :league_max_bet }
   validates :probability, :numericality => { :greater_than => 0, :less_than => 1 }
@@ -13,6 +11,7 @@ class Bet < ActiveRecord::Base
 
   validate :ensure_user_has_necessary_funds, :on => :create
   validate :ensure_betting_is_open, :on => :create
+  validate :ensure_answer_and_membership_in_same_league
 
   before_validation :set_probability_to_answer_current, :on => :create
 
@@ -26,13 +25,8 @@ class Bet < ActiveRecord::Base
   scope :made_after, lambda{|after_date| where("created_at > ?", after_date)}
   scope :outstanding, where(:payout => nil)
 
-  # league_id is included in bets so that we can easily get a list of bets in a league
-  def answer=(val)
-    super
-    self.league_id = answer.question.league_id 
-  end
-
   def league_max_bet
+    #possibly should be membership.league instead
     answer.question.league.max_bet
   end
 
@@ -67,7 +61,6 @@ class Bet < ActiveRecord::Base
 
   def pay_bettor!
     self.payout = payout_when_correct
-    membership = user.membership_in_league(answer.question.league)
     if membership # in case they left the league
       membership.balance += payout
       Bet.transaction do
@@ -80,10 +73,6 @@ class Bet < ActiveRecord::Base
   def zero_payout!
     self.payout = 0
     save!
-  end
-
-  def membership
-    @membership ||= user.membership_in_league(answer.question.league)
   end
 
 private
@@ -122,6 +111,10 @@ private
   
   def ensure_betting_is_open
     errors[:base] << errors.generate_message(:base, :betting_has_been_closed) unless answer.open_for_betting?
+  end
+
+  def ensure_answer_and_membership_in_same_league
+    errors[:base] << errors.generate_message(:base, :answer_and_membership_same_league) unless membership.league_id == answer.question.league_id
   end
 
 end

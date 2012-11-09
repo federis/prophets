@@ -22,7 +22,14 @@ class League < ActiveRecord::Base
 
   after_create :give_creator_admin_membership
 
+  before_validation :set_default_values, :on => :create
+
 private
+
+  def set_default_values
+    self.max_bet ||= 100000 #100k
+    self.initial_balance ||= 10000 #10k
+  end
 
   def give_creator_admin_membership
     lm = Membership.new

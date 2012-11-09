@@ -8,6 +8,7 @@ describe Answer do
     user.leagues << question.league
     user
   end
+  let(:membership){ user.membership_in_league(question.league) }
 
   it "sets current prob to initial prob on creation" do
     a = FactoryGirl.build(:answer)
@@ -73,7 +74,6 @@ describe Answer do
     let(:question){ FactoryGirl.create(:question, :with_answers) }
     before(:each) do
       @answer = question.answers.first
-      membership = user.membership_in_league(question.league)
       membership.role = Membership::ROLES[:admin]
       membership.save
     end
@@ -112,8 +112,8 @@ describe Answer do
     end
 
     it "invalidates bets made after the known_at date" do
-      bet1 = FactoryGirl.create(:bet, :answer => @answer, :user => user, :created_at => 1.week.ago)
-      bet2 = FactoryGirl.create(:bet, :answer => @answer, :user => user)
+      bet1 = FactoryGirl.create(:bet, :answer => @answer, :membership => membership, :created_at => 1.week.ago)
+      bet2 = FactoryGirl.create(:bet, :answer => @answer, :membership => membership)
       
       @answer.judge!(true, user, 2.days.ago)
 

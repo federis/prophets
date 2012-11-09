@@ -8,7 +8,8 @@ describe Bet do
     user
   end
   let(:membership){ user.membership_in_league(answer.question.league) }
-  let(:new_bet){ FactoryGirl.build(:bet, :answer => answer, :user => user) }
+  let(:new_bet){ FactoryGirl.build(:bet, :answer => answer, :membership => membership) }
+  let(:bet){ FactoryGirl.create(:bet, :answer => answer, :membership => membership) }
 
   it "can't be made when betting is closed" do
     answer.stub(:open_for_betting?).and_return(false)
@@ -39,8 +40,6 @@ describe Bet do
   end
 
   it "decrements the user's balance in that league by the bet amount after creation" do
-    membership = user.membership_in_league(answer.question.league)
-
     before_balance = membership.balance
     new_bet.save
     
@@ -49,7 +48,7 @@ describe Bet do
   end
 
   it "decrements the answer's bet total by the bet amount and refunds the bet to the user after destruction" do
-    bet = FactoryGirl.create(:bet, :answer => answer, :user => user)
+    bet #trigger creation
     before_total = answer.bet_total
     before_balance = membership.balance
 
@@ -61,7 +60,7 @@ describe Bet do
   end
 
   it "#invalidate! decrements the answer's bet total by the bet amount, refunds the bet to the user, and sets the invalidated_at timestamp and saves the bet & answer" do
-    bet = FactoryGirl.create(:bet, :answer => answer, :user => user)
+    bet #trigger creation
     before_total = bet.answer.bet_total
     before_balance = membership.balance
 
@@ -77,13 +76,14 @@ describe Bet do
   end
 
   it "updates probabilities for all answers in the question after creation" do
-    bet = user.bets.build(:answer_id => answer.id, :amount => 1000)
+    bet = membership.bets.build(:amount => 1000)
+    bet.answer = answer
     bet.answer.question.should_receive(:update_answer_probabilities!)
     bet.save
   end
 
   it "doesn't modify answer bet total or user balance if invalidation fails" do
-    bet = FactoryGirl.create(:bet, :answer => answer, :user => user)
+    bet #trigger creation
     before_total = bet.answer.bet_total
     before_balance = membership.balance
 
@@ -98,7 +98,7 @@ describe Bet do
   end
 
   it "#pay_bettor! increments the user's balance in that league and sets the bet's payout" do
-    bet = FactoryGirl.create(:bet, :answer => answer, :user => user)
+    bet #trigger creation
     before_balance = membership.balance
 
     bet.pay_bettor!
@@ -108,7 +108,7 @@ describe Bet do
   end
 
   it "#pay_bettor! doesn't increment the user's balance or set the bet's payout if the save fails" do
-    bet = FactoryGirl.create(:bet, :answer => answer, :user => user)
+    bet #trigger creation
     before_balance = membership.balance
 
     bet.stub(:save!){ raise ActiveRecord::RecordNotSaved }
@@ -119,21 +119,13 @@ describe Bet do
   end
 
   it "#zero_payout! sets bet payout to zero and saves the bet" do
-    bet = FactoryGirl.create(:bet, :answer => answer, :user => user)
     bet.payout.should be_nil
 
     bet.zero_payout!
 
     bet.reload.payout.should == 0
   end
-
-  it "sets the league_id whenever the bet's answer is set" do
-    bet = Bet.new(:amount => 2)
-    bet.answer.should be_nil
-    bet.answer = answer
-    bet.league_id.should == answer.question.league_id
-  end
-
+  
   it "#payout_when_correct gives the correct payout" do
     bet = Bet.new(:amount => 2)
     bet.probability = 0.2 # 4:1 odds

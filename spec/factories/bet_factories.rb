@@ -3,6 +3,6 @@ FactoryGirl.define do
     amount 2
     probability 0.2
     answer
-    user
+    membership
   end
 end

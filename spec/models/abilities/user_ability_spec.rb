@@ -84,6 +84,8 @@ describe "As a normal user," do
         league.users << user
       end
 
+      let(:membership_in_league){ user.membership_in_league(league) }
+
       can_perform_actions("the league", :read, :read_approved_questions){ league }
       cannot_perform_actions("the league", :create, :update, :destroy, :read_unapproved_questions, :read_all_questions){ league }
       cannot_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
@@ -96,7 +98,7 @@ describe "As a normal user," do
       can_perform_actions("unapproved questions", :create, :destroy){ own_unapproved_question }
 
       let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }
-      let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
+      let(:bet){ FactoryGirl.build(:bet, :membership => membership_in_league, :answer => answer) }
       can_perform_actions("bets", :create){ bet }
       can_perform_actions("bets", :index){ Bet }
       cannot_perform_actions("bets", :destroy){ bet }
@@ -122,9 +124,6 @@ describe "As a normal user," do
         let(:question){ FactoryGirl.build(:question, :league => league, :approver => nil, :approved_at => nil) }
         let(:answer){ FactoryGirl.build(:answer, :question => question) }
         cannot_perform_actions("answers", :create, :update, :destroy, :judge){ answer }
-
-        let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
-        cannot_perform_actions("bets", :create){ bet }
       end
 
     end
@@ -140,7 +139,7 @@ describe "As a normal user," do
       cannot_perform_actions("questions owned by user", :read, :create, :destroy, :approve, :update){ own_approved_question }
 
       let(:answer){ FactoryGirl.build(:answer, :question => own_approved_question) }
-      let(:bet){ FactoryGirl.build(:bet, :user => user, :answer => answer) }
+      let(:bet){ FactoryGirl.build(:bet, :answer => answer, :membership => FactoryGirl.build(:membership, :user => user)) }
       cannot_perform_actions("bets", :create, :destroy){ bet }
       cannot_perform_actions("bets", :index){ Bet }
 

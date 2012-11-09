@@ -6,7 +6,7 @@ class BetsController < ApplicationController
 
   def index
     authorize! :index, Bet
-    @bets = current_user.bets.where(:league_id => current_league.id)
+    @bets = current_membership.bets
     @include_answer = true
     @include_question = true
     respond_with current_league, @bets
@@ -14,8 +14,7 @@ class BetsController < ApplicationController
 
   def create
     @bet = @answer.bets.build(params[:bet])
-    @bet.user = current_user
-    @bet.league = @answer.question.league
+    @bet.membership = current_membership
     authorize! :create, @bet
     @bet.save
     respond_with @answer, @bet

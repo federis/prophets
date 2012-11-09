@@ -12,7 +12,9 @@ FactoryGirl.define do
       end
 
       after(:create) do |answer, evaluator|
-        FactoryGirl.create_list(:bet, evaluator.bet_count, :answer => answer, :user => evaluator.bet_user || answer.user)
+        user = evaluator.bet_user || answer.user
+        membership = user.membership_in_league(answer.question.league) || FactoryGirl.create(:membership, :league => answer.question.league, :user => user)
+        FactoryGirl.create_list(:bet, evaluator.bet_count, :answer => answer, :membership => membership)
       end
     end
   end

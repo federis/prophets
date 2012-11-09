@@ -68,7 +68,9 @@ private
   end
 
   def ensure_betting_closes_in_future
-    errors[:betting_closes_at] << errors.generate_message(:betting_closes_at, :cant_be_in_past) if betting_closes_at <= Time.now
+    if !betting_closes_at.blank? && betting_closes_at <= Time.now
+      errors[:betting_closes_at] << errors.generate_message(:betting_closes_at, :cant_be_in_past) 
+    end
   end
 
 end

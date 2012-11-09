@@ -14,5 +14,6 @@ en:
         bet:
           betting_has_been_closed: "Betting has been closed"
           insufficient_funds_to_cover_bet: "User does not have sufficient funds to make this bet"
+          answer_and_membership_same_league: "A bet's answer and membership must be in the same league"
   tokens:
     fb_user_not_found: "Facebook user does not exist"

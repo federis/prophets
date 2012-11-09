@@ -4,7 +4,7 @@ class Answer < ActiveRecord::Base
   belongs_to :judge, :class_name => "User"
   has_many :bets
 
-  attr_accessible :content, :question_id, :initial_probability
+  attr_accessible :content, :initial_probability
 
   validates :content, :presence => true, :length => { :in => 1..250 }
   validates :question_id, :presence => true

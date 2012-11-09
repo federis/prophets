@@ -1,6 +1,8 @@
 class Membership < ActiveRecord::Base
   belongs_to :user
   belongs_to :league
+  has_many :bets
+
   attr_accessible :name, :user_id
 
   ROLES = { :admin => 1, :member => 2 }
@@ -15,7 +17,7 @@ class Membership < ActiveRecord::Base
   before_validation :set_balance_to_league_initial, :on => :create
 
   def outstanding_bets_value
-    user.bets.outstanding.where(:league_id => league.id).reduce(0){|sum, bet| sum + bet.amount }
+    bets.outstanding.reduce(0){|sum, bet| sum + bet.amount }
   end
 
   def rank

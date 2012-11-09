@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :created_leagues, :class_name => "League"
   has_many :memberships
   has_many :leagues, :through => :memberships
-  has_many :bets
+  has_many :bets, :through => :memberships
 
   before_save :ensure_authentication_token
 
