@@ -1,6 +1,6 @@
 class Membership < ActiveRecord::Base
   belongs_to :user
-  belongs_to :league
+  belongs_to :league, :counter_cache => true
   has_many :bets
 
   attr_accessible :name, :user_id

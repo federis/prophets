@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121109190912) do
+ActiveRecord::Schema.define(:version => 20121112165815) do
 
   create_table "answers", :force => true do |t|
     t.string   "content"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20121109190912) do
     t.datetime "judged_at"
     t.integer  "judge_id"
     t.datetime "correctness_known_at"
+    t.integer  "bets_count",                                          :default => 0
   end
 
   add_index "answers", ["question_id"], :name => "index_answers_on_question_id"
@@ -77,12 +78,15 @@ ActiveRecord::Schema.define(:version => 20121109190912) do
 
   create_table "leagues", :force => true do |t|
     t.string   "name"
-    t.boolean  "priv",                                           :default => false
+    t.boolean  "priv",                                             :default => false
     t.integer  "user_id"
-    t.datetime "created_at",                                                        :null => false
-    t.datetime "updated_at",                                                        :null => false
-    t.decimal  "max_bet",         :precision => 12, :scale => 2
-    t.decimal  "initial_balance", :precision => 12, :scale => 2
+    t.datetime "created_at",                                                          :null => false
+    t.datetime "updated_at",                                                          :null => false
+    t.decimal  "max_bet",           :precision => 12, :scale => 2
+    t.decimal  "initial_balance",   :precision => 12, :scale => 2
+    t.integer  "comments_count",                                   :default => 0
+    t.integer  "questions_count",                                  :default => 0
+    t.integer  "memberships_count",                                :default => 0
   end
 
   add_index "leagues", ["user_id"], :name => "index_leagues_on_user_id"
@@ -108,10 +112,11 @@ ActiveRecord::Schema.define(:version => 20121109190912) do
     t.integer  "user_id"
     t.integer  "approver_id"
     t.datetime "approved_at"
-    t.datetime "created_at",                                       :null => false
-    t.datetime "updated_at",                                       :null => false
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
     t.decimal  "initial_pool",      :precision => 15, :scale => 2
     t.datetime "betting_closes_at"
+    t.integer  "comments_count",                                   :default => 0
   end
 
   add_index "questions", ["approver_id"], :name => "index_questions_on_approver_id"

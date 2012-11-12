@@ -27,7 +27,7 @@ describe Question do
   end
 
   it "won't approve a question where the answer probabilities don't sum to 100" do
-    question = FactoryGirl.create(:question, :with_answers, :answer_count => 3, :approved_at => nil, :approver => nil)
+    question = FactoryGirl.create(:question, :with_answers, :answers_count => 3, :approved_at => nil, :approver => nil)
     answer = question.answers.first
     answer.initial_probability = 0.5
     answer.save
@@ -38,7 +38,7 @@ describe Question do
   end
 
   it "#total_pool gives the sum of the bets made in the question plus the question's initial pool" do
-    question = FactoryGirl.create(:question, :with_answers, :answer_count => 3)
+    question = FactoryGirl.create(:question, :with_answers, :answers_count => 3)
     question.answers.each{|a| a.bet_total = 1000; a.save }
 
     question.total_pool.should == 3000 + question.initial_pool

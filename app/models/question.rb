@@ -3,7 +3,7 @@ class Question < ActiveRecord::Base
 
   attr_accessible :content, :desc, :betting_closes_at
 
-  belongs_to :league
+  belongs_to :league, :counter_cache => true
   belongs_to :user
   belongs_to :approver, :class_name => "User"
   has_many :answers
@@ -28,8 +28,8 @@ class Question < ActiveRecord::Base
     approved? && betting_closes_at > Time.now
   end
 
-  def bet_count
-    @bet_count ||= answers.reduce(0){|sum, answer| sum + answer.bets.count }
+  def bets_count
+    @bets_count ||= answers.reduce(0){|sum, answer| sum + answer.bets.count }
   end
 
   def approve!(approving_user)

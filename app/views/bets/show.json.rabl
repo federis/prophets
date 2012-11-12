@@ -6,3 +6,9 @@ if @include_answer
     extends "answers/show"
   end
 end
+
+if @include_membership
+  child :membership do
+    extends "memberships/show"
+  end
+end

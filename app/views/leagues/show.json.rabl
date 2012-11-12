@@ -1,4 +1,2 @@
 object @league
-attributes :id, :user_id, :name, :priv, :max_bet, :initial_balance, :created_at, :updated_at
-node(:memberships_count){ |league| league.memberships.count }
-node(:questions_count){ |league| league.questions.count }
+attributes :id, :user_id, :name, :priv, :max_bet, :initial_balance, :memberships_count, :questions_count, :comments_count, :created_at, :updated_at

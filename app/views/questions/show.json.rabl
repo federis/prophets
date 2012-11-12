@@ -1,6 +1,5 @@
 object @question
-attributes :id, :content, :desc, :league_id, :user_id, :approver_id, :approved_at, :bet_count, :betting_closes_at, :created_at, :updated_at
-node(:comment_count){|question| question.comments.count }
+attributes :id, :content, :desc, :league_id, :user_id, :approver_id, :approved_at, :bets_count, :comments_count, :betting_closes_at, :created_at, :updated_at
 
 if @include_answers
   child :answers do

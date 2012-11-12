@@ -1,5 +1,5 @@
 class Bet < ActiveRecord::Base
-  belongs_to :answer
+  belongs_to :answer, :counter_cache => true
   belongs_to :membership
   attr_accessible :amount
 

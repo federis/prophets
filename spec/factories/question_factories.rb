@@ -25,11 +25,11 @@ FactoryGirl.define do
 
     trait :with_answers do
       ignore do
-        answer_count 3
+        answers_count 3
       end
 
       after(:create) do |question, evaluator|
-        FactoryGirl.create_list(:answer, evaluator.answer_count, :question => question, :user => question.user, :initial_probability => 1.0/evaluator.answer_count)
+        FactoryGirl.create_list(:answer, evaluator.answers_count, :question => question, :user => question.user, :initial_probability => 1.0/evaluator.answers_count)
       end
     end
   end

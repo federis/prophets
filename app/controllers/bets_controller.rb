@@ -17,6 +17,7 @@ class BetsController < ApplicationController
     @bet.membership = current_membership
     authorize! :create, @bet
     @bet.save
+    @include_membership = true
     respond_with @answer, @bet
   end
 

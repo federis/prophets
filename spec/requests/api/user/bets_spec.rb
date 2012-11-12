@@ -23,6 +23,7 @@ describe "As a normal user, Bets" do
     json = decode_json(response.body)['bet']
     json['id'].should_not be_nil
     json['membership_id'].should == membership.id
+    json['membership']['id'].should == membership.id
     json['answer_id'].should == answer.id
     json['amount'].should == bet_attrs[:amount]
     json['probability'].should == before_prob

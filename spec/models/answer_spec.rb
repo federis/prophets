@@ -18,7 +18,7 @@ describe Answer do
   end
 
   it "#total_pool_share gives answer's total bet value plus the answer's portion of the initial pool" do
-    question = FactoryGirl.create(:question, :with_answers, :answer_count => 3)
+    question = FactoryGirl.create(:question, :with_answers, :answers_count => 3)
     a = question.answers.first
     a.bet_total = 1000
     a.save
