@@ -13,7 +13,7 @@ Prophets::Application.routes.draw do
     resources :comments
   end
 
-  resources :questions, :only => nil do
+  resources :questions, :only => [] do
     resources :answers do
       put "judge", :on => :member
     end
@@ -21,7 +21,7 @@ Prophets::Application.routes.draw do
     resources :comments
   end
 
-  resources :answers, :only => nil do
+  resources :answers, :only => [] do
     resources :bets
   end
 

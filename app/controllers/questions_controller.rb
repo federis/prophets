@@ -29,11 +29,9 @@ class QuestionsController < ApplicationController
   def create
     @question = current_league.questions.build(params[:question])
     @question.user = current_user
-    assign_user_to_newly_created_answers
 
     authorize! :create, @question
     @question.save
-    @include_answers = true
     respond_with current_league, @question
   end
 
@@ -42,11 +40,9 @@ class QuestionsController < ApplicationController
     authorize! :update, @question
 
     @question.assign_attributes(params[:question])
-    assign_user_to_newly_created_answers
     authorize! :update, @question #needs to happen twice, so that they don't overwrite attrs on a question that they shouldn't
 
     @question.save
-    @include_answers = true
     respond_with current_league, @question
   end
 
@@ -65,12 +61,6 @@ class QuestionsController < ApplicationController
   end
 
 private
-
-  def assign_user_to_newly_created_answers
-    @question.answers.each do |a|
-      a.user = current_user if a.new_record? && a.user_id.nil?
-    end
-  end
 
   def type
     if params[:type] == "unapproved" || params[:type] == "all"

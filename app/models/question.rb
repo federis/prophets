@@ -7,7 +7,6 @@ class Question < ActiveRecord::Base
   belongs_to :user
   belongs_to :approver, :class_name => "User"
   has_many :answers
-  accepts_nested_attributes_for :answers, :allow_destroy => true
 
   validates :user_id, :presence => true
   validates :league_id, :presence => true
