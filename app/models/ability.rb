@@ -36,7 +36,7 @@ class Ability
           can :show, Question do |q| 
             q.approved? 
           end
-          can [:create, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id, :league_id => league.id
+          can [:create, :update, :destroy], Question, :approver_id => nil, :approved_at => nil, :user_id => user.id, :league_id => league.id
           can [:create, :update, :destroy], Answer, :question => { :user_id => user.id, :approved_at => nil, :league_id => league.id }, :user_id => user.id
           can :index, Bet
           can :create, Bet, :membership => { :user_id => user.id, :league_id => league.id }, :answer => {:question => {:league_id => league.id }}

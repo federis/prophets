@@ -6,7 +6,7 @@ class Answer < ActiveRecord::Base
 
   attr_accessible :content, :initial_probability
 
-  validates :content, :presence => true, :length => { :in => 1..250 }
+  validates :content, :presence => true, :length => { :in => 1..100 }
   validates :question_id, :presence => true
   validates :user_id, :presence => true
   validates :judge_id, :presence => true, :if => Proc.new{|a| !a.judged_at.nil? }

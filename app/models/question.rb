@@ -1,12 +1,13 @@
 class Question < ActiveRecord::Base
   acts_as_commentable
 
-  attr_accessible :content, :desc, :betting_closes_at
+  attr_accessible :content, :desc, :betting_closes_at, :answers_attributes
 
   belongs_to :league, :counter_cache => true
   belongs_to :user
   belongs_to :approver, :class_name => "User"
   has_many :answers
+  accepts_nested_attributes_for :answers, :allow_destroy => true
 
   validates :user_id, :presence => true
   validates :league_id, :presence => true
@@ -23,6 +24,14 @@ class Question < ActiveRecord::Base
   scope :unapproved, where('questions.approved_at IS NULL')
 
   before_validation :set_initial_pool, :on => :create
+
+  def answers_attributes=(attrs)
+    answers.each do |answer|
+      attrs << { :id => answer.id, :_destroy => '1' } unless attrs.collect{|an| an[:id] }.include?(answer.id.to_s)
+    end
+
+    super #we can do this because of the initializer nested_attributes_setter.rb
+  end
 
   def open_for_betting?
     approved? && betting_closes_at > Time.now

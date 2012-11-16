@@ -4,28 +4,29 @@ class AnswersController < ApplicationController
   self.responder = ApiResponder
   respond_to :json
 
-  def create
-    @answer = @question.answers.build(params[:answer])
-    @answer.user = current_user
-    authorize! :create, @answer
-    @answer.save
-    respond_with @question, @answer
-  end
+  #these are now going through question nested attrs
+  # def create
+  #   @answer = @question.answers.build(params[:answer])
+  #   @answer.user = current_user
+  #   authorize! :create, @answer
+  #   @answer.save
+  #   respond_with @question, @answer
+  # end
 
-  def update
-    @answer = @question.answers.find(params[:id])
-    @answer.assign_attributes(params[:answer])
-    authorize! :update, @answer
-    @answer.save
-    respond_with @question, @answer
-  end
+  # def update
+  #   @answer = @question.answers.find(params[:id])
+  #   @answer.assign_attributes(params[:answer])
+  #   authorize! :update, @answer
+  #   @answer.save
+  #   respond_with @question, @answer
+  # end
 
-  def destroy
-    @answer = @question.answers.find(params[:id])
-    authorize! :destroy, @answer
-    @answer.destroy
-    respond_with @question, @answer
-  end
+  # def destroy
+  #   @answer = @question.answers.find(params[:id])
+  #   authorize! :destroy, @answer
+  #   @answer.destroy
+  #   respond_with @question, @answer
+  # end
 
   def judge
     @answer = @question.answers.find(params[:id])

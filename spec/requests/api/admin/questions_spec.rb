@@ -25,14 +25,14 @@ describe "As an admin, Questions" do
     json['approved_at'].should be_nil
   end
 
-  it "updates a question" do
+  it "updates an approved question" do
     question = FactoryGirl.create(:question, :with_answers, :league => league)
 
     put league_question_path(league, question), :question => { :content => "updated content" },
                                                 :auth_token => admin.authentication_token,
                                                 :format => "json"
 
-    response.status.should == 204
+    response.status.should == 200
 
     question.reload
     question.content.should == "updated content"

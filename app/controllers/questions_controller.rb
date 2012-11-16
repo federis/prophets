@@ -1,58 +1,76 @@
 class QuestionsController < ApplicationController
-  authorize_resource :league
-  load_and_authorize_resource :through => :league, :except => [:index, :create]
-
+  
   self.responder = ApiResponder
   respond_to :json
 
   def index
-    authorize! "read_#{type}_questions".to_sym, @league
+    authorize! "read_#{type}_questions".to_sym, current_league
 
     @questions = if params[:type] == "unapproved"
-      @league.questions.unapproved
+      current_league.questions.unapproved
     elsif params[:type] == "all"
-      @league.questions
+      current_league.questions
     else
-      @league.questions.approved
+      current_league.questions.approved
     end
 
     @include_answers = true
 
-    respond_with @league, @questions
+    respond_with current_league, @questions
   end
 
   def show
+    @question = current_league.questions.find(params[:id])
+    authorize! :show, @question
     @include_answers = true
-    respond_with @league, @question
+    respond_with current_league, @question
   end
 
   def create
-    @question = @league.questions.build(params[:question])
+    @question = current_league.questions.build(params[:question])
     @question.user = current_user
+    assign_user_to_newly_created_answers
+
     authorize! :create, @question
     @question.save
-    respond_with @league, @question
+    @include_answers = true
+    respond_with current_league, @question
   end
 
   def update
-    @question.assign_attributes(params[:question])
+    @question = current_league.questions.find(params[:id])
     authorize! :update, @question
 
+    @question.assign_attributes(params[:question])
+    assign_user_to_newly_created_answers
+    authorize! :update, @question #needs to happen twice, so that they don't overwrite attrs on a question that they shouldn't
+
     @question.save
-    respond_with @league, @question
+    @include_answers = true
+    respond_with current_league, @question
   end
 
   def approve
+    @question = current_league.questions.find(params[:id])
+    authorize! :approve, @question
     @question.approve!(current_user)
-    respond_with @league, @question
+    respond_with current_league, @question
   end
 
   def destroy
+    @question = current_league.questions.find(params[:id])
+    authorize! :destroy, @question
     @question.destroy
-    respond_with @league, @question
+    respond_with current_league, @question
   end
 
 private
+
+  def assign_user_to_newly_created_answers
+    @question.answers.each do |a|
+      a.user = current_user if a.new_record? && a.user_id.nil?
+    end
+  end
 
   def type
     if params[:type] == "unapproved" || params[:type] == "all"
