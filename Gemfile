@@ -2,8 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.9'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+gem 'pg'
 
 gem 'unicorn'
 gem 'delayed_job_active_record'
@@ -47,15 +46,11 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 2.11.0'
   gem 'debugger'
-  gem 'mysql2'
+  #gem 'mysql2'
 end
 
 group :development do
   gem 'thin'
   gem 'sinatra' #for ios tests
   gem 'capistrano'
-end
-
-group :production do
-  gem 'pg'
 end

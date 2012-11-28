@@ -1,38 +1,38 @@
-# development:
-#   adapter: postgresql
-#   encoding: unicode
-#   database: prophets_development
-#   pool: 5
-#   username: <%= ENV['USER'] %>
-#   password:
-
-# test:
-#   adapter: postgresql
-#   encoding: unicode
-#   database: prophets_test
-#   pool: 5
-#   username: <%= ENV['USER'] %>
-#   password:
-
 development:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
+  adapter: postgresql
+  encoding: unicode
   database: prophets_development
   pool: 5
-  username: root
+  username: <%= ENV['USER'] %>
   password:
-  socket: /tmp/mysql.sock
 
 test:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
+  adapter: postgresql
+  encoding: unicode
   database: prophets_test
   pool: 5
-  username: root
+  username: <%= ENV['USER'] %>
   password:
-  socket: /tmp/mysql.sock
+
+# development:
+#   adapter: mysql2
+#   encoding: utf8
+#   reconnect: false
+#   database: prophets_development
+#   pool: 5
+#   username: root
+#   password:
+#   socket: /tmp/mysql.sock
+
+# test:
+#   adapter: mysql2
+#   encoding: utf8
+#   reconnect: false
+#   database: prophets_test
+#   pool: 5
+#   username: root
+#   password:
+#   socket: /tmp/mysql.sock
 
 
 
