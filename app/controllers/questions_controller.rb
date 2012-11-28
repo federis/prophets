@@ -6,9 +6,9 @@ class QuestionsController < ApplicationController
   def index
     authorize! "read_#{type}_questions".to_sym, current_league
 
-    @questions = if params[:type] == "unapproved"
+    @questions = if type == "unapproved"
       current_league.questions.unapproved
-    elsif params[:type] == "all"
+    elsif type == "all"
       current_league.questions
     else
       current_league.questions.approved
