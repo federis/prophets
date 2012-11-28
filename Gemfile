@@ -53,6 +53,7 @@ end
 group :development do
   gem 'thin'
   gem 'sinatra' #for ios tests
+  gem 'capistrano'
 end
 
 group :production do
