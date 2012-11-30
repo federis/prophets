@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.9'
 
 gem 'pg'
+gem 'texticle', '~> 2.0', :require => 'texticle/rails'
 
 gem 'unicorn'
 gem 'delayed_job_active_record'
@@ -39,7 +40,7 @@ group :test do
   gem 'rb-fsevent'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'capybara'
-  gem 'capybara-webkit', '0.12.1'
+  #gem 'capybara-webkit', '0.12.1'
   gem 'database_cleaner', '0.8'
 end
 

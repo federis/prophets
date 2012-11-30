@@ -6,7 +6,12 @@ class LeaguesController < ApplicationController
   respond_to :html, :only => :index
 
   def index
-    @leagues = current_user.leagues
+    @leagues = if params[:query]
+      current_user.visible_leagues.search(:name => params[:query])
+    else
+      current_user.leagues
+    end
+    
     respond_with @leagues
   end
 

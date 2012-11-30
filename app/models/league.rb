@@ -14,7 +14,6 @@ class League < ActiveRecord::Base
                     :source => :user, 
                     :conditions => { :memberships => {:role => Membership::ROLES[:admin]} }
 
-
   validates :name, :presence => true, :length => { :in => 3..250 }
   validates :user_id, :presence => true
   validates :max_bet, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 1000000 } # $1 to $1 mil

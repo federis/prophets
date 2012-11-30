@@ -1,11 +1,12 @@
 Getting Started
 ---------------
 
-Install Postgres (install homebrew first, if you don't have it):
+Install Postgres and qt (install homebrew first, if you don't have it):
 
 ```bash
  brew update
  brew install postgresql
+ brew install qt
 ```
 
 Follow any additional instructions printed by the install. You can install an OSX preference pane here: https://github.com/mckenfra/postgresql-mac-preferences
