@@ -11,7 +11,7 @@ describe "As an admin, Leagues" do
                              :auth_token => auth_token,
                              :format => "json"
 
-    response.status.should == 204
+    response.status.should == 200
 
     league.reload
     league.name.should == "updated name"
