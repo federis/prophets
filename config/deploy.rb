@@ -1,10 +1,15 @@
 require "capistrano/ext/multistage"
 require "bundler/capistrano"
+require "rvm/capistrano"
 
 set :application, "prophets"
 set :repository,  "git@github.com:bcroesch/prophets.git"
 set :scm, :git
 set :branch, "master"
+ssh_options[:forward_agent] = true
+
+set :rvm_ruby_string, "ruby-1.9.3-p194"
+set :rvm_type, :system
 
 set :stages, %w(staging production vm)
 set :default_stage, "staging"

@@ -53,4 +53,5 @@ group :development do
   gem 'thin'
   gem 'sinatra' #for ios tests
   gem 'capistrano'
+  gem 'rvm-capistrano'
 end

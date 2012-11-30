@@ -35,11 +35,11 @@ test:
 #   socket: /tmp/mysql.sock
 
 
-
 production:
   adapter: postgresql
   encoding: unicode
+  host: localhost
   database: prophets_production
   pool: 5
   username: prophets
-  password:
+  password: <%= ENV['DB_PASS'] %>
