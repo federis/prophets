@@ -44,7 +44,7 @@ describe "As an admin, Questions" do
     put approve_league_question_path(league, question), :auth_token => admin.authentication_token,
                                                         :format => "json"
 
-    response.status.should == 204
+    response.status.should == 200
 
     question.reload
     question.approver.should == admin

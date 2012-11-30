@@ -16,10 +16,6 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
 
-  def visible_leagues #includes public leagues and leagues where the user is a member
-    League.includes(:memberships).where(["memberships.user_id = ? OR leagues.priv = ?", self.id, false])
-  end
-
   def membership_in_league(league)
     memberships.where(:league_id => league.id).first
   end

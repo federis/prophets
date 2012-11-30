@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.9'
 
 gem 'pg'
-gem 'texticle', '~> 2.0', :require => 'texticle/rails'
+gem 'pg_search'
 
 gem 'unicorn'
 gem 'delayed_job_active_record'

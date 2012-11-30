@@ -7,7 +7,7 @@ class LeaguesController < ApplicationController
 
   def index
     @leagues = if params[:query]
-      current_user.visible_leagues.search(:name => params[:query])
+      League.visible_to(current_user).search_by_name(params[:query])
     else
       current_user.leagues
     end

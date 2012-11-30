@@ -3,6 +3,9 @@ class League < ActiveRecord::Base
 
   acts_as_commentable
 
+  include PgSearch
+  pg_search_scope :search_by_name, :against => :name
+
   attr_accessible :name, :priv, :max_bet, :initial_balance
 
   belongs_to :user #the league creator
@@ -13,6 +16,8 @@ class League < ActiveRecord::Base
   has_many :admins, :through => :memberships, 
                     :source => :user, 
                     :conditions => { :memberships => {:role => Membership::ROLES[:admin]} }
+  
+  scope :visible_to, lambda{|user| joins(:memberships).where(["memberships.user_id = ? OR leagues.priv = ?", user.id, false]) }
 
   validates :name, :presence => true, :length => { :in => 3..250 }
   validates :user_id, :presence => true
