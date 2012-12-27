@@ -6,13 +6,19 @@ class LeaguesController < ApplicationController
   respond_to :html, :only => :index
 
   def index
-    @leagues = if params[:query]
-      League.visible_to(current_user).search_by_name(params[:query])
+    if params[:tag_id]
+      @tag = ActsAsTaggableOn::Tag.find(params[:tag_id])
+      @leagues = League.tagged_with(@tag).visible_to(current_user)
+      respond_with @tag, @leagues
     else
-      current_user.leagues
+      @leagues = if params[:query]
+        League.visible_to(current_user).search_by_name(params[:query])
+      else
+        current_user.leagues
+      end
+      
+      respond_with @leagues
     end
-    
-    respond_with @leagues
   end
 
   def create

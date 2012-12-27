@@ -29,6 +29,7 @@ class Ability
       can [:read, :destroy], Membership, :user_id => user.id
       can :create, Membership, :user_id => user.id, :league => { :priv => false }, :role => Membership::ROLES[:member]
       #can :read, Question, :league => { :priv => false }
+      can :index, ActsAsTaggableOn::Tag
 
       unless league.nil?
         if user.is_member_of_league?(league)

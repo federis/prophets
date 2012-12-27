@@ -2,6 +2,10 @@ Prophets::Application.routes.draw do
   
   resources :memberships, :only => :index
 
+  resources :tags, :only => :index do
+    resources :leagues
+  end
+
   resources :leagues do
     resources :memberships, :except => :index
     resources :questions do

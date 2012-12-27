@@ -18,7 +18,7 @@ class League < ActiveRecord::Base
                     :source => :user, 
                     :conditions => { :memberships => {:role => Membership::ROLES[:admin]} }
 
-  scope :visible_to, lambda{|user| joins(:memberships).where(["memberships.user_id = ? OR leagues.priv = ?", user.id, false]) }
+  scope :visible_to, lambda{|user| includes(:memberships).where(["memberships.user_id = ? OR leagues.priv = ?", user.id, false]) }
 
   validates :name, :presence => true, :length => { :in => 3..250 }
   validates :user_id, :presence => true
