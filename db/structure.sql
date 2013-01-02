@@ -195,7 +195,8 @@ CREATE TABLE leagues (
     initial_balance numeric(12,2),
     comments_count integer DEFAULT 0,
     questions_count integer DEFAULT 0,
-    memberships_count integer DEFAULT 0
+    memberships_count integer DEFAULT 0,
+    password_digest character varying(255)
 );
 
 
@@ -230,7 +231,8 @@ CREATE TABLE memberships (
     role integer DEFAULT 2,
     balance numeric(15,2),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    outstanding_bets_value numeric(12,2) DEFAULT 0
 );
 
 
@@ -638,6 +640,13 @@ CREATE INDEX index_memberships_on_league_id_and_balance ON memberships USING btr
 
 
 --
+-- Name: index_memberships_on_outstanding_bets_value_and_league_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_memberships_on_outstanding_bets_value_and_league_id ON memberships USING btree (outstanding_bets_value, league_id);
+
+
+--
 -- Name: index_questions_on_approver_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -770,3 +779,7 @@ INSERT INTO schema_migrations (version) VALUES ('20121112165815');
 INSERT INTO schema_migrations (version) VALUES ('20121130180338');
 
 INSERT INTO schema_migrations (version) VALUES ('20121130211904');
+
+INSERT INTO schema_migrations (version) VALUES ('20121229203733');
+
+INSERT INTO schema_migrations (version) VALUES ('20130102010138');

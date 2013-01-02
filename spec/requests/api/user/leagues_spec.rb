@@ -80,23 +80,4 @@ describe "As normal user, Leagues" do
     league_ids.should_not include(league_where_member.id)
   end
 
-  it "searches only leagues visible to the user" do
-    priv_league_where_not_member = FactoryGirl.create(:league, :priv => true, :name => "league")
-    public_league = FactoryGirl.create(:league_with_member, :priv => false, :member => user, :name => "league")
-    league_where_member = FactoryGirl.create(:league_with_member, :priv => true, :member => user, :name => "league")
-
-    get leagues_path, :auth_token => auth_token,
-                      :query => "league",
-                      :format => "json"
-
-    response.status.should == 200
-
-    json = decode_json(response.body)
-    
-    league_ids = json.map{|l| l["league"]["id"] }
-    league_ids.should include(public_league.id)
-    league_ids.should include(league_where_member.id)
-    league_ids.should_not include(priv_league_where_not_member.id)
-  end
-
 end

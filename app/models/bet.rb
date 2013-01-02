@@ -17,7 +17,7 @@ class Bet < ActiveRecord::Base
 
   after_create :increment_answer_bet_total!
   after_create :update_question_answer_probabilities!
-  after_create :decrement_user_balance_by_bet_amount!
+  after_create :update_membership_balance_and_outstanding_bets_value!
 
   after_destroy :decrement_answer_bet_total!
   after_destroy :refund_bet_to_user!
@@ -63,6 +63,7 @@ class Bet < ActiveRecord::Base
     self.payout = payout_when_correct
     if membership # in case they left the league
       membership.balance += payout
+      membership.outstanding_bets_value -= amount
       Bet.transaction do
         membership.save!
         save!
@@ -72,7 +73,11 @@ class Bet < ActiveRecord::Base
 
   def zero_payout!
     self.payout = 0
-    save!
+    membership.outstanding_bets_value -= amount
+    Bet.transaction do
+      membership.save!
+      save!
+    end
   end
 
 private
@@ -91,8 +96,9 @@ private
     answer.save!
   end
 
-  def decrement_user_balance_by_bet_amount!
+  def update_membership_balance_and_outstanding_bets_value!
     membership.balance -= amount
+    membership.outstanding_bets_value += amount
     membership.save!
   end
 
@@ -101,6 +107,7 @@ private
   end
 
   def refund_bet_to_user!
+    membership.outstanding_bets_value -= amount
     membership.balance += amount
     membership.save!
   end

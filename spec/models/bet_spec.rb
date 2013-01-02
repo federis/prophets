@@ -120,9 +120,7 @@ describe Bet do
 
   it "#zero_payout! sets bet payout to zero and saves the bet" do
     bet.payout.should be_nil
-
     bet.zero_payout!
-
     bet.reload.payout.should == 0
   end
   
@@ -130,6 +128,46 @@ describe Bet do
     bet = Bet.new(:amount => 2)
     bet.probability = 0.2 # 4:1 odds
     bet.payout_when_correct.should == 10
+  end
+
+  it "increments membership's outstanding bets value after creation" do
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 2)
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 5)
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 10)
+    other_league_answer = FactoryGirl.create(:answer)
+    other_league_answer.question.league.users << user
+    FactoryGirl.create(:bet, :answer => other_league_answer, 
+                             :membership => user.membership_in_league(other_league_answer.question.league), 
+                             :amount => 6)
+
+    membership.outstanding_bets_value.should == 17
+  end
+
+  it "decrements membership's outstanding bets value after payout" do
+    bet = FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 2)
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 5)
+
+    membership.outstanding_bets_value.should == 7
+    bet.pay_bettor!
+    membership.outstanding_bets_value.should == 5
+  end
+
+  it "decrements membership's outstanding bets value after payout is zeroed" do
+    bet = FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 2)
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 5)
+
+    membership.outstanding_bets_value.should == 7
+    bet.zero_payout!
+    membership.outstanding_bets_value.should == 5
+  end
+
+  it "decrements membership's outstanding bets value after invalidation" do
+    bet = FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 2)
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 5)
+
+    membership.outstanding_bets_value.should == 7
+    bet.invalidate!
+    membership.outstanding_bets_value.should == 5
   end
 
 end

@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  self.responder = ApiResponder
+  
   protect_from_forgery
   
   before_filter :authenticate_user!

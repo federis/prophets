@@ -15,6 +15,8 @@ Prophets::Application.routes.draw do
     resources :bets, :only => :index
 
     resources :comments
+
+    resources :leaderboards, :only => :index
   end
 
   resources :questions, :only => [] do
