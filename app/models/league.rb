@@ -7,7 +7,8 @@ class League < ActiveRecord::Base
   include PgSearch
   pg_search_scope :search_by_name, :against => :name
 
-  attr_accessible :name, :priv, :max_bet, :initial_balance, :tag_list
+  attr_reader :password
+  attr_accessible :name, :priv, :max_bet, :initial_balance, :tag_list, :password, :password_confirmation
 
   belongs_to :user #the league creator
   has_many :questions
@@ -18,18 +19,31 @@ class League < ActiveRecord::Base
                     :source => :user, 
                     :conditions => { :memberships => {:role => Membership::ROLES[:admin]} }
 
-  scope :visible_to, lambda{|user| includes(:memberships).where(["memberships.user_id = ? OR leagues.priv = ?", user.id, false]) }
-
   validates :name, :presence => true, :length => { :in => 3..250 }
   validates :user_id, :presence => true
   validates :max_bet, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 1000000 } # $1 to $1 mil
   validates :initial_balance, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 100000 } # $1 to $100k
+
+  validates_confirmation_of :password, if: ->(l){ l.priv }
+  validates_presence_of     :password_digest, if: ->(l){ l.priv }
 
   validate :ensure_tag_list_only_uses_existing_tags
 
   after_create :give_creator_admin_membership
 
   before_validation :set_default_values, :on => :create
+
+  def authenticate(unencrypted_password)
+    BCrypt::Password.new(password_digest) == unencrypted_password ? self : false
+  end
+
+  # Encrypts the password into the password_digest attribute.
+  def password=(unencrypted_password)
+    @password = unencrypted_password
+    unless unencrypted_password.blank?
+      self.password_digest = BCrypt::Password.create(unencrypted_password)
+    end
+  end
 
 private
 

@@ -27,7 +27,7 @@ describe "As a league admin," do
   end
 
   context "in a private league" do
-    let(:league) { FactoryGirl.create(:league, :user => admin, :priv => true) } #will automatically get admin privs on create
+    let(:league) { FactoryGirl.create(:league, :private, :user => admin) } #will automatically get admin privs on create
     let(:ability) { Ability.new(admin, league) }
 
     can_perform_actions("the league", :manage){ league }

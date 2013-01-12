@@ -47,8 +47,8 @@ describe "As normal user, Leagues" do
   it "lists the user's leagues" do
     league_where_not_member = FactoryGirl.create(:league, :priv => false)
     public_league = FactoryGirl.create(:league_with_member, :priv => false, :member => user)
-    league_where_member = FactoryGirl.create(:league_with_member, :priv => true, :member => user)
-    league_where_admin = FactoryGirl.create(:league_with_admin, :priv => true, :admin => user)
+    league_where_member = FactoryGirl.create(:league_with_member, :private, :member => user)
+    league_where_admin = FactoryGirl.create(:league_with_admin, :private, :admin => user)
 
     get leagues_path, :auth_token => auth_token, :format => "json"
 
@@ -65,7 +65,7 @@ describe "As normal user, Leagues" do
 
   it "searches leagues" do
     public_league = FactoryGirl.create(:league_with_member, :priv => false, :member => user, :name => "dude party")
-    league_where_member = FactoryGirl.create(:league_with_member, :priv => true, :member => user, :name => "brogrammers")
+    league_where_member = FactoryGirl.create(:league_with_member, :private, :member => user, :name => "brogrammers")
 
     get leagues_path, :auth_token => auth_token,
                       :query => "party",

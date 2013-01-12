@@ -13,6 +13,11 @@ class MembershipsController < ApplicationController
   end
 
   def create
+    if @league.priv? && !@league.authenticate(params[:league_password])
+      render :json => { :errors => "Incorrect league password" }, :status => :unauthorized 
+      return
+    end
+
     @membership = @league.memberships.build(params[:membership])
     @membership.user = current_user if @membership.user_id.nil?
     

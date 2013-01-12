@@ -4,12 +4,13 @@ describe "As an admin, Memberships" do
   let(:admin){ FactoryGirl.create(:user) }
   let(:other_user){ FactoryGirl.create(:user) }
   let(:other_membership_attrs){ FactoryGirl.attributes_for(:membership, :user => other_user).except(:role).merge(:user_id => other_user.id) }
-  let(:private_league){ FactoryGirl.create(:league_with_admin, :priv => true, :admin => admin) }
+  let(:private_league){ FactoryGirl.create(:league_with_admin, :private, :admin => admin) }
 
   it "creates a league membership for another user in a private league" do
     count = other_user.memberships.count
     
     post league_memberships_path(private_league), :membership => other_membership_attrs, 
+                                                  :league_password => "abc123",
                                                   :auth_token => admin.authentication_token,
                                                   :format => "json"
         

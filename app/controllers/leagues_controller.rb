@@ -8,11 +8,11 @@ class LeaguesController < ApplicationController
   def index
     if params[:tag_id]
       @tag = ActsAsTaggableOn::Tag.find(params[:tag_id])
-      @leagues = League.tagged_with(@tag).visible_to(current_user)
+      @leagues = League.tagged_with(@tag)
       respond_with @tag, @leagues
     else
       @leagues = if params[:query]
-        League.visible_to(current_user).search_by_name(params[:query])
+        League.search_by_name(params[:query])
       else
         current_user.leagues
       end

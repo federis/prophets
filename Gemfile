@@ -11,6 +11,7 @@ gem 'delayed_job_active_record'
 gem 'devise', '~> 2.1'
 gem 'omniauth-facebook'
 gem 'cancan', '~>1.6'
+gem 'bcrypt-ruby', '~> 3.0.0', :require => 'bcrypt'
 
 gem 'rabl', '~>0.7'
 

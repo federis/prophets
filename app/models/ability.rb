@@ -27,7 +27,7 @@ class Ability
       can :create, League, :user_id => user.id
       can [:read, :read_approved_questions], League, :priv => false
       can [:read, :destroy], Membership, :user_id => user.id
-      can :create, Membership, :user_id => user.id, :league => { :priv => false }, :role => Membership::ROLES[:member]
+      can :create, Membership, :user_id => user.id, :role => Membership::ROLES[:member]
       #can :read, Question, :league => { :priv => false }
       can :index, ActsAsTaggableOn::Tag
 

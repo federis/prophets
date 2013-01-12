@@ -65,12 +65,11 @@ describe "As a normal user," do
   end
 
   context "in a private league" do
-    let(:league){ FactoryGirl.create(:league, :priv => true) }
+    let(:league){ FactoryGirl.create(:league, :private) }
     let(:ability) { Ability.new(user, league) }
 
     let(:own_membership){ FactoryGirl.build(:membership, :league => league, :user => user) }
-    cannot_perform_actions("their own membership", :create){ own_membership }
-    can_perform_actions("their own membership", :read, :destroy){ own_membership }
+    can_perform_actions("their own membership", :read, :create, :destroy){ own_membership }
 
     let(:own_admin_membership){ FactoryGirl.build(:membership, :league => league, :user => user, :role => Membership::ROLES[:admin]) }
     cannot_perform_actions("their own admin membership", :create){ own_admin_membership }

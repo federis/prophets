@@ -8,8 +8,8 @@ describe "As a normal user, Memberships" do
   it "lists the user's memberships" do
     league_where_not_member = FactoryGirl.create(:league, :priv => false)
     public_league = FactoryGirl.create(:league_with_member, :priv => false, :member => user)
-    league_where_member = FactoryGirl.create(:league_with_member, :priv => true, :member => user)
-    league_where_admin = FactoryGirl.create(:league_with_admin, :priv => true, :admin => user)
+    league_where_member = FactoryGirl.create(:league_with_member, :private, :member => user)
+    league_where_admin = FactoryGirl.create(:league_with_admin, :private, :admin => user)
 
     memberships = []
     [public_league, league_where_admin, league_where_member].each do |l|

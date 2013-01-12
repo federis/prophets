@@ -6,6 +6,11 @@ FactoryGirl.define do
     max_bet 1000
     initial_balance 10000
 
+    trait :private do
+      priv true
+      password_digest "$2a$10$hRQ6pSt5H09rb0X5idSJrukNGn9UgD2s0v84MV4Wgyg2c0yLBhZfy" # abc123
+    end
+
     ignore do
       member nil
       admin nil
