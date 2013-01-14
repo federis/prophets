@@ -14,4 +14,8 @@ class ApiResponder < ActionController::Responder
   rescue ActionView::MissingTemplate => e
     api_behavior(e)
   end
+
+  def json_resource_errors
+    {:errors => resource.errors.full_messages}
+  end
 end

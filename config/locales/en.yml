@@ -3,6 +3,9 @@
 
 en:
   activerecord:
+    attributes:
+      league:
+        password_digest: "Password"
     errors:
       models:
         question:

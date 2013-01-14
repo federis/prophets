@@ -8,7 +8,7 @@ class League < ActiveRecord::Base
   pg_search_scope :search_by_name, :against => :name
 
   attr_reader :password
-  attr_accessible :name, :priv, :max_bet, :initial_balance, :tag_list, :password, :password_confirmation
+  attr_accessible :name, :priv, :max_bet, :initial_balance, :tag_list, :password
 
   belongs_to :user #the league creator
   has_many :questions
@@ -24,8 +24,7 @@ class League < ActiveRecord::Base
   validates :max_bet, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 1000000 } # $1 to $1 mil
   validates :initial_balance, :numericality => { :greater_than_or_equal_to => 1, :less_than_or_equal_to => 100000 } # $1 to $100k
 
-  validates_confirmation_of :password, if: ->(l){ l.priv }
-  validates_presence_of     :password_digest, if: ->(l){ l.priv }
+  validates :password_digest, presence: true, if: ->(l){ l.priv }
 
   validate :ensure_tag_list_only_uses_existing_tags
 
