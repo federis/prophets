@@ -41,7 +41,7 @@ describe "As normal user, Leagues" do
     response.status.should == 422
 
     json = decode_json(response.body)
-    json["errors"].should include("name")
+    json["errors"].should include("Name can't be blank")
   end
 
   it "lists the user's leagues" do
