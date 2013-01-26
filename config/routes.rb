@@ -16,7 +16,7 @@ Prophets::Application.routes.draw do
 
     resources :comments
 
-    resources :leaderboards, :only => :index
+    get "leaderboard" => "leaderboard#index", as: "leaderboard"
   end
 
   resources :questions, :only => [] do
