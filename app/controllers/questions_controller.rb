@@ -6,12 +6,15 @@ class QuestionsController < ApplicationController
   def index
     authorize! "read_#{type}_questions".to_sym, current_league
 
-    @questions = if type == "unapproved"
+    @questions = case type
+    when "unapproved"
       current_league.questions.unapproved
-    elsif type == "all"
-      current_league.questions
+    when "pending_judgement"
+      current_league.questions.pending_judgement
+    when "complete"
+      current_league.questions.complete
     else
-      current_league.questions.approved
+      current_league.questions.currently_running
     end
 
     @include_answers = true
@@ -63,10 +66,10 @@ class QuestionsController < ApplicationController
 private
 
   def type
-    if params[:type] == "unapproved" || params[:type] == "all"
+    if %w(unapproved pending_judgement complete).include?(params[:type])
       params[:type]
     else
-      "approved"
+      "currently_running"
     end
   end
 end

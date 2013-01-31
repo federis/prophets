@@ -271,7 +271,8 @@ CREATE TABLE questions (
     updated_at timestamp without time zone NOT NULL,
     initial_pool numeric(15,2),
     betting_closes_at timestamp without time zone,
-    comments_count integer DEFAULT 0
+    comments_count integer DEFAULT 0,
+    completed_at timestamp without time zone
 );
 
 
@@ -783,3 +784,5 @@ INSERT INTO schema_migrations (version) VALUES ('20121130211904');
 INSERT INTO schema_migrations (version) VALUES ('20121229203733');
 
 INSERT INTO schema_migrations (version) VALUES ('20130102010138');
+
+INSERT INTO schema_migrations (version) VALUES ('20130131042130');

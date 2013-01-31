@@ -11,11 +11,13 @@ FactoryGirl.define do
     before(:create) do |question, evaluator|
       question.stub(:approved?).and_return(false)
       question.stub(:check_answer_initial_probabilities).and_return(true)
+      question.stub(:ensure_betting_closes_in_future).and_return(true)
     end
 
     after(:create) do |question, evaluator|
       question.unstub(:approved?)
       question.unstub(:check_answer_initial_probabilities)
+      question.unstub(:ensure_betting_closes_in_future)
     end
 
     trait :unapproved do

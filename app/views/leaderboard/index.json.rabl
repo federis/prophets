@@ -1,2 +1,2 @@
 collection @leaders
-extends "memberships/show"
+extends "leaderboard/membership"

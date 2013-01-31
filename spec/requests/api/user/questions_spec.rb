@@ -62,11 +62,13 @@ describe "As a normal user, Questions" do
     answer_json.keys.should include('correct', 'judged_at', 'judge_id', 'correctness_known_at')
   end
 
-  it "lists the approved questions in a league" do
+  it "lists the currently running questions in a league" do
     q1 = FactoryGirl.create(:question, :with_answers, :league => league, :approved_at => Time.now)
     q2 = FactoryGirl.create(:question, :with_answers, :league => league, :approved_at => Time.now)
     q3 = FactoryGirl.create(:question, :with_answers, :unapproved, :league => league)
     q4 = FactoryGirl.create(:question, :with_answers, :approved_at => Time.now)
+    q5 = FactoryGirl.create(:question, :with_answers, :league => league, :approved_at => 1.day.ago, :betting_closes_at => 1.hour.ago)
+    q6 = FactoryGirl.create(:question, :with_answers, :league => league, :approved_at => 1.day.ago, :completed_at => 1.hour.ago)
 
     get league_questions_path(league), :auth_token => user.authentication_token,
                                        :format => "json"
@@ -78,6 +80,8 @@ describe "As a normal user, Questions" do
     question_ids.should include(q2.id)
     question_ids.should_not include(q3.id)
     question_ids.should_not include(q4.id)
+    question_ids.should_not include(q5.id)
+    question_ids.should_not include(q6.id)
     
     json.first["question"]["answers"].should_not be_nil
   end

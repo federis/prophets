@@ -17,7 +17,7 @@ class Membership < ActiveRecord::Base
   before_validation :set_balance_to_league_initial, :on => :create
 
   def rank
-    @rank ||= league.memberships.where(["memberships.balance > ?", balance]).count + 1
+    @rank ||= league.memberships.where(["memberships.balance + memberships.outstanding_bets_value > ?", balance + outstanding_bets_value]).count + 1
   end
 
 private

@@ -14,7 +14,7 @@ describe "As a league admin," do
     let(:ability) { Ability.new(admin, league) }
 
     can_perform_actions("the league", :manage){ league }
-    can_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
+    can_perform_actions("", :read_unapproved_questions, :read_complete_questions, :read_pending_judgement_questions){ league }
 
     let(:not_own_membership){ FactoryGirl.build(:membership, :league => league, :user => other_user) }
     can_perform_actions("a membership for another user in private league", :create, :destroy){ not_own_membership }
@@ -31,7 +31,7 @@ describe "As a league admin," do
     let(:ability) { Ability.new(admin, league) }
 
     can_perform_actions("the league", :manage){ league }
-    can_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
+    can_perform_actions("", :read_unapproved_questions, :read_complete_questions, :read_pending_judgement_questions){ league }
 
     let(:not_own_membership){ FactoryGirl.build(:membership, :league => league, :user => other_user) }
     can_perform_actions("a membership for another user", :create, :destroy){ not_own_membership }

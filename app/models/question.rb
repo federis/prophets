@@ -16,11 +16,18 @@ class Question < ActiveRecord::Base
   validates :answers, :length => { :minimum => 2 }, :if => Proc.new{|q| q.approved? } 
   validates :betting_closes_at, :presence => true
 
-  validate :ensure_betting_closes_in_future
+  validate :ensure_betting_closes_in_future, :on => :create
   validate :check_answer_initial_probabilities, :if => Proc.new{|q| q.approved_at_changed? } 
 
-  scope :approved, where('questions.approved_at IS NOT NULL')
-  scope :unapproved, where('questions.approved_at IS NULL')
+  scope :approved, ->{ where('questions.approved_at IS NOT NULL') }
+  scope :unapproved, ->{ where('questions.approved_at IS NULL') }
+  scope :betting_open, ->{ where('questions.betting_closes_at > ?', Time.now) }
+  scope :betting_closed, ->{ where('questions.betting_closes_at < ?', Time.now) }
+  scope :complete, -> { where('questions.completed_at IS NOT NULL') } # all answers have been judged
+  scope :incomplete, -> { where('questions.completed_at IS NULL') }
+
+  scope :currently_running, -> { approved.betting_open.incomplete }
+  scope :pending_judgement, -> { approved.betting_closed.incomplete }
 
   before_validation :set_initial_pool, :on => :create
 

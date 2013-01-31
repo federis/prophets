@@ -66,19 +66,40 @@ describe "As an admin, Questions" do
     question_ids.should include(q2.id)
   end
 
-  it "lists all questions in a league" do
-    q1 = FactoryGirl.create(:question, :league => league, :approved_at => Time.now)
-    q2 = FactoryGirl.create(:question, :league => league)
+  it "lists completed questions in a league" do
+    q1 = FactoryGirl.create(:question, :league => league)
+    q2 = FactoryGirl.create(:question, :unapproved, :league => league)
+    q3 = FactoryGirl.create(:question, :league => league, :completed_at => 1.week.ago)
 
     get league_questions_path(league), :auth_token => admin.authentication_token,
-                                       :type => "all",
+                                       :type => "complete",
                                        :format => "json"
 
     response.status.should == 200
     json = decode_json(response.body) 
     question_ids = json.map{|l| l["question"]["id"] }
-    question_ids.should include(q1.id)
-    question_ids.should include(q2.id)
+    question_ids.should_not include(q1.id)
+    question_ids.should_not include(q2.id)
+    question_ids.should include(q3.id)
+  end
+
+  it "lists questions that are pending judgement in a league" do
+    q1 = FactoryGirl.create(:question, :league => league)
+    q2 = FactoryGirl.create(:question, :unapproved, :league => league)
+    q3 = FactoryGirl.create(:question, :league => league, :completed_at => 1.week.ago)
+    q4 = FactoryGirl.create(:question, :league => league, :betting_closes_at => 1.day.ago)
+
+    get league_questions_path(league), :auth_token => admin.authentication_token,
+                                       :type => "pending_judgement",
+                                       :format => "json"
+
+    response.status.should == 200
+    json = decode_json(response.body) 
+    question_ids = json.map{|l| l["question"]["id"] }
+    question_ids.should_not include(q1.id)
+    question_ids.should_not include(q2.id)
+    question_ids.should_not include(q3.id)
+    question_ids.should include(q4.id)
   end
 
   it "deletes an already approved question" do

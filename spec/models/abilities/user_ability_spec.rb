@@ -33,8 +33,9 @@ describe "As a normal user," do
       end
 
       can_perform_actions("the league", :read){ league }        
-      can_perform_actions("", :read_approved_questions){ league }
-      cannot_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
+      can_perform_actions("", :read_currently_running_questions){ league }
+      cannot_perform_actions("", :read_unapproved_questions, :read_complete_questions, :read_pending_judgement_questions){ league }
+
 
       let(:own_league_comment){ FactoryGirl.build(:comment, :for_league, :user => user, :commentable => league) }
       can_perform_actions("league comments", :create, :update, :destroy){ own_league_comment }
@@ -53,8 +54,8 @@ describe "As a normal user," do
       cannot_perform_actions("questions", :create, :update, :destroy){ question }
 
       can_perform_actions("the league", :read){ league }        
-      can_perform_actions("", :read_approved_questions){ league }
-      cannot_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
+      can_perform_actions("", :read_currently_running_questions){ league }
+      cannot_perform_actions("", :read_unapproved_questions, :read_complete_questions, :read_pending_judgement_questions){ league }
 
       let(:own_league_comment){ FactoryGirl.build(:comment, :for_league, :user => user, :commentable => league) }
       cannot_perform_actions("league comments", :create, :update, :destroy){ own_league_comment }
@@ -85,9 +86,8 @@ describe "As a normal user," do
 
       let(:membership_in_league){ user.membership_in_league(league) }
 
-      can_perform_actions("the league", :read, :read_approved_questions){ league }
-      cannot_perform_actions("the league", :create, :update, :destroy, :read_unapproved_questions, :read_all_questions){ league }
-      cannot_perform_actions("", :read_unapproved_questions, :read_all_questions){ league }
+      can_perform_actions("the league", :read, :read_currently_running_questions){ league }
+      cannot_perform_actions("the league", :create, :update, :destroy, :read_unapproved_questions, :read_complete_questions, :read_pending_judgement_questions){ league }
 
       let(:own_approved_question){ FactoryGirl.build(:question, :user => user, :league => league, :approved_at => Time.now) }
       cannot_perform_actions("questions owned by user", :create, :approve, :update, :destroy){ own_approved_question }
@@ -129,7 +129,7 @@ describe "As a normal user," do
 
     context "where user is not a member" do
       cannot_perform_actions("the league", :read, :create, :update, :destroy){ league }
-      cannot_perform_actions("", :read_approved_questions, :read_unapproved_questions, :read_all_questions){ league }
+      cannot_perform_actions("", :read_currently_running_questions, :read_unapproved_questions, :read_complete_questions, :read_pending_judgement_questions){ league }
 
       let(:own_approved_question){ FactoryGirl.build(:question, :user => user, :league => league, :approved_at => Time.now) }
       cannot_perform_actions("questions owned by user", :read, :create, :approve, :update, :destroy){ own_approved_question }

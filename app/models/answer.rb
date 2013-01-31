@@ -44,6 +44,10 @@ class Answer < ActiveRecord::Base
       end
     end
 
+    if question.answers.all?{|a| !a.judged_at.blank? } && question.completed_at.blank?
+      question.update_attribute :completed_at, Time.now
+    end
+
     save!
   end
 
