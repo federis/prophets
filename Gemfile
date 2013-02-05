@@ -20,6 +20,8 @@ gem 'koala'
 gem 'acts_as_commentable', '3.0.1'
 gem 'acts-as-taggable-on', '~> 2.3.1'
 
+gem 'rails_admin'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   
   before_filter :authenticate_user!
 
-  check_authorization :unless => :devise_controller?
+  check_authorization :unless => :skip_cancan?
 
 private
 
@@ -19,6 +19,10 @@ private
 
   def current_ability
     @current_ability ||= Ability.new(current_user, current_league)
+  end
+
+  def skip_cancan?
+    devise_controller? || rails_admin_controller?
   end
 
 end

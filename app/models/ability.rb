@@ -34,6 +34,12 @@ class Ability
           can :manage, Comment
         end
       end
+
+      if user.superuser == 1
+        can :access, :rails_admin
+        can :dashboard
+        can :manage, :all
+      end
     end
     
   end

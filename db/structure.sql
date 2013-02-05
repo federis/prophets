@@ -296,6 +296,42 @@ ALTER SEQUENCE questions_id_seq OWNED BY questions.id;
 
 
 --
+-- Name: rails_admin_histories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE rails_admin_histories (
+    id integer NOT NULL,
+    message text,
+    username character varying(255),
+    item integer,
+    "table" character varying(255),
+    month smallint,
+    year bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rails_admin_histories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE rails_admin_histories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rails_admin_histories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE rails_admin_histories_id_seq OWNED BY rails_admin_histories.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -390,7 +426,8 @@ CREATE TABLE users (
     updated_at timestamp without time zone NOT NULL,
     fb_uid character varying(255),
     fb_token character varying(255),
-    fb_token_expires_at timestamp without time zone
+    fb_token_expires_at timestamp without time zone,
+    superuser integer
 );
 
 
@@ -460,6 +497,13 @@ ALTER TABLE ONLY memberships ALTER COLUMN id SET DEFAULT nextval('memberships_id
 --
 
 ALTER TABLE ONLY questions ALTER COLUMN id SET DEFAULT nextval('questions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY rails_admin_histories ALTER COLUMN id SET DEFAULT nextval('rails_admin_histories_id_seq'::regclass);
 
 
 --
@@ -537,6 +581,14 @@ ALTER TABLE ONLY memberships
 
 ALTER TABLE ONLY questions
     ADD CONSTRAINT questions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rails_admin_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY rails_admin_histories
+    ADD CONSTRAINT rails_admin_histories_pkey PRIMARY KEY (id);
 
 
 --
@@ -669,6 +721,13 @@ CREATE INDEX index_questions_on_user_id ON questions USING btree (user_id);
 
 
 --
+-- Name: index_rails_admin_histories; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_rails_admin_histories ON rails_admin_histories USING btree (item, "table", month, year);
+
+
+--
 -- Name: index_taggings_on_tag_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -786,3 +845,7 @@ INSERT INTO schema_migrations (version) VALUES ('20121229203733');
 INSERT INTO schema_migrations (version) VALUES ('20130102010138');
 
 INSERT INTO schema_migrations (version) VALUES ('20130131042130');
+
+INSERT INTO schema_migrations (version) VALUES ('20130205223859');
+
+INSERT INTO schema_migrations (version) VALUES ('20130205225632');

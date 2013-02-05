@@ -1,5 +1,7 @@
 Prophets::Application.routes.draw do
   
+  mount RailsAdmin::Engine => '/moses', :as => 'rails_admin'
+
   resources :memberships, :only => :index
 
   resources :tags, :only => :index do
