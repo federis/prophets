@@ -7,7 +7,7 @@ Prophets::Application.routes.draw do
   end
 
   resources :leagues do
-    resources :memberships, :except => :index
+    resources :memberships
     resources :questions do
       put "approve", :on => :member
     end

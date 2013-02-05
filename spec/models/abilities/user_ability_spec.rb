@@ -36,6 +36,7 @@ describe "As a normal user," do
       can_perform_actions("", :read_currently_running_questions){ league }
       cannot_perform_actions("", :read_unapproved_questions, :read_complete_questions, :read_pending_judgement_questions){ league }
 
+      cannot_perform_actions("index memberships in league", :index_memberships){ League }
 
       let(:own_league_comment){ FactoryGirl.build(:comment, :for_league, :user => user, :commentable => league) }
       can_perform_actions("league comments", :create, :update, :destroy){ own_league_comment }

@@ -6,9 +6,16 @@ class MembershipsController < ApplicationController
   respond_to :json
 
   def index
-    @memberships = current_user.memberships.includes(:league)
-    authorize! :index, Membership
-    @include_leagues = true
+    @memberships = if current_league
+      authorize! :index_memberships, League 
+      @include_users = true
+      current_league.memberships
+    else
+      authorize! :index, Membership
+      @include_leagues = true
+      current_user.memberships.includes(:league)
+    end
+    
     respond_with @memberships
   end
 

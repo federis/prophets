@@ -16,6 +16,8 @@ describe "As a league admin," do
     can_perform_actions("the league", :manage){ league }
     can_perform_actions("", :read_unapproved_questions, :read_complete_questions, :read_pending_judgement_questions){ league }
 
+    can_perform_actions("index memberships in league", :index_memberships){ League }
+
     let(:not_own_membership){ FactoryGirl.build(:membership, :league => league, :user => other_user) }
     can_perform_actions("a membership for another user in private league", :create, :destroy){ not_own_membership }
 
