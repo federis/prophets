@@ -11,8 +11,8 @@ class League < ActiveRecord::Base
   attr_accessible :name, :priv, :max_bet, :initial_balance, :tag_list, :password
 
   belongs_to :user #the league creator
-  has_many :questions
-  has_many :memberships
+  has_many :questions, dependent: :destroy
+  has_many :memberships, dependent: :destroy
   has_many :bets
   has_many :users, :through => :memberships
   has_many :admins, :through => :memberships, 

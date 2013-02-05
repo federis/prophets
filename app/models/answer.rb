@@ -2,7 +2,7 @@ class Answer < ActiveRecord::Base
   belongs_to :question
   belongs_to :user
   belongs_to :judge, :class_name => "User"
-  has_many :bets
+  has_many :bets, dependent: :destroy
 
   attr_accessible :content, :initial_probability
 
@@ -43,9 +43,9 @@ class Answer < ActiveRecord::Base
         a.judge!(false, judging_user, known_at) unless a == self
       end
     end
-
-    if question.answers.all?{|a| !a.judged_at.blank? } && question.completed_at.blank?
-      question.update_attribute :completed_at, Time.now
+    
+    if question.answers.all?{|a| a == self || a.judged? } && question.completed_at.blank?
+      question.update_attribute :completed_at, self.judged_at
     end
 
     save!

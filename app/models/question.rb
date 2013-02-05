@@ -6,7 +6,7 @@ class Question < ActiveRecord::Base
   belongs_to :league, :counter_cache => true
   belongs_to :user
   belongs_to :approver, :class_name => "User"
-  has_many :answers
+  has_many :answers, dependent: :destroy
 
   validates :user_id, :presence => true
   validates :league_id, :presence => true
@@ -16,7 +16,7 @@ class Question < ActiveRecord::Base
   validates :answers, :length => { :minimum => 2 }, :if => Proc.new{|q| q.approved? } 
   validates :betting_closes_at, :presence => true
 
-  validate :ensure_betting_closes_in_future, :on => :create
+  validate :ensure_betting_closes_in_future, unless: Proc.new{|q| q.complete? }
   validate :check_answer_initial_probabilities, :if => Proc.new{|q| q.approved_at_changed? } 
 
   scope :approved, ->{ where('questions.approved_at IS NOT NULL') }
@@ -52,12 +52,16 @@ class Question < ActiveRecord::Base
 
     self.approver = approving_user
     self.approved_at = Time.now
-
-    save!    
+    
+    save
   end
   
   def approved?
     !approved_at.nil?
+  end
+
+  def complete?
+    !completed_at.blank?
   end
 
   def total_pool

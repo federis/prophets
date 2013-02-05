@@ -32,9 +32,10 @@ describe Question do
     answer.initial_probability = 0.5
     answer.save
     
-    expect{ question.approve!(question.league.user) }.to raise_error(ActiveRecord::RecordInvalid)
+    question.approve!(question.league.user)
     
     question.errors[:answers].should include(I18n.t('activerecord.errors.models.question.attributes.answers.invalid_initial_probabilities_sum'))
+    question.reload.approved_at.should be_blank
   end
 
   it "#total_pool gives the sum of the bets made in the question plus the question's initial pool" do

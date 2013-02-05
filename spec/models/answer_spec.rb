@@ -123,6 +123,17 @@ describe Answer do
       bet2.reload.should be_invalidated
       bet2.should_not be_judged
     end
+
+    it "sets the completed_at date for the question if all the answers have been judged" do
+      question.answers.each do |a|
+        Answer.update_all({judged_at: Time.now, judge_id: user.id}, {id: a.id}) unless a == @answer
+      end
+
+      @answer.judge!(true, user)
+
+      @answer.reload
+      @answer.question.completed_at.should_not be_blank
+    end
   end
 
 end
