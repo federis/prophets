@@ -1,6 +1,7 @@
 require "capistrano/ext/multistage"
 require "bundler/capistrano"
 require "rvm/capistrano"
+require "delayed/recipes"
 
 set :application, "prophets"
 set :repository,  "git@github.com:bcroesch/prophets.git"
@@ -21,8 +22,11 @@ default_run_options[:pty] = true
 set :user, "deploy"
 set :use_sudo, false
 
-# if you want to clean up old releases on each deploy uncomment this:
 after "deploy:restart", "deploy:cleanup"
+
+after "deploy:stop",    "delayed_job:stop"
+after "deploy:start",   "delayed_job:start"
+after "deploy:restart", "delayed_job:restart"
 
 namespace :deploy do
   %w[start stop restart].each do |command|
