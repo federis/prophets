@@ -1,5 +1,5 @@
 set :rails_env, 'production'
 
-role :web, "your web-server here"
-role :app, "your app-server here"
-role :db,  "your primary db-server here", :primary => true
+role :web, "192.81.211.10"
+role :app, "192.81.211.10"
+role :db,  "192.81.211.10", :primary => true
