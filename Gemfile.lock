@@ -295,6 +295,7 @@ DEPENDENCIES
   capistrano
   capybara
   coffee-rails (~> 3.2.1)
+  daemons
   database_cleaner (= 0.8)
   debugger
   delayed_job_active_record

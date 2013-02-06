@@ -7,6 +7,7 @@ gem 'pg_search'
 
 gem 'unicorn'
 gem 'delayed_job_active_record'
+gem 'daemons'
 
 gem 'devise', '~> 2.1'
 gem 'omniauth-facebook'

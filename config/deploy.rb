@@ -9,7 +9,7 @@ set :scm, :git
 set :branch, "master"
 ssh_options[:forward_agent] = true
 
-set :rvm_ruby_string, "ruby-1.9.3-p194"
+set :rvm_ruby_string, "ruby-1.9.3-p374"
 set :rvm_type, :system
 
 set :stages, %w(staging production vm)
