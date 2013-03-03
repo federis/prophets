@@ -6,7 +6,7 @@ gem 'pg'
 gem 'pg_search'
 
 gem 'unicorn'
-gem 'delayed_job_active_record'
+gem 'resque'
 gem 'daemons'
 
 gem 'devise', '~> 2.1'
@@ -60,4 +60,5 @@ group :development do
   gem 'sinatra' #for ios tests
   gem 'capistrano'
   gem 'rvm-capistrano'
+  gem 'capistrano-resque'
 end

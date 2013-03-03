@@ -36,7 +36,7 @@ class Answer < ActiveRecord::Base
     self.judge = judging_user
     self.correctness_known_at = known_at
 
-    Answer.delay.process_bets_for_judged_answer(self.id, is_correct, known_at)
+    Resque.enqueue(ProcessBetsForJudgedAnswer, self.id, is_correct, known_at)
 
     if is_correct #if this is the correct answer, the others are implicitly incorrect
       question.answers.each do |a|
@@ -75,15 +75,9 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  def self.process_bets_for_judged_answer(id, is_correct, known_at = nil)
-    answer = find(id)
-    answer.bets.made_after(known_at).each{|bet| bet.invalidate! } unless known_at.nil?
-    
-    if is_correct
-      answer.pay_bettors!
-    else
-      answer.zero_bet_payouts!
-    end
+  def process_bets_for_judgement(is_correct, known_at = nil)
+    bets.made_after(known_at).each{|bet| bet.invalidate! } unless known_at.nil?
+    is_correct ? pay_bettors! : zero_bet_payouts!
   end
 
 private

@@ -1,7 +1,7 @@
 require "capistrano/ext/multistage"
 require "bundler/capistrano"
 require "rvm/capistrano"
-require "delayed/recipes"
+require "capistrano-resque"
 
 set :application, "prophets"
 set :repository,  "git@github.com:bcroesch/prophets.git"
@@ -24,9 +24,10 @@ set :use_sudo, false
 
 after "deploy:restart", "deploy:cleanup"
 
-after "deploy:stop",    "delayed_job:stop"
-after "deploy:start",   "delayed_job:start"
-after "deploy:restart", "delayed_job:restart"
+set :workers, { "*" => 2 }
+after "deploy:stop",    "resque:stop"
+after "deploy:start",   "resque:start"
+after "deploy:restart", "resque:restart"
 
 namespace :deploy do
   %w[start stop restart].each do |command|

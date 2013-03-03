@@ -42,16 +42,14 @@ describe Answer do
     answer_with_bets.zero_bet_payouts!
   end
 
-  it "#process_bets_for_judged_answer pays bettors for a correct answer" do
-    Answer.stub(:find).and_return(answer_with_bets)
+  it "#process_bets_for_judgement pays bettors for a correct answer" do
     answer_with_bets.should_receive(:pay_bettors!)
-    Answer.process_bets_for_judged_answer(answer_with_bets.id, true)
+    answer_with_bets.process_bets_for_judgement(true)
   end
 
   it "#process_bets_for_judged_answer zeros the payouts for bets in an incorrect answer" do
-    Answer.stub(:find).and_return(answer_with_bets)
     answer_with_bets.should_receive(:zero_bet_payouts!)
-    Answer.process_bets_for_judged_answer(answer_with_bets.id, false)
+    answer_with_bets.process_bets_for_judgement(false)
   end
 
   it "is open for betting if the question is open for betting and the answer has not been judged" do
@@ -79,23 +77,25 @@ describe Answer do
     end
 
     it "sets the judged info and processes bets" do
-      dj = mock("DelayProxy")
-      Answer.should_receive(:delay).any_number_of_times.and_return(dj)
-      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, true, nil).once
-      dj.should_receive(:process_bets_for_judged_answer).any_number_of_times
+      Answer.stub(:find).and_return(@answer)
+      #debugger
+      #Resque.should_receive(:enqueue).at_least(1).times.with(ProcessBetsForJudgedAnswer, @answer.id, false, nil)
+      @answer.should_receive(:process_bets_for_judgement).with(false, nil).once
 
-      @answer.judge!(true, user)
+      @answer.judge!(false, user)
 
-      @answer.reload.should be_correct
+      @answer.reload
+      @answer.correct.should == false 
       @answer.judged_at.should_not be_nil
       @answer.judge.should == user
     end
 
-    it "calls judge! for other answers in the same question when it is the correct answer" do
-      dj = mock("DelayProxy")
-      Answer.should_receive(:delay).any_number_of_times.and_return(dj)
-      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, true, nil).once
+    it "enqueues the ProcessBetsForJudgedAnswer job" do
+      Resque.should_receive(:enqueue).at_least(1).times.with(ProcessBetsForJudgedAnswer, @answer.id, false, nil)
+      @answer.judge!(false, user)
+    end
 
+    it "calls judge! for other answers in the same question when it is the correct answer" do
       @answer.question.answers.each do |a|
         a.should_receive(:judge!).with(false, user, nil) unless a == @answer
       end
@@ -104,10 +104,9 @@ describe Answer do
     end
 
     it "doesn't call judge! for other answers in the same question when it is the incorrect answer" do
-      dj = mock("DelayProxy")
-      Answer.should_receive(:delay).and_return(dj)
-      dj.should_receive(:process_bets_for_judged_answer).with(@answer.id, false, nil).once
-
+      question.answers.each do |a|
+        a.should_not_receive(:judge!) unless a == @answer
+      end
       @answer.judge!(false, user)
     end
 
