@@ -24,7 +24,7 @@ set :use_sudo, false
 
 after "deploy:restart", "deploy:cleanup"
 
-set :workers, { "*" => 2 }
+set :workers, { "*" => 3 }
 after "deploy:stop",    "resque:stop"
 after "deploy:start",   "resque:start"
 after "deploy:restart", "resque:restart"
