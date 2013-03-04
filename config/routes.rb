@@ -42,6 +42,6 @@ Prophets::Application.routes.draw do
     end
   end
   
-  root :to => "leagues#index"
+  root :to => "home#index"
 
 end

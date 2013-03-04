@@ -25,4 +25,8 @@ private
     devise_controller? || rails_admin_controller?
   end
 
+  def rails_admin_controller?
+    false
+  end
+
 end
