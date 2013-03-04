@@ -7,7 +7,6 @@ gem 'pg_search'
 
 gem 'unicorn'
 gem 'resque'
-gem 'daemons'
 
 gem 'devise', '~> 2.1'
 gem 'omniauth-facebook'
@@ -20,6 +19,12 @@ gem 'koala'
 
 gem 'acts_as_commentable', '3.0.1'
 gem 'acts-as-taggable-on', '~> 2.3.1'
+
+gem 'twitter-bootstrap-rails'
+gem "therubyracer"
+gem "less-rails"
+
+gem 'jquery-rails'
 
 gem 'rails_admin'
 
@@ -34,9 +39,6 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
 end
-
-gem 'jquery-rails'
-
  
 group :test do
   gem 'spork', '~> 0.9.2'
@@ -52,7 +54,6 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 2.11.0'
   gem 'debugger'
-  #gem 'mysql2'
 end
 
 group :development do
