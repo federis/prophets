@@ -1,7 +1,6 @@
-Prophets::Application.routes.draw do
-  
-  mount RailsAdmin::Engine => '/moses', :as => 'rails_admin'
+require 'resque/server'
 
+Prophets::Application.routes.draw do
   resources :memberships, :only => :index
 
   resources :tags, :only => :index do
@@ -43,5 +42,11 @@ Prophets::Application.routes.draw do
   end
   
   root :to => "home#index"
+
+  # Super-user only routes
+  constraints lambda{|request| request.env['warden'].user.try(:superuser) == 1 } do
+    mount RailsAdmin::Engine => '/moses', :as => 'rails_admin'
+    mount Resque::Server, :at => "/resque"
+  end
 
 end
