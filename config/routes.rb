@@ -35,6 +35,7 @@ Prophets::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => "registrations",
                                        :omniauth_callbacks => "omniauth_callbacks" }
 
+  resources :users, :only => :show
   resources :device_tokens, :only => :create 
   resources :tokens, :only => :create do
     collection do

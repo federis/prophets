@@ -9,6 +9,9 @@ describe "As a normal user," do
   let(:other_user) { FactoryGirl.create(:user) }
   let(:ability) { Ability.new(user) }
 
+  can_perform_actions("", :show){ user }
+  cannot_perform_actions("", :show){ other_user }
+
   let(:own_league){ FactoryGirl.build(:league, :user => user) }
   let(:not_own_league){ FactoryGirl.build(:league, :user => other_user) }
   can_perform_actions("a league of their own", :create){ own_league }

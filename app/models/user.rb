@@ -7,7 +7,8 @@ class User < ActiveRecord::Base
          :token_authenticatable, :omniauthable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :fb_uid, :fb_token, :fb_token_expires_at
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :fb_uid, :fb_token, :fb_token_expires_at,
+                  :wants_notifications, :wants_new_question_notifications
 
   has_many :created_leagues, :class_name => "League"
   has_many :memberships

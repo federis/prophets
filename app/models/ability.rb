@@ -4,6 +4,7 @@ class Ability
   def initialize(user, league=nil)
     unless user.nil?
       can :create, League, :user_id => user.id
+      can :show, User, :id => user.id
       can [:read, :read_currently_running_questions], League, :priv => false
       can [:read, :destroy, :update], Membership, :user_id => user.id
       can :create, Membership, :user_id => user.id, :role => Membership::ROLES[:member]
