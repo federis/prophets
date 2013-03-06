@@ -78,8 +78,7 @@ describe Answer do
 
     it "sets the judged info and processes bets" do
       Answer.stub(:find).and_return(@answer)
-      #debugger
-      #Resque.should_receive(:enqueue).at_least(1).times.with(ProcessBetsForJudgedAnswer, @answer.id, false, nil)
+      
       @answer.should_receive(:process_bets_for_judgement).with(false, nil).once
 
       @answer.judge!(false, user)
@@ -90,8 +89,8 @@ describe Answer do
       @answer.judge.should == user
     end
 
-    it "enqueues the ProcessBetsForJudgedAnswer job" do
-      Resque.should_receive(:enqueue).at_least(1).times.with(ProcessBetsForJudgedAnswer, @answer.id, false, nil)
+    it "enqueues the ProcessBetsForJudgedAnswerJob" do
+      Resque.should_receive(:enqueue).at_least(1).times.with(ProcessBetsForJudgedAnswerJob, @answer.id, false, nil)
       @answer.judge!(false, user)
     end
 

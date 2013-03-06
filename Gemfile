@@ -7,6 +7,7 @@ gem 'pg_search'
 
 gem 'unicorn'
 gem 'resque'
+gem 'grocer' # for push notifications
 
 gem 'devise', '~> 2.1'
 gem 'omniauth-facebook'

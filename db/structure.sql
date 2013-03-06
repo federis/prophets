@@ -142,6 +142,38 @@ ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
 
 
 --
+-- Name: device_tokens; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE device_tokens (
+    id integer NOT NULL,
+    user_id integer,
+    value character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: device_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE device_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: device_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE device_tokens_id_seq OWNED BY device_tokens.id;
+
+
+--
 -- Name: leagues; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -388,7 +420,9 @@ CREATE TABLE users (
     fb_uid character varying(255),
     fb_token character varying(255),
     fb_token_expires_at timestamp without time zone,
-    superuser integer
+    superuser integer,
+    wants_notifications boolean DEFAULT true,
+    wants_new_question_notifications boolean DEFAULT true
 );
 
 
@@ -430,6 +464,13 @@ ALTER TABLE ONLY bets ALTER COLUMN id SET DEFAULT nextval('bets_id_seq'::regclas
 --
 
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY device_tokens ALTER COLUMN id SET DEFAULT nextval('device_tokens_id_seq'::regclass);
 
 
 --
@@ -503,6 +544,14 @@ ALTER TABLE ONLY bets
 
 ALTER TABLE ONLY comments
     ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: device_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY device_tokens
+    ADD CONSTRAINT device_tokens_pkey PRIMARY KEY (id);
 
 
 --
@@ -601,6 +650,20 @@ CREATE INDEX index_comments_on_commentable_type ON comments USING btree (comment
 --
 
 CREATE INDEX index_comments_on_user_id ON comments USING btree (user_id);
+
+
+--
+-- Name: index_device_tokens_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_device_tokens_on_user_id ON device_tokens USING btree (user_id);
+
+
+--
+-- Name: index_device_tokens_on_value; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_device_tokens_on_value ON device_tokens USING btree (value);
 
 
 --
@@ -790,3 +853,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130205223859');
 INSERT INTO schema_migrations (version) VALUES ('20130205225632');
 
 INSERT INTO schema_migrations (version) VALUES ('20130302221701');
+
+INSERT INTO schema_migrations (version) VALUES ('20130306001719');
+
+INSERT INTO schema_migrations (version) VALUES ('20130306171625');

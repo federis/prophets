@@ -3,7 +3,8 @@ class Membership < ActiveRecord::Base
   belongs_to :league, :counter_cache => true
   has_many :bets
 
-  attr_accessible :name, :user_id
+  attr_accessible :name, :wants_new_question_notifications
+  attr_accessible :name, :wants_new_question_notifications, :user_id, :role, :as => :admin
 
   ROLES = { :admin => 1, :member => 2 }
 
@@ -18,6 +19,10 @@ class Membership < ActiveRecord::Base
 
   def rank
     @rank ||= league.memberships.where(["memberships.balance + memberships.outstanding_bets_value > ?", balance + outstanding_bets_value]).count + 1
+  end
+
+  def admin?
+    role == ROLES[:admin]
   end
 
 private

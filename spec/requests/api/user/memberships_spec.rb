@@ -49,6 +49,21 @@ describe "As a normal user, Memberships" do
     json['rank'].should == 1
   end
 
+  it "updates a membership" do
+    league_where_member = FactoryGirl.create(:league_with_member, :member => user)
+    mem = user.membership_in_league(league_where_member)
+    
+    put league_membership_path(league_where_member, mem),
+        :membership => { :wants_new_question_notifications => false },
+        :auth_token => auth_token,
+        :format => "json"
+
+    response.status.should == 204
+
+    mem.reload
+    mem.wants_new_question_notifications.should == false
+  end
+
   it "deletes a league membership" do
     league_where_member = FactoryGirl.create(:league_with_member, :member => user)
 

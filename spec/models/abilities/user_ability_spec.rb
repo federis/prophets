@@ -19,13 +19,13 @@ describe "As a normal user," do
     let(:ability) { Ability.new(user, league) }
     
     let(:own_membership){ FactoryGirl.build(:membership, :league => league, :user => user) }
-    can_perform_actions("their own membership", :read, :create, :destroy){ own_membership }
+    can_perform_actions("their own membership", :read, :create, :destroy, :update){ own_membership }
 
     let(:own_admin_membership){ FactoryGirl.build(:membership, :league => league, :user => user, :role => Membership::ROLES[:admin]) }
     cannot_perform_actions("their own admin membership", :create){ own_admin_membership }
 
     let(:not_own_membership){ FactoryGirl.build(:membership, :league => league, :user => other_user) }
-    cannot_perform_actions("a membership for another user", :create, :destroy){ not_own_membership }
+    cannot_perform_actions("a membership for another user", :create, :destroy, :update){ not_own_membership }
 
     context "where user is a member" do
       before do

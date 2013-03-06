@@ -36,7 +36,7 @@ class Answer < ActiveRecord::Base
     self.judge = judging_user
     self.correctness_known_at = known_at
 
-    Resque.enqueue(ProcessBetsForJudgedAnswer, self.id, is_correct, known_at)
+    Resque.enqueue(ProcessBetsForJudgedAnswerJob, self.id, is_correct, known_at)
 
     if is_correct #if this is the correct answer, the others are implicitly incorrect
       question.answers.each do |a|

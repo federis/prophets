@@ -25,6 +25,20 @@ describe "As an admin, Memberships" do
     json['role'].should == Membership::ROLES[:member]
   end
 
+  it "updates a league membership for another user in a private league" do
+    private_league.users << other_user
+
+    mem = other_user.membership_in_league(private_league)
+
+    put league_membership_path(private_league, mem),
+           :membership => { :role => Membership::ROLES[:admin] },
+           :auth_token => admin.authentication_token,
+           :format => "json"
+    
+    response.status.should == 204
+    mem.reload.should be_admin
+  end
+
   it "deletes a league membership for another user in a private league" do
     private_league.users << other_user
 

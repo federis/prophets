@@ -5,7 +5,7 @@ class Ability
     unless user.nil?
       can :create, League, :user_id => user.id
       can [:read, :read_currently_running_questions], League, :priv => false
-      can [:read, :destroy], Membership, :user_id => user.id
+      can [:read, :destroy, :update], Membership, :user_id => user.id
       can :create, Membership, :user_id => user.id, :role => Membership::ROLES[:member]
       #can :read, Question, :league => { :priv => false }
       can :index, ActsAsTaggableOn::Tag

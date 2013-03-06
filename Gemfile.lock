@@ -97,6 +97,7 @@ GEM
     font-awesome-sass-rails (3.0.0.1)
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
+    grocer (0.3.2)
     guard (1.5.4)
       listen (>= 0.4.2)
       lumberjack (>= 1.0.2)
@@ -330,6 +331,7 @@ DEPENDENCIES
   debugger
   devise (~> 2.1)
   factory_girl_rails (~> 4.0)
+  grocer
   guard-rspec (~> 1.2.0)
   guard-spork (~> 1.1.0)
   jquery-rails

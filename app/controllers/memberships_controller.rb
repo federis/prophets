@@ -25,13 +25,18 @@ class MembershipsController < ApplicationController
       return
     end
 
-    @membership = @league.memberships.build(params[:membership])
+    @membership = @league.memberships.build(params[:membership], as: current_user.is_admin_of_league?(@league) ? :admin : :default)
     @membership.user = current_user if @membership.user_id.nil?
     
     authorize! :create, @membership
 
     @membership.save
     respond_with @league, @membership
+  end
+
+  def update
+    @membership.update_attributes(params[:membership], as: current_user.is_admin_of_league?(@league) ? :admin : :default)
+    respond_with @membership
   end
 
   def destroy

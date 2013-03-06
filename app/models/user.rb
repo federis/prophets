@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_many :memberships
   has_many :leagues, :through => :memberships
   has_many :bets, :through => :memberships
+  has_many :device_tokens
 
   before_save :ensure_authentication_token
 
