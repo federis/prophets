@@ -6,7 +6,7 @@ gem 'pg'
 gem 'pg_search'
 
 gem 'unicorn'
-gem 'resque'
+gem 'resque', '1.22.0'
 gem 'grocer' # for push notifications
 
 gem 'devise', '~> 2.1'
