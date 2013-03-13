@@ -37,6 +37,7 @@ Prophets::Application.routes.draw do
 
   resources :users, :only => :show
   resources :device_tokens, :only => :create 
+  delete "device_tokens" => "device_tokens#destroy"
   resources :tokens, :only => :create do
     collection do
       post "facebook"

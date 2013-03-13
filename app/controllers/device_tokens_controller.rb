@@ -1,5 +1,5 @@
 class DeviceTokensController < ApplicationController
-  skip_authorization_check only: :create
+  skip_authorization_check only: [:create, :destroy]
 
   respond_to :json
 
@@ -13,5 +13,11 @@ class DeviceTokensController < ApplicationController
       @device_token.save
     end
     respond_with @device_token, location: nil
+  end
+
+  def destroy
+    @device_token = current_user.device_tokens.where(value: params[:device_token][:value]).first
+    @device_token.destroy
+    respond_with @device_token
   end
 end
