@@ -2,7 +2,6 @@ class SendNotificationsForNewQuestionJob
   @queue = :new_question_notifications
 
   def self.perform(question_id)
-    debugger
     question = Question.find(question_id)
 
     question.league.users.where("users.wants_notifications = ? and users.wants_new_question_notifications = ?", true, true).each do |user|      
@@ -13,8 +12,10 @@ class SendNotificationsForNewQuestionJob
           badge:        1,
           expiry:       1.day.from_now
         )
+        
+        Rails.logger.info "Sending new question #{question.id} notification to user #{user.id}"
 
-        pusher.push(notification)
+        FFP::PushNotifications.grocer.push(notification)
       end
     end
 
