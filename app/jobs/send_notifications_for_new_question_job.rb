@@ -10,12 +10,19 @@ class SendNotificationsForNewQuestionJob
           device_token: token.value,
           alert:        "The question \"#{question.content}\" was published in #{question.league.name}",
           badge:        1,
-          expiry:       1.day.from_now
+          expiry:       1.day.from_now,
+          custom: { 
+            "notificationType" => "newQuestion",
+            "leagueId" => question.league_id,
+            "questionId" => question.id 
+          }
         )
         
         Rails.logger.info "Sending new question #{question.id} notification to user #{user.id}"
-
-        FFP::PushNotifications.grocer.push(notification)
+        
+        ret = FFP::PushNotifications.grocer.push(notification)
+        
+        Rails.logger.info "Return value was #{ret}"
       end
     end
 
