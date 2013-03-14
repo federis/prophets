@@ -34,6 +34,21 @@ describe "As a normal user, DeviceToken" do
     token.value.should == device_token.value
     token.user_id.should == user.id
   end
+
+  it "updates the timestamp if token already exists" do
+    token = FactoryGirl.create(:device_token, user: user)
+    last_updated = token.updated_at
+    count = DeviceToken.count
+
+    post device_tokens_path, :device_token => { :value => token.value },
+                             :auth_token => user.authentication_token,
+                             :format => "json"
+
+    DeviceToken.count.should == count
+
+    token.reload
+    token.updated_at.should be > last_updated
+  end
   
   it "destroys a token" do
     token = FactoryGirl.create(:device_token, user: user)

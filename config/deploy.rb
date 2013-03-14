@@ -1,6 +1,7 @@
 require "capistrano/ext/multistage"
 require "bundler/capistrano"
 require "rvm/capistrano"
+require "whenever/capistrano"
 require "capistrano-resque"
 
 set :application, "prophets"
@@ -21,6 +22,9 @@ set :deploy_via, :remote_cache
 default_run_options[:pty] = true
 set :user, "deploy"
 set :use_sudo, false
+
+set :whenever_command, "bundle exec whenever"
+set :whenever_roles, :cron
 
 after "deploy:restart", "deploy:cleanup"
 
