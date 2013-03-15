@@ -52,6 +52,8 @@ class Question < ActiveRecord::Base
 
     self.approver = approving_user
     self.approved_at = Time.now
+
+    Resque.enqueue(SendNotificationsForNewQuestionJob, self.id)
     
     save
   end

@@ -15,7 +15,7 @@ describe "As a normal user, DeviceToken" do
     DeviceToken.count.should == count + 1
 
     token = DeviceToken.last
-    token.value.should == "hereisatoken"
+    token.value.should == "HEREISATOKEN"
     token.user.should == user
   end
 

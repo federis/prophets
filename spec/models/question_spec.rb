@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Question do
 
-  it "#approve raises an exception and doesn't approve question if approving_user isn't an admin" do
+  it "#approve! raises an exception and doesn't approve question if approving_user isn't an admin" do
     user = FactoryGirl.create(:user)
     league = FactoryGirl.create(:league)
     question = FactoryGirl.create(:question, :unapproved, :league => league)
@@ -13,10 +13,12 @@ describe Question do
     question.approved_at.should be_nil
   end
 
-  it "#approve! approves the question and saves it" do
+  it "#approve! approves the question, saves it, and queues a job to send push notifications" do
     admin = FactoryGirl.create(:user)
     league = FactoryGirl.create(:league_with_admin, :admin => admin)
     question = FactoryGirl.create(:question, :with_answers, :user => admin, :league => league, :approver => nil)
+    
+    Resque.should_receive(:enqueue).with(SendNotificationsForNewQuestionJob, question.id)
     
     question.approve!(admin)
     question.approver.should == admin
