@@ -1,5 +1,5 @@
 class SendNotificationsForNewQuestionJob
-  @queue = :jobs
+  @queue = :new_question_notifications
 
   def self.perform(question_id)
     Rails.logger.info "Starting APNs for new question #{question_id}"

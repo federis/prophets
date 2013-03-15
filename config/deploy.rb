@@ -27,7 +27,7 @@ set :whenever_roles, :cron
 
 after "deploy:restart", "deploy:cleanup"
 
-set :workers, { "jobs" => 2 }
+set :workers, { "*" => 2 }
 after "deploy:stop",    "resque:stop"
 after "deploy:start",   "resque:start"
 after "deploy:restart", "resque:restart"
