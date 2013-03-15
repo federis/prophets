@@ -1,5 +1,5 @@
 class SendNotificationsForNewQuestionJob
-  @queue = :new_question_notifications
+  @queue = :jobs
 
   def self.perform(question_id)
     question = Question.find(question_id)

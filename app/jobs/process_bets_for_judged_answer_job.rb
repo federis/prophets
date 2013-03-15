@@ -1,5 +1,5 @@
 class ProcessBetsForJudgedAnswerJob
-  @queue = :judgement_bet_processing
+  @queue = :jobs
 
   def self.perform(answer_id, is_correct, known_at = nil)
     answer = Answer.find(answer_id)
