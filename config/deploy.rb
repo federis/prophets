@@ -2,7 +2,6 @@ require "capistrano/ext/multistage"
 require "bundler/capistrano"
 require "rvm/capistrano"
 require "whenever/capistrano"
-require "capistrano-resque"
 
 set :application, "prophets"
 set :repository,  "git@github.com:bcroesch/prophets.git"
