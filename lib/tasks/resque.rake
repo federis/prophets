@@ -5,7 +5,7 @@ task "resque:setup" => :environment do
 
   logger = Logger.new("#{Rails.root}/log/resque.log")
   logger.formatter = Proc.new{|severity, datetime, progname, msg| "[#{Time.now}] [#{severity}] #{msg}\n"}
-  ActiveRecord::Base.logger = logger
+  #ActiveRecord::Base.logger = logger
   Rails.logger = logger
   #Resque.logger = logger
   
