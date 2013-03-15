@@ -2,6 +2,8 @@ class SendNotificationsForNewQuestionJob
   @queue = :jobs
 
   def self.perform(question_id)
+    Rails.logger.info "Starting APNs for new question #{question_id}"
+    
     question = Question.find(question_id)
 
     question.league.users.where("users.wants_notifications = ? and users.wants_new_question_notifications = ?", true, true).each do |user|      
