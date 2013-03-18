@@ -1,0 +1,149 @@
+/* Stylesheet for 55Prophets */
+
+body {
+	background: #efefef;
+	font-family: "Roboto Condensed",Arial,sans-serif
+}
+
+h1,h2,h3,h4,h5 {
+	font-family: "Roboto Condensed",Arial,sans-serif
+}
+
+.title {
+	text-align: right;
+	margin-top: 15px;
+	font-weight: 400;
+}
+
+.title h3 {
+	color: #adadad;
+}
+
+.wood {
+	background: url(../images/wood.jpg);
+	padding: 15px;
+	moz-border-radius: 10px;
+	border-radius: 10px;
+	webkit-border-radius: 10px;
+}
+
+.plaid {
+	background: url(../images/bgnd.png);
+	box-shadow: 0 0 20px #000;
+	border-top: 1px solid #6e6e6e;
+	border-left: 1px solid #6e6e6e;
+	moz-border-radius: 10px;
+	border-radius: 10px;
+	webkit-border-radius: 10px;
+}
+
+/* Header */
+
+#header {
+	padding: 50px 0 0 0;
+	text-align: center;
+	font-family: 'Pacifico', cursive;
+}
+
+.hero {
+	text-align: left;
+	margin-left: 30px;
+}
+
+.hero h1 {
+	color: #fff;
+	font-size: 60px;
+	font-family: 'Roboto Condensed', sans-serif;
+	text-shadow: -1px 0 0 #000;
+	margin-top: 60px;
+	line-height: 1em;
+}
+
+.hero h2 {
+	color: #bde8f3;
+	font-size: 36px;
+	font-family: 'Yellowtail', cursive;
+	text-shadow: -1px 0 0 #000;
+	margin-top: 30px;
+}
+
+/* Email Sign up Form */
+
+#mc_embed_signup {background:none; font-family: "Roboto Condensed",Arial,sans-serif; height: 130px;}
+
+#mc_embed_signup label {color: #fff}
+
+#mc_embed_signup input {
+	font-size: 18px;
+	moz-border-radius: 5px;
+	border-radius: 5px;
+	webkit-border-radius: 5px;
+}
+
+#mc_embed_signup input.email {
+	border: 0;
+	font-family: "Roboto Condensed",Arial,sans-serif
+}
+
+#mc_embed_signup input.button {
+	background-color: #cc5c32; 
+	border-right: 1px solid #a3431f;
+	border-bottom: 1px solid #a3431f;
+	border-radius:4px;
+	color: #FFFFFF;
+	font-size:18px;
+	font-weight: 400;
+	text-shadow: none;
+	font-family: "Roboto Condensed",Arial,sans-serif;
+}
+
+#mc_embed_signup input.button:hover {
+	background-color:#bbb;
+	color: #fff;
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+}
+
+#mc_embed_signup input:focus {border-color:#333; border: none;}
+
+.thankyou {
+	margin: 50px 0;
+}
+
+.thankyou h2 {
+	color: #fff;
+	text-shadow: -1px 0 0 #000;
+	margin-top: 0px;
+}
+
+.thankyou h3 {
+	color: #bbb;
+	font-size: 18px;
+	margin-top: 10px;
+	line-height: 1em;
+}
+	
+
+/* Footer */
+
+.footer {
+	margin: 40px 0 20px 0;
+	color: #848484;
+}
+
+.federislogo {
+	display: inline;
+}
+
+.footer_content {
+	display: inline;
+	top: -30px;
+	position: relative;
+	margin-left: 20px
+}
+
+/* Utility Styles */
+
+.right {
+	float: right;
+}
