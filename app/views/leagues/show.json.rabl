@@ -5,3 +5,5 @@ node(:creator_name){|l| l.user.name }
 child :tags do
   extends "tags/show"
 end
+
+child(:memberships){ extends "memberships/show" } if @include_memberships

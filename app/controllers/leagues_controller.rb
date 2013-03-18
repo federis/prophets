@@ -25,6 +25,7 @@ class LeaguesController < ApplicationController
     @league = current_user.created_leagues.build(params[:league])
     authorize! :create, @league
     @league.save
+    @include_memberships = true
     
     respond_with @league
   end
