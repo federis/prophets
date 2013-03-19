@@ -67,6 +67,18 @@ h1,h2,h3,h4,h5 {
 	margin-top: 30px;
 }
 
+.contact h1 {
+	color: #fff;
+	font-size: 30px;
+	margin-top: 100px;
+	margin-left: 10px;
+	line-height: 1em;
+}
+
+.contact a{
+	color: #C4C4C4;
+}
+
 /* Email Sign up Form */
 
 #mc_embed_signup {background:none; font-family: "Roboto Condensed",Arial,sans-serif; height: 130px;}
