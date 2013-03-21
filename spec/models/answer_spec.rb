@@ -103,10 +103,19 @@ describe Answer do
     end
 
     it "doesn't call judge! for other answers in the same question when it is the incorrect answer" do
-      question.answers.each do |a|
+      @answer.question.answers.each do |a|
         a.should_not_receive(:judge!) unless a == @answer
       end
       @answer.judge!(false, user)
+    end
+
+    it "doesn't call judge! for other answers that have already been judged" do
+      judged_answer = double("Answer")
+      judged_answer.stub(:judged?).and_return(true)
+      @answer.question.stub(:answers).and_return([judged_answer])
+      
+      judged_answer.should_not_receive(:judge!)
+      @answer.judge!(true, user)
     end
 
     it "invalidates bets made after the known_at date" do

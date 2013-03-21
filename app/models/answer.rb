@@ -40,7 +40,7 @@ class Answer < ActiveRecord::Base
 
     if is_correct #if this is the correct answer, the others are implicitly incorrect
       question.answers.each do |a|
-        a.judge!(false, judging_user, known_at) unless a == self
+        a.judge!(false, judging_user, known_at) unless a == self || a.judged?
       end
     end
     
@@ -65,13 +65,13 @@ class Answer < ActiveRecord::Base
 
   def pay_bettors!
     bets.each do |bet|
-      bet.pay_bettor! unless bet.invalidated?
+      bet.pay_bettor! unless bet.complete?
     end
   end
 
   def zero_bet_payouts!
     bets.each do |bet|
-      bet.zero_payout! unless bet.invalidated?
+      bet.zero_payout! unless bet.complete?
     end
   end
 

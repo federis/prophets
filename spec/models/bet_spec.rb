@@ -123,6 +123,16 @@ describe Bet do
     bet.zero_payout!
     bet.reload.payout.should == 0
   end
+
+  it "#pay_bettor! throws exception when bet has already been judged" do
+    bet.pay_bettor!
+    expect{ bet.pay_bettor! }.to raise_error(FFP::Exceptions::BetDoubleJudgementError)
+  end
+
+  it "#zero_payout! throws exception when bet has already been judged" do
+    bet.pay_bettor!
+    expect{ bet.zero_payout! }.to raise_error(FFP::Exceptions::BetDoubleJudgementError)
+  end
   
   it "#payout_when_correct gives the correct payout" do
     bet = Bet.new(:amount => 2)

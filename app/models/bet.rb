@@ -30,6 +30,10 @@ class Bet < ActiveRecord::Base
     answer.question.league.max_bet
   end
 
+  def complete?
+    judged? || invalidated?
+  end
+
   def judged?
     !payout.nil?
   end
@@ -60,6 +64,8 @@ class Bet < ActiveRecord::Base
   end
 
   def pay_bettor!
+    raise FFP::Exceptions::BetDoubleJudgementError if complete?
+
     self.payout = payout_when_correct
     if membership # in case they left the league
       membership.balance += payout
@@ -72,6 +78,8 @@ class Bet < ActiveRecord::Base
   end
 
   def zero_payout!
+    raise FFP::Exceptions::BetDoubleJudgementError if complete?
+    
     self.payout = 0
     membership.outstanding_bets_value -= amount
     Bet.transaction do
