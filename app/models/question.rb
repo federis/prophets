@@ -80,7 +80,7 @@ class Question < ActiveRecord::Base
 private
 
   def set_initial_pool
-    self.initial_pool = league.max_bet * League::POOL_MULTIPLIER
+    self.initial_pool = league.initial_balance * League::POOL_MULTIPLIER
   end
 
   def check_answer_initial_probabilities

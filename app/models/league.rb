@@ -1,5 +1,5 @@
 class League < ActiveRecord::Base
-  POOL_MULTIPLIER = 10
+  POOL_MULTIPLIER = 1
 
   acts_as_commentable
   acts_as_taggable
