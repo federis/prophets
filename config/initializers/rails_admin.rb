@@ -57,7 +57,7 @@ RailsAdmin.config do |config|
 
   ###  Answer  ###
 
-  # config.model 'Answer' do
+  config.model 'Answer' do
 
   #   # You can copy this to a 'rails_admin do ... end' block inside your answer.rb model definition
 
@@ -87,7 +87,7 @@ RailsAdmin.config do |config|
 
   #   # Cross-section configuration:
 
-  #     # object_label_method :name     # Name of the method called for pretty printing an *instance* of ModelName
+      object_label_method :content     # Name of the method called for pretty printing an *instance* of ModelName
   #     # label 'My model'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
   #     # label_plural 'My models'      # Same, plural
   #     # weight 0                      # Navigation priority. Bigger is higher.
@@ -108,7 +108,7 @@ RailsAdmin.config do |config|
   #     # also see the create, update, modal and nested sections, which override edit in specific cases (resp. when creating, updating, modifying from another model in a popup modal or modifying from another model nested form)
   #     # you can override a cross-section field configuration in any section with the same syntax `configure :field_name do ... end`
   #     # using `field` instead of `configure` will exclude all other fields and force the ordering
-  # end
+  end
 
 
   ###  Bet  ###
@@ -211,9 +211,7 @@ RailsAdmin.config do |config|
 
   ###  League  ###
 
-  # config.model 'League' do
-
-  #   # You can copy this to a 'rails_admin do ... end' block inside your league.rb model definition
+  config.model 'League' do
 
   #   # Found associations:
 
@@ -267,12 +265,12 @@ RailsAdmin.config do |config|
   #     # also see the create, update, modal and nested sections, which override edit in specific cases (resp. when creating, updating, modifying from another model in a popup modal or modifying from another model nested form)
   #     # you can override a cross-section field configuration in any section with the same syntax `configure :field_name do ... end`
   #     # using `field` instead of `configure` will exclude all other fields and force the ordering
-  # end
+  end
 
 
   ###  Membership  ###
 
-  # config.model 'Membership' do
+  config.model 'Membership' do
 
   #   # You can copy this to a 'rails_admin do ... end' block inside your membership.rb model definition
 
@@ -296,7 +294,7 @@ RailsAdmin.config do |config|
 
   #   # Cross-section configuration:
 
-  #     # object_label_method :name     # Name of the method called for pretty printing an *instance* of ModelName
+      object_label_method :user_name     # Name of the method called for pretty printing an *instance* of ModelName
   #     # label 'My model'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
   #     # label_plural 'My models'      # Same, plural
   #     # weight 0                      # Navigation priority. Bigger is higher.
@@ -317,12 +315,12 @@ RailsAdmin.config do |config|
   #     # also see the create, update, modal and nested sections, which override edit in specific cases (resp. when creating, updating, modifying from another model in a popup modal or modifying from another model nested form)
   #     # you can override a cross-section field configuration in any section with the same syntax `configure :field_name do ... end`
   #     # using `field` instead of `configure` will exclude all other fields and force the ordering
-  # end
+  end
 
 
   ###  Question  ###
 
-  # config.model 'Question' do
+  config.model 'Question' do
 
   #   # You can copy this to a 'rails_admin do ... end' block inside your question.rb model definition
 
@@ -352,7 +350,7 @@ RailsAdmin.config do |config|
 
   #   # Cross-section configuration:
 
-  #     # object_label_method :name     # Name of the method called for pretty printing an *instance* of ModelName
+      object_label_method :content     # Name of the method called for pretty printing an *instance* of ModelName
   #     # label 'My model'              # Name of ModelName (smartly defaults to ActiveRecord's I18n API)
   #     # label_plural 'My models'      # Same, plural
   #     # weight 0                      # Navigation priority. Bigger is higher.
@@ -373,7 +371,7 @@ RailsAdmin.config do |config|
   #     # also see the create, update, modal and nested sections, which override edit in specific cases (resp. when creating, updating, modifying from another model in a popup modal or modifying from another model nested form)
   #     # you can override a cross-section field configuration in any section with the same syntax `configure :field_name do ... end`
   #     # using `field` instead of `configure` will exclude all other fields and force the ordering
-  # end
+  end
 
 
   ###  User  ###

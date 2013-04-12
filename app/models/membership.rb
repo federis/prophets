@@ -25,6 +25,10 @@ class Membership < ActiveRecord::Base
     role == ROLES[:admin]
   end
 
+  def user_name
+    user.name
+  end
+
 private
 
   def set_balance_to_league_initial
