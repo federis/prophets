@@ -12,4 +12,13 @@ class Comment < ActiveRecord::Base
   validates :user_id, :presence => true
   validates :commentable_id, :presence => true
   validates :commentable_type, :presence => true, :inclusion => { :in => ["League", "Question"] }
+
+  after_create :enqueue_notifications_jobs
+
+private
+
+  def enqueue_notifications_jobs
+    Resque.enqueue(SendNotificationsForNewCommentJob, self.id)
+  end
+
 end

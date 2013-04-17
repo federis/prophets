@@ -422,7 +422,9 @@ CREATE TABLE users (
     fb_token_expires_at timestamp without time zone,
     superuser integer,
     wants_notifications boolean DEFAULT true,
-    wants_new_question_notifications boolean DEFAULT true
+    wants_new_question_notifications boolean DEFAULT true,
+    wants_new_comment_notifications boolean DEFAULT true,
+    wants_question_created_notifications boolean DEFAULT true
 );
 
 
@@ -857,3 +859,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130302221701');
 INSERT INTO schema_migrations (version) VALUES ('20130306001719');
 
 INSERT INTO schema_migrations (version) VALUES ('20130306171625');
+
+INSERT INTO schema_migrations (version) VALUES ('20130416141254');
+
+INSERT INTO schema_migrations (version) VALUES ('20130416143610');

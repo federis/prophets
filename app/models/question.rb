@@ -30,6 +30,7 @@ class Question < ActiveRecord::Base
   scope :pending_judgement, -> { approved.betting_closed.incomplete }
 
   before_validation :set_initial_pool, :on => :create
+  after_create :enqueue_created_question_notifications_jobs
 
   def answers_attributes=(attrs)
     answers.each do |answer|
@@ -92,6 +93,10 @@ private
     if !betting_closes_at.blank? && betting_closes_at <= Time.now
       errors[:betting_closes_at] << errors.generate_message(:betting_closes_at, :cant_be_in_past) 
     end
+  end
+
+  def enqueue_created_question_notifications_jobs
+    Resque.enqueue(SendNotificationsForCreatedQuestionJob, self.id)
   end
 
 end
