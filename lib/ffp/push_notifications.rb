@@ -2,6 +2,10 @@ module FFP
   module PushNotifications
     extend self
 
+    SEND_NEW_QUESTION_NOTIFICATIONS = true
+    SEND_NEW_COMMENT_NOTIFICATIONS = false
+    SEND_QUESTION_CREATED_NOTIFICATIONS = false
+
     def grocer
       @grocer ||= begin
                     connection = Grocer::PushConnection.new(certificate: cert_location)

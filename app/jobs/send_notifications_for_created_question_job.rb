@@ -2,6 +2,11 @@ class SendNotificationsForCreatedQuestionJob
   @queue = :question_created_notifications
 
   def self.perform(question_id)
+    unless FFP::PushNotifications::SEND_QUESTION_CREATED_NOTIFICATIONS
+      Rails.logger.info "Question created notifications are turned off. Skipping notifications."
+      return
+    end
+
     Rails.logger.info "Starting APNs for created question #{question_id}"
     
     question = Question.find(question_id)

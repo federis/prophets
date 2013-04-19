@@ -2,6 +2,11 @@ class SendNotificationsForNewCommentJob
   @queue = :new_comment_notifications
 
   def self.perform(comment_id)
+    unless FFP::PushNotifications::SEND_NEW_COMMENT_NOTIFICATIONS
+      Rails.logger.info "New comment notifications are turned off. Skipping notifications."
+      return
+    end
+
     Rails.logger.info "Starting APNs for new comment #{comment_id}"
     
     comment = Comment.find(comment_id)
