@@ -2,7 +2,7 @@ class SendNotificationsForNewQuestionJob
   @queue = :new_question_notifications
 
   def self.perform(question_id)
-    unless FFP::PushNotifications::SEND_QUESTION_CREATED_NOTIFICATIONS
+    unless FFP::PushNotifications::SEND_NEW_QUESTION_NOTIFICATIONS
       Rails.logger.info "New question notifications are turned off. Skipping notifications."
       return
     end
