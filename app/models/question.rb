@@ -45,7 +45,7 @@ class Question < ActiveRecord::Base
   end
 
   def bets_count
-    @bets_count ||= answers.reduce(0){|sum, answer| sum + answer.bets.count }
+    @bets_count ||= answers.reduce(0){|sum, answer| sum + answer.bets_count }
   end
 
   def approve!(approving_user)
