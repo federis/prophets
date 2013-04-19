@@ -64,4 +64,5 @@ group :development do
   gem 'capistrano'
   gem 'rvm-capistrano'
   gem 'capistrano-resque'
+  gem 'capistrano-maintenance'
 end
