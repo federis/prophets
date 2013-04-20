@@ -634,17 +634,10 @@ CREATE INDEX index_bets_on_answer_id ON bets USING btree (answer_id);
 
 
 --
--- Name: index_comments_on_commentable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_comments_on_commentable_type_and_commentable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_comments_on_commentable_id ON comments USING btree (commentable_id);
-
-
---
--- Name: index_comments_on_commentable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_comments_on_commentable_type ON comments USING btree (commentable_type);
+CREATE INDEX index_comments_on_commentable_type_and_commentable_id ON comments USING btree (commentable_type, commentable_id);
 
 
 --
@@ -863,3 +856,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130306171625');
 INSERT INTO schema_migrations (version) VALUES ('20130416141254');
 
 INSERT INTO schema_migrations (version) VALUES ('20130416143610');
+
+INSERT INTO schema_migrations (version) VALUES ('20130420211802');
