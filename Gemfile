@@ -29,6 +29,7 @@ gem "less-rails"
 gem 'jquery-rails'
 
 gem 'rails_admin'
+gem 'kaminari'
 
 # Gems used only for assets and not required
 # in production environments by default.

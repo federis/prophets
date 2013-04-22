@@ -1,4 +1,6 @@
 class Bet < ActiveRecord::Base
+  acts_as_commentable
+  
   belongs_to :answer, :counter_cache => true
   belongs_to :membership
   has_many :activities, as: :feedable, dependent: :destroy

@@ -118,7 +118,8 @@ CREATE TABLE bets (
     updated_at timestamp without time zone NOT NULL,
     invalidated_at timestamp without time zone,
     payout numeric(15,2),
-    membership_id integer
+    membership_id integer,
+    comments_count integer DEFAULT 0
 );
 
 
@@ -924,3 +925,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130416143610');
 INSERT INTO schema_migrations (version) VALUES ('20130420211802');
 
 INSERT INTO schema_migrations (version) VALUES ('20130422154328');
+
+INSERT INTO schema_migrations (version) VALUES ('20130422194333');
