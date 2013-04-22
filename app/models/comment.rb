@@ -11,7 +11,7 @@ class Comment < ActiveRecord::Base
   validates :comment, :presence => true, :length => { :in => 1..250 }
   validates :user_id, :presence => true
   validates :commentable_id, :presence => true
-  validates :commentable_type, :presence => true, :inclusion => { :in => ["League", "Question"] }
+  validates :commentable_type, :presence => true, :inclusion => { :in => ["League", "Question", "Bet"] }
 
   after_create :enqueue_notifications_jobs
 

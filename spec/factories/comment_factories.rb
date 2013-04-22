@@ -10,5 +10,9 @@ FactoryGirl.define do
     trait :for_league do
       association :commentable, factory: :league
     end
+
+    trait :for_bet do
+      association :commentable, factory: :bet
+    end
   end
 end

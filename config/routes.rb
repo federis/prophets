@@ -32,6 +32,10 @@ Prophets::Application.routes.draw do
     resources :bets
   end
 
+  resources :bets, :only => [] do
+    resources :comments
+  end
+
   devise_for :users, :controllers => { :registrations => "registrations",
                                        :omniauth_callbacks => "omniauth_callbacks" }
 

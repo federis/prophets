@@ -34,11 +34,23 @@ class CommentsController < ApplicationController
 private
 
   def commentable
-    @commentable ||= params[:question_id] ? Question.find(params[:question_id]) : League.find(params[:league_id]) 
+    @commentable ||= if params[:question_id]
+      Question.find(params[:question_id])
+    elsif params[:bet_id]
+      Bet.find(params[:bet_id])
+    else 
+      League.find(params[:league_id]) 
+    end
   end
 
   def current_league
-    @current_league ||= commentable.is_a?(League) ? commentable : commentable.league
+    @current_league ||= if commentable.is_a?(League)
+      commentable
+    elsif commentable.is_a?(Question)
+      commentable.league
+    elsif commentable.is_a?(Bet)
+      commentable.answer.question.league
+    end
   end
 
 end

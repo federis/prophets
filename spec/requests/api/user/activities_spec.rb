@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "As a normal user, Questions" do
+describe "As a normal user, Activities" do
   let(:user){ FactoryGirl.create(:user) }
   let(:league){ FactoryGirl.create(:league_with_member, :member => user) }
   let(:question){ FactoryGirl.create(:question, :user => user, :league => league, :approved_at => Time.now) }
