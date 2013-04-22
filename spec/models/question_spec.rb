@@ -13,14 +13,21 @@ describe Question do
     question.approved_at.should be_nil
   end
 
-  it "#approve! approves the question, saves it, and queues a job to send push notifications" do
+  it "#approve! approves the question, saves it, generates an activity entry, and queues a job to send push notifications" do
     admin = FactoryGirl.create(:user)
     league = FactoryGirl.create(:league_with_admin, :admin => admin)
     question = FactoryGirl.create(:question, :with_answers, :user => admin, :league => league, :approver => nil)
     
     Resque.should_receive(:enqueue).with(SendNotificationsForNewQuestionJob, question.id)
     
+    activity_count = Activity.count
     question.approve!(admin)
+
+    Activity.count.should == activity_count + 1
+    activity = Activity.last
+    activity.feedable.should == question
+    activity.activity_type.should == Activity::TYPES[:question_published]
+
     question.approver.should == admin
     question.approved_at.should_not be_nil
 

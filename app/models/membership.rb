@@ -3,8 +3,8 @@ class Membership < ActiveRecord::Base
   belongs_to :league, :counter_cache => true
   has_many :bets
 
-  attr_accessible :name, :wants_new_question_notifications
-  attr_accessible :name, :wants_new_question_notifications, :user_id, :role, :as => :admin
+  attr_accessible :name
+  attr_accessible :name, :user_id, :role, :as => :admin
 
   ROLES = { :admin => 1, :member => 2 }
 

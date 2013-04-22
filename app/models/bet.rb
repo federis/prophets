@@ -1,6 +1,7 @@
 class Bet < ActiveRecord::Base
   belongs_to :answer, :counter_cache => true
   belongs_to :membership
+  has_many :activities, as: :feedable, dependent: :destroy
   attr_accessible :amount
 
   validates :answer_id, :presence => true
@@ -18,6 +19,7 @@ class Bet < ActiveRecord::Base
   after_create :increment_answer_bet_total!
   after_create :update_question_answer_probabilities!
   after_create :update_membership_balance_and_outstanding_bets_value!
+  after_create :generate_bet_created_activity
 
   after_destroy :decrement_answer_bet_total!
   after_destroy :refund_bet_to_user!
@@ -70,6 +72,9 @@ class Bet < ActiveRecord::Base
     if membership # in case they left the league
       membership.balance += payout
       membership.outstanding_bets_value -= amount
+
+      generate_bet_payout_activity
+      
       Bet.transaction do
         membership.save!
         save!
@@ -120,7 +125,7 @@ private
     membership.save!
   end
 
-  def ensure_user_has_necessary_funds 
+  def ensure_user_has_necessary_funds
     errors[:base] << errors.generate_message(:base, :insufficient_funds_to_cover_bet) unless membership.balance >= amount
   end
   
@@ -130,6 +135,22 @@ private
 
   def ensure_answer_and_membership_in_same_league
     errors[:base] << errors.generate_message(:base, :answer_and_membership_same_league) unless membership.league_id == answer.question.league_id
+  end
+
+  def generate_bet_created_activity
+    content = "#{membership.user.name} bet #{amount} on \"#{answer.content}\" in \"#{answer.question.content}\""
+    activity = self.activities.build(activity_type: Activity::TYPES[:bet_created], content: content)
+    activity.league = answer.question.league
+
+    activity.save
+  end
+
+  def generate_bet_payout_activity
+    content = "#{membership.user.name} won #{payout} on \"#{answer.content}\" in \"#{answer.question.content}\""
+    activity = self.activities.build(activity_type: Activity::TYPES[:bet_payout], content: content)
+    activity.league = answer.question.league
+
+    activity.save
   end
 
 end

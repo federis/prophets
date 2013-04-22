@@ -14,8 +14,8 @@ Prophets::Application.routes.draw do
     end
 
     resources :bets, :only => :index
-
     resources :comments
+    resources :activities, only: :index
 
     get "leaderboard" => "leaderboard#index", as: "leaderboard"
   end

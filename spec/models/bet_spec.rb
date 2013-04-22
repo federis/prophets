@@ -180,4 +180,26 @@ describe Bet do
     membership.outstanding_bets_value.should == 5
   end
 
+  it "creates an activity entry after creation" do
+    activity_count = Activity.count
+    bet #trigger creation
+    Activity.count.should == activity_count + 1
+
+    activity = Activity.last
+    activity.feedable.should == bet
+    activity.activity_type.should == Activity::TYPES[:bet_created]
+  end
+
+  it "creates an activity entry after payout" do
+    bet #trigger creation
+
+    activity_count = Activity.count
+    bet.pay_bettor!
+    Activity.count.should == activity_count + 1
+
+    activity = Activity.last
+    activity.feedable.should == bet
+    activity.activity_type.should == Activity::TYPES[:bet_payout]
+  end
+
 end

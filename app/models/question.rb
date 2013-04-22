@@ -7,6 +7,7 @@ class Question < ActiveRecord::Base
   belongs_to :user
   belongs_to :approver, :class_name => "User"
   has_many :answers, dependent: :destroy
+  has_many :activities, as: :feedable, dependent: :destroy
 
   validates :user_id, :presence => true
   validates :league_id, :presence => true
@@ -55,6 +56,7 @@ class Question < ActiveRecord::Base
     self.approved_at = Time.now
 
     Resque.enqueue(SendNotificationsForNewQuestionJob, self.id)
+    generate_question_published_activity
     
     save
   end
@@ -97,6 +99,14 @@ private
 
   def enqueue_created_question_notifications_jobs
     Resque.enqueue(SendNotificationsForCreatedQuestionJob, self.id)
+  end
+
+  def generate_question_published_activity
+    activity_content = "The question \"#{content}\" was published"
+    activity = self.activities.build(activity_type: Activity::TYPES[:question_published], content: activity_content)
+    activity.league = league
+
+    activity.save
   end
 
 end
