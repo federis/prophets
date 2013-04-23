@@ -140,7 +140,8 @@ private
   end
 
   def generate_bet_created_activity
-    content = "#{membership.user.name} bet #{amount} on \"#{answer.content}\" in \"#{answer.question.content}\""
+    amount_as_currency = ActionController::Base.helpers.number_to_currency(amount)
+    content = "#{membership.user.name} bet #{amount_as_currency} on \"#{answer.content}\" in \"#{answer.question.content}\""
     activity = self.activities.build(activity_type: Activity::TYPES[:bet_created], content: content)
     activity.league = answer.question.league
 
@@ -148,7 +149,8 @@ private
   end
 
   def generate_bet_payout_activity
-    content = "#{membership.user.name} won #{payout} on \"#{answer.content}\" in \"#{answer.question.content}\""
+    payout_as_currency = ActionController::Base.helpers.number_to_currency(payout)
+    content = "#{membership.user.name} won #{payout_as_currency} on \"#{answer.content}\" in \"#{answer.question.content}\""
     activity = self.activities.build(activity_type: Activity::TYPES[:bet_payout], content: content)
     activity.league = answer.question.league
 
