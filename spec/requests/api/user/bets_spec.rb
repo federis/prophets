@@ -50,4 +50,18 @@ describe "As a normal user, Bets" do
     json.first["bet"]["answer"]["question"].should_not be_nil
   end
 
+  it "shows a bet" do
+    bet = FactoryGirl.create(:bet, :membership => membership, :answer => answer)
+
+    get bet_path(bet), :auth_token => user.authentication_token,
+                       :format => "json"
+
+    response.status.should == 200
+    json = decode_json(response.body)           
+    json["bet"]["amount"].should == bet.amount
+    json["bet"]["probability"].should == bet.probability
+    json["bet"]["answer"].should_not be_nil
+    json["bet"]["answer"]["question"].should_not be_nil
+  end
+
 end

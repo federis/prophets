@@ -32,7 +32,7 @@ Prophets::Application.routes.draw do
     resources :bets
   end
 
-  resources :bets, :only => [] do
+  resources :bets, :only => [:show] do
     resources :comments
   end
 
