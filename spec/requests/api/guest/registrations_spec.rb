@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Registrations API" do
   it "creates a user" do
     expect{
-      post user_registration_path, :user => FactoryGirl.attributes_for(:user).merge(:password_confirmation => "password"), 
+      post user_registration_path, :user => FactoryGirl.attributes_for(:user).except(:fb_token).merge(:password_confirmation => "password"), 
                                    :registration_secret => RegistrationsController::REGISTRATION_SECRET, 
                                    :format => "json"
     }.to change{ User.count }.by(1)
