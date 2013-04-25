@@ -1,0 +1,54 @@
+-Logged out
+  tokens#facebook
+    User.find_or_create_facebook_user
+    return user + token
+
+
+-Logged in
+  -Connect facebook (Settings/Attempt to publish to fb when not connected)
+    -SocialConnectionsController#facebook -> current_user.connect_facebook_account(params)
+
+
+
+
+On app:
+-Already logged in:
+  -On app launch, if curretn_user.fb_uid isn't nil, refresh token + send it to server to be stored as user's fb_access_token
+
+  -If user.fb_uid is blank, we need to connect their fb account
+    -Log in to fb, get fb_access_token
+    -Send fb_access_token to SocialConnectionsController#facebook
+      -Use fb_access_token to query facebook for 'me'
+      -If fb_access_token is valid, set current_user.fb_uid = 'me'.id and current_user.fb_access_token = fb_access_token
+
+
+-Logged out:
+  -User touches login with fb button
+  -Login via fb, get fb_access_token
+  -Send fb_access_token to TokensController#facebook
+    -Use fb_access_token to query facebook for 'me'
+    -If user with fb_uid of 'me' exists, return json for user + token
+    -If not, create user, return json for user + token + indicator that this is a new user
+      -On client side, show registration completion if it's a new user
+
+
+
+Paths:
+-Logged out of ffp:
+  -Logs into fb, has no ffp account => create ffp account + store fb info, log them into ffp and give token + user info
+  -Logs into fb, has ffp account with fb uid stored => log them into ffp account with matching fb uid, give token + user info
+  -Logs into fb, has ffp account with NO fb uid stored => ?????
+
+-Logged into ffp:
+  -Touches "connect fb account" => Hit social connection controller action
+    -Does user with that fb uid exist?
+      -No => store the fb uid and token on current_user
+      -Yes => ?????
+
+
+
+-Logs into fb
+-tokens#facebook with fb_uid and fb_token
+  -success => logged in
+  -fail => go to complete registration screen w/email populated. Have them fill in name, password
+    -Hit registrations with fb_uid and fb_token

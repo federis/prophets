@@ -6,6 +6,8 @@ en:
     attributes:
       league:
         password_digest: "Password"
+      user:
+        fb_uid: "Facebook account"
     errors:
       models:
         question:

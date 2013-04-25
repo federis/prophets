@@ -13,11 +13,12 @@ class TokensController < ApplicationController
     respond_with @user, :location => nil
   end
 
-  def facebook   
+  def facebook
     facebook = Koala::Facebook::API.new(params[:fb_token])
     me = facebook.get_object("me")
     @user = User.where(:fb_uid => me['id']).first
     if @user
+      @user.update_attributes(fb_token: facebook.access_token, fb_token_expires_at: params[:fb_token_expires_at])
       @include_auth_token = true
       respond_with @user, :location => nil
     else

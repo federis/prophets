@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   has_many :bets, :through => :memberships
   has_many :device_tokens
 
+  validates :fb_uid, uniqueness: true, allow_nil: true
+
   before_save :ensure_authentication_token
 
   def membership_in_league(league)
