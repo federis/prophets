@@ -3,8 +3,8 @@ module FFP
     extend self
 
     SEND_NEW_QUESTION_NOTIFICATIONS = true
-    SEND_NEW_COMMENT_NOTIFICATIONS = false
-    SEND_QUESTION_CREATED_NOTIFICATIONS = false
+    SEND_NEW_COMMENT_NOTIFICATIONS = true
+    SEND_QUESTION_CREATED_NOTIFICATIONS = true
 
     def grocer
       @grocer ||= begin
