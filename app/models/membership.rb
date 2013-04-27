@@ -29,6 +29,18 @@ class Membership < ActiveRecord::Base
     user.name
   end
 
+  ["balance", "outstanding_bets_value"].each do |type|
+    class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def #{type}
+        self[:#{type}].nil? ? nil : self[:#{type}].round(Membership.#{type}_scale)
+      end
+
+      def self.#{type}_scale
+        @#{type}_scale ||= columns.find {|r| r.name == '#{type}'}.scale
+      end
+    RUBY
+  end
+
 private
 
   def set_balance_to_league_initial

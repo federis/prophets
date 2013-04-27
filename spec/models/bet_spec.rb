@@ -10,6 +10,9 @@ describe Bet do
   let(:membership){ user.membership_in_league(answer.question.league) }
   let(:new_bet){ FactoryGirl.build(:bet, :answer => answer, :membership => membership) }
   let(:bet){ FactoryGirl.create(:bet, :answer => answer, :membership => membership) }
+  let(:winning_bet){ FactoryGirl.create(:bet, :winner, :answer => answer, :membership => membership) }
+  let(:losing_bet){ FactoryGirl.create(:bet, :loser, :answer => answer, :membership => membership) }
+  let(:invalidated_bet){ FactoryGirl.create(:bet, :invalidated, :answer => answer, :membership => membership) }
 
   it "can't be made when betting is closed" do
     answer.stub(:open_for_betting?).and_return(false)
@@ -80,6 +83,16 @@ describe Bet do
     bet.answer = answer
     bet.answer.question.should_receive(:update_answer_probabilities!)
     bet.save
+  end
+
+  it "updates probabilities for all answers in the question after invalidation" do
+    bet.answer.question.should_receive(:update_answer_probabilities!)
+    bet.invalidate!
+  end
+
+  it "updates probabilities for all answers in the question after undoing judgement" do
+    bet.answer.question.should_receive(:update_answer_probabilities!)
+    winning_bet.undo_judgement!
   end
 
   it "doesn't modify answer bet total or user balance if invalidation fails" do
@@ -200,6 +213,58 @@ describe Bet do
     activity = Activity.last
     activity.feedable.should == bet
     activity.activity_type.should == Activity::TYPES[:bet_payout]
+  end
+
+  it "#delete_bet_payout_activity deletes associated payout activity" do
+    bet.pay_bettor!
+    Activity.where(activity_type: Activity::TYPES[:bet_payout], feedable_id: bet.id, feedable_type: "Bet").count.should eq(1)
+    bet.send(:delete_bet_payout_activity)
+    Activity.where(activity_type: Activity::TYPES[:bet_payout], feedable_id: bet.id, feedable_type: "Bet").count.should eq(0)
+  end
+
+  describe "#undo_judgement! sets the payout to nil and" do
+    it "for a winning bet, it decrements the membership's outstanding balance and increments outstanding bets value" do
+      payout = winning_bet.payout
+      initial_balance = membership.balance
+      initial_outstanding = membership.outstanding_bets_value
+      
+      winning_bet.undo_judgement!
+      
+      winning_bet.reload
+      winning_bet.payout.should be_nil
+
+      membership.reload
+      membership.balance.should == initial_balance - payout
+      membership.outstanding_bets_value.should == initial_outstanding + winning_bet.amount
+    end
+
+    it "for a losing bet, increments outstanding bets value" do
+      payout = losing_bet.payout
+      initial_balance = membership.balance
+      initial_outstanding = membership.outstanding_bets_value
+      
+      losing_bet.undo_judgement!
+      
+      losing_bet.reload
+      losing_bet.payout.should be_nil
+
+      membership.reload
+      membership.balance.should == initial_balance
+      membership.outstanding_bets_value.should == initial_outstanding + losing_bet.amount
+    end
+
+    it "for an invalidated bet, it reinstates the bet" do
+      invalidated_bet
+      initial_balance = membership.balance
+      initial_outstanding = membership.outstanding_bets_value
+      initial_total = answer.bet_total
+
+      invalidated_bet.undo_judgement!
+
+      membership.balance.should == initial_balance - invalidated_bet.amount
+      membership.outstanding_bets_value.should == initial_outstanding + invalidated_bet.amount
+      answer.bet_total.should == initial_total + invalidated_bet.amount
+    end
   end
 
 end

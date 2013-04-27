@@ -17,7 +17,8 @@ class League < ActiveRecord::Base
   has_many :users, :through => :memberships
   has_many :admins, :through => :memberships, 
                     :source => :user, 
-                    :conditions => { :memberships => {:role => Membership::ROLES[:admin]} }
+                    :conditions => "memberships.role = #{Membership::ROLES[:admin]}"
+                    #:conditions => { :memberships => {:role => Membership::ROLES[:admin]} }
 
   validates :name, :presence => true, :length => { :in => 3..250 }
   validates :user_id, :presence => true

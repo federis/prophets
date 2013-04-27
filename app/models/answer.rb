@@ -14,6 +14,7 @@ class Answer < ActiveRecord::Base
   validates :current_probability, :numericality => { :greater_than_or_equal_to => 0, :less_than_or_equal_to => 1 }
 
   before_validation :set_current_probability_to_intial, :on => :create
+  after_save :update_question_answer_probabilities!, if: Proc.new{|a| a.bet_total_changed? }
 
   def open_for_betting?
     !judged? && question.open_for_betting?
@@ -51,14 +52,23 @@ class Answer < ActiveRecord::Base
     save!
   end
 
-  ["current", "initial"].each do |type|
+  def undo_judgement!
+    self.correct = nil
+    self.judged_at = nil
+    self.judge = nil
+    self.correctness_known_at = nil
+
+    Resque.enqueue(UndoBetPayoutsForAnswerJob, self.id)
+  end
+
+  ["current_probability", "initial_probability", "bet_total"].each do |type|
     class_eval <<-RUBY, __FILE__, __LINE__ + 1
-      def #{type}_probability
-        self[:#{type}_probability].nil? ? nil : self[:#{type}_probability].round(Answer.#{type}_probability_scale)
+      def #{type}
+        self[:#{type}].nil? ? nil : self[:#{type}].round(Answer.#{type}_scale)
       end
 
-      def self.#{type}_probability_scale
-        @#{type}_probability_scale ||= columns.find {|r| r.name == '#{type}_probability'}.scale
+      def self.#{type}_scale
+        @#{type}_scale ||= columns.find {|r| r.name == '#{type}'}.scale
       end
     RUBY
   end
@@ -78,6 +88,16 @@ class Answer < ActiveRecord::Base
   def process_bets_for_judgement(is_correct, known_at = nil)
     bets.made_after(known_at).each{|bet| bet.invalidate! } unless known_at.nil?
     is_correct ? pay_bettors! : zero_bet_payouts!
+  end
+
+  def undo_bet_judgements!
+    bets.each do |bet|
+      bet.undo_judgement! rescue nil #in case the membership doesn't have sufficient balance to reinstate the bet
+    end
+  end
+
+  def update_question_answer_probabilities!
+    question.update_answer_probabilities!
   end
 
 private

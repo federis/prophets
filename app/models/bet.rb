@@ -19,7 +19,6 @@ class Bet < ActiveRecord::Base
   before_validation :set_probability_to_answer_current, :on => :create
 
   after_create :increment_answer_bet_total!
-  after_create :update_question_answer_probabilities!
   after_create :update_membership_balance_and_outstanding_bets_value!
   after_create :generate_bet_created_activity
 
@@ -55,12 +54,16 @@ class Bet < ActiveRecord::Base
     end
   end
 
-  def probability
-    self[:probability].nil? ? nil : self[:probability].round(Bet.probability_scale)
-  end
+  ["amount", "probability", "bonus", "payout"].each do |type|
+    class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def #{type}
+        self[:#{type}].nil? ? nil : self[:#{type}].round(Bet.#{type}_scale)
+      end
 
-  def self.probability_scale
-    @probability_scale ||= columns.find {|r| r.name == 'probability'}.scale
+      def self.#{type}_scale
+        @#{type}_scale ||= columns.find {|r| r.name == '#{type}'}.scale
+      end
+    RUBY
   end
 
   def payout_when_correct
@@ -75,9 +78,8 @@ class Bet < ActiveRecord::Base
       membership.balance += payout
       membership.outstanding_bets_value -= amount
 
-      generate_bet_payout_activity
-      
       Bet.transaction do
+        generate_bet_payout_activity
         membership.save!
         save!
       end
@@ -92,6 +94,30 @@ class Bet < ActiveRecord::Base
     Bet.transaction do
       membership.save!
       save!
+    end
+  end
+
+  def undo_judgement!
+    raise FFP::Exceptions::UndoUnjudgedBetError unless complete?
+
+    if membership
+      Bet.transaction do
+        if invalidated?
+          self.invalidated_at = nil
+          increment_answer_bet_total!
+          membership.balance -= amount
+        else
+          membership.balance -= payout
+        end
+
+        membership.outstanding_bets_value += amount
+
+        self.payout = nil
+
+        delete_bet_payout_activity
+        membership.save!
+        save!
+      end
     end
   end
 
@@ -115,10 +141,6 @@ private
     membership.balance -= amount
     membership.outstanding_bets_value += amount
     membership.save!
-  end
-
-  def update_question_answer_probabilities!
-    answer.question.update_answer_probabilities!
   end
 
   def refund_bet_to_user!
@@ -155,6 +177,10 @@ private
     activity.league = answer.question.league
 
     activity.save
+  end
+
+  def delete_bet_payout_activity
+    self.activities.where(activity_type: Activity::TYPES[:bet_payout]).destroy_all
   end
 
 end
