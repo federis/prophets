@@ -1,6 +1,6 @@
 class TokensController < ApplicationController
   prepend_before_filter :allow_params_authentication!, :only => :create
-  skip_authorization_check :only => [:create, :facebook]
+  skip_authorization_check :only => [:create, :facebook, :facebook_for_existing_user]
   skip_before_filter :authenticate_user!, :only => :facebook
 
   self.responder = ApiResponder
@@ -18,7 +18,7 @@ class TokensController < ApplicationController
     me = facebook.get_object("me")
     @user = User.where(:fb_uid => me['id']).first
     if @user
-      @user.update_attributes(fb_token: facebook.access_token, fb_token_expires_at: params[:fb_token_expires_at])
+      @user.update_attributes(fb_token: facebook.access_token, fb_token_expires_at: params[:fb_token_expires_at], fb_token_refreshed_at: params[:fb_token_refreshed_at])
       @include_auth_token = true
       respond_with @user, :location => nil
     else

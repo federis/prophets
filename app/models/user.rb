@@ -7,7 +7,8 @@ class User < ActiveRecord::Base
          :token_authenticatable, :omniauthable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :fb_uid, :fb_token, :fb_token_expires_at,
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, 
+                  :fb_uid, :fb_token, :fb_token_expires_at, :fb_token_refreshed_at, :publish_bets_to_fb,
                   :wants_notifications, :wants_new_question_notifications, :wants_new_comment_notifications, :wants_question_created_notifications
 
   has_many :created_leagues, :class_name => "League"
@@ -19,6 +20,17 @@ class User < ActiveRecord::Base
   validates :fb_uid, uniqueness: true, allow_nil: true
 
   before_save :ensure_authentication_token
+
+  def fb_uid=(val)
+    if val.blank?
+      self.fb_token = nil
+      self.fb_token_expires_at = nil
+      self.fb_token_refreshed_at = nil
+      self[:fb_uid] = nil
+    else
+      self[:fb_uid] = val
+    end
+  end
 
   def membership_in_league(league)
     memberships.where(:league_id => league.id).first

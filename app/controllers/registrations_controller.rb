@@ -26,7 +26,7 @@ private
       begin
         facebook = Koala::Facebook::API.new(params[:user][:fb_token])
         me = facebook.get_object("me")
-        params[:user][:fb_uid] = me.id
+        params[:user][:fb_uid] = me["id"]
       rescue Koala::Facebook::APIError => error
         render :json => {:errors => { :fb_token => "is invalid" }}, :status => :unprocessable_entity
       end

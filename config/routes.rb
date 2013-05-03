@@ -39,7 +39,12 @@ Prophets::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => "registrations",
                                        :omniauth_callbacks => "omniauth_callbacks" }
 
-  resources :users, :only => :show
+  resources :users, :only => :show do
+    collection do
+      post "facebook"
+    end
+  end
+
   resources :device_tokens, :only => :create 
   delete "device_tokens" => "device_tokens#destroy"
   resources :tokens, :only => :create do

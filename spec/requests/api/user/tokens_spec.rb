@@ -87,4 +87,5 @@ describe "Tokens API" do
       resp["error"].should == I18n.t('tokens.fb_user_not_found')
     end
   end
+  
 end

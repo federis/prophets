@@ -10,6 +10,7 @@ class Ability
       can :create, Membership, :user_id => user.id, :role => Membership::ROLES[:member]
       #can :read, Question, :league => { :priv => false }
       can :index, ActsAsTaggableOn::Tag
+      can :connect_facebook, User
 
       unless league.nil?
         if user.is_member_of_league?(league)

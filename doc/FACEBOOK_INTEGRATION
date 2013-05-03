@@ -45,10 +45,20 @@ Paths:
       -No => store the fb uid and token on current_user
       -Yes => ?????
 
+  -On app launch
+    -try to open session with custom token cache
+    -if we have an active session, try to extend the token
 
 
 -Logs into fb
 -tokens#facebook with fb_uid and fb_token
   -success => logged in
-  -fail => go to complete registration screen w/email populated. Have them fill in name, password
+  -fail => go to complete registration screen w/email & name populated. Have them fill in password.
     -Hit registrations with fb_uid and fb_token
+
+
+
+-Register
+-Login
+-Extend Token
+-Connect

@@ -13,8 +13,15 @@ class SendNotificationsForNewCommentJob
 
     league = if comment.commentable.is_a?(League)
       comment.commentable
-    else # it's a question
+    elsif comment.commentable.is_a?(Question)
       comment.commentable.league
+    elsif comment.commentable.is_a?(Bet)
+      comment.commentable.answer.question.league
+    end
+
+    if league.nil?
+      Rails.logger.info "Commentable was not a League, Question, or Bet. Skipping notifications"
+      return
     end
 
     league.users.where("users.wants_notifications = ? and users.wants_new_comment_notifications = ?", true, true).each do |user|
