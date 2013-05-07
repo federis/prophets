@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, 
-                  :fb_uid, :fb_token, :fb_token_expires_at, :fb_token_refreshed_at, :publish_bets_to_fb,
+                  :fb_uid, :fb_token, :fb_token_expires_at, :fb_token_refreshed_at, :publish_bets_to_fb, :publish_created_leagues_to_fb,
                   :wants_notifications, :wants_new_question_notifications, :wants_new_comment_notifications, :wants_question_created_notifications
 
   has_many :created_leagues, :class_name => "League"
