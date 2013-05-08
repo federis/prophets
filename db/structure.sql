@@ -40,7 +40,8 @@ CREATE TABLE activities (
     activity_type integer,
     content character varying(255),
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    comments_count integer DEFAULT 0
 );
 
 
@@ -947,3 +948,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130430202127');
 INSERT INTO schema_migrations (version) VALUES ('20130507183442');
 
 INSERT INTO schema_migrations (version) VALUES ('20130507235012');
+
+INSERT INTO schema_migrations (version) VALUES ('20130508002707');
