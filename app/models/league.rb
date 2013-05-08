@@ -11,7 +11,7 @@ class League < ActiveRecord::Base
   attr_accessible :name, :priv, :max_bet, :initial_balance, :tag_list, :password
 
   belongs_to :user #the league creator
-  has_many :activities
+  has_many :activities, :order => 'activities.created_at DESC'
   has_many :questions, dependent: :destroy
   has_many :memberships, dependent: :destroy
   has_many :users, :through => :memberships

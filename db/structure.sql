@@ -674,10 +674,10 @@ CREATE INDEX index_activities_on_feedable_id_and_feedable_type ON activities USI
 
 
 --
--- Name: index_activities_on_league_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_activities_on_league_id_and_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_activities_on_league_id ON activities USING btree (league_id);
+CREATE INDEX index_activities_on_league_id_and_created_at ON activities USING btree (league_id, created_at);
 
 
 --
@@ -945,3 +945,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130430151723');
 INSERT INTO schema_migrations (version) VALUES ('20130430202127');
 
 INSERT INTO schema_migrations (version) VALUES ('20130507183442');
+
+INSERT INTO schema_migrations (version) VALUES ('20130507235012');
