@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     respond_with @user, :location => nil
     
   rescue Koala::Facebook::APIError => error
-    render :json => { :error => I18n.t('devise.failure.unauthenticated') }, :status => :unauthorized
+    render :json => { :error => error.fb_error_message }, :status => :unauthorized
   end
 
 end
