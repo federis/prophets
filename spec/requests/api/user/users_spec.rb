@@ -61,7 +61,7 @@ describe "As a normal user, Users" do
       resp = decode_json(response.body)
       resp.keys.should include("error")
       resp.keys.should_not include("user")
-      resp["error"].should == I18n.t('devise.failure.unauthenticated')
+      resp.keys.should include("error")
 
       user.reload
       user.fb_uid.should be_nil      

@@ -69,7 +69,7 @@ describe "Tokens API" do
       resp = decode_json(response.body)
       resp.keys.should include("error")
       resp.keys.should_not include("user")
-      resp["error"].should == I18n.t('devise.failure.unauthenticated')
+      resp.keys.should include("error")
       
     end
 
