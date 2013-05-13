@@ -67,3 +67,7 @@ group :development do
   gem 'capistrano-resque'
   gem 'capistrano-maintenance'
 end
+
+group :production do
+  gem 'newrelic_rpm'
+end
