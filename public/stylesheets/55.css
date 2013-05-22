@@ -67,6 +67,12 @@ h1,h2,h3,h4,h5 {
 	margin-top: 30px;
 }
 
+.hero h3{
+	color: #fff;
+	text-shadow: -1px 0 0 #000;
+	margin-top: 30px;
+}
+
 .contact h1 {
 	color: #fff;
 	font-size: 30px;
