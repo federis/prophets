@@ -38,36 +38,118 @@
 	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="/javascripts/jquery.slides.min.js"></script>
+	<link rel="stylesheet" href="/stylesheets/slidejs.css">
+
+	<script>
+    $(function(){
+      $("#slides").slidesjs({
+        width: 940,
+        height: 555,
+        play: {
+          active: true,
+          auto: false,
+          interval: 8000,
+          swap: true,
+          pauseOnHover: true,
+          restartDelay: 2500
+        }
+      });
+    });
+  </script>
+
 </head>
 <body>
 
-
+	<div class="hero container">
+		<img class="logo" src = "images/55-small.png">
+		<h1 class="headline">55Prophets</h1>
+		
+		<div class="header-app-store-link right">
+			<a href="https://itunes.apple.com/us/app/55prophets/id622424094?ls=1&mt=8">
+				<img src="images/app-store-button-blue.png" />
+			</a>
+		</div>
+	</div>
+	<br class = "clear" />
 
 	<!-- Primary Page Layout
 	================================================== -->
 
-	<div class = "container title">
-		<h3>55Prophets</h3>
-	</div>
-
 	<div class = "container wood">
 		<div class = "plaid">
-			<div class = "offset-by-two four columns alpha">
-				<div id = "header">
-					<img src = "images/55.png">
+			
+			<div id="slides">
+				<div class="slide">
+					<div class="left">
+						<img src="/images/screenshots/bet.png" />					
+					</div>
+					<div class="left text">
+						<p>
+						55Prophets is a fantasy betting app where you can place bets on <span class="italics">anything</span>.
+						</p>
+						<p>
+						Want to bet on who will be the first pick in the NFL draft? Go for it. Want to bet on who Don Draper will verbally abuse next on Mad Men? Look out Pete.
+						</p>
+
+						<p class="app-store-link">
+							<a href="https://itunes.apple.com/us/app/55prophets/id622424094?ls=1&mt=8">
+								<img src="images/app-store-button-green.png" />
+							</a>
+						</p>
+					</div>
+				</div>
+				<div class="slide">
+					<div class="left text">
+						<p>You can create and join leagues, just like fantasy football, about all sorts of different topics such as sports, television shows, and politics. </p>
+
+						<p>In each league, you start with 10,000 prophits (Ƥ), which is our fantasy currency. You can then create questions of any kind and place bets them.</p>
+
+						<p class="app-store-link">
+							<a href="https://itunes.apple.com/us/app/55prophets/id622424094?ls=1&mt=8">
+								<img src="images/app-store-button-green.png" />
+							</a>
+						</p>
+					</div>
+					<div class="left">
+						<img src="/images/screenshots/join_league.png" />					
+					</div>
+				</div>
+				<div class="slide">
+					<div class="left">
+						<img src="/images/screenshots/leaderboard.png" />
+					</div>
+					<div class="left text">
+						<p>The best part? It’s competitive.</p> 
+
+						<p>You’re competing against the other members of the league to accumulate the biggest cash pile. Now, your friend who acts like he knows everything will have to put his (virtual) money where his mouth is.</p> 
+
+						<p class="app-store-link">
+							<a href="https://itunes.apple.com/us/app/55prophets/id622424094?ls=1&mt=8">
+								<img src="images/app-store-button-green.png" />
+							</a>
+						</p>
+					</div>
+				</div>
+				<div class="slide">
+					<div class="left text">
+						<p>Keep up with what's happening in your leagues with a continuous activity stream.</p> 
+
+						<p>See who's making bets, what questions are published, and who got the latest big payout.</p>
+
+						<p class="app-store-link">
+							<a href="https://itunes.apple.com/us/app/55prophets/id622424094?ls=1&mt=8">
+								<img src="images/app-store-button-green.png" />
+							</a>
+						</p>
+					</div>
+					<div class="left">
+						<img src="/images/screenshots/activity.png" />					
+					</div>
 				</div>
 			</div>
-			<div class = "offset-by-one eight columns omega hero">
-				<h1>55Prophets</h1>
-				<h2>Fake money won is better than fake money earned.</h2>
-				
-				<div style="margin:55px;">
-					<a href="https://itunes.apple.com/us/app/55prophets/id622424094?ls=1&mt=8">
-						<img src="images/app-store-button-blue.png" />
-					</a>
-				</div>
-			</div>
-			<br class = "clear" />
+
 		</div>
 	</div>
 

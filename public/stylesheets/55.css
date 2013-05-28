@@ -9,16 +9,6 @@ h1,h2,h3,h4,h5 {
 	font-family: "Roboto Condensed",Arial,sans-serif
 }
 
-.title {
-	text-align: right;
-	margin-top: 15px;
-	font-weight: 400;
-}
-
-.title h3 {
-	color: #adadad;
-}
-
 .wood {
 	background: url(../images/wood.jpg);
 	padding: 15px;
@@ -35,6 +25,8 @@ h1,h2,h3,h4,h5 {
 	moz-border-radius: 10px;
 	border-radius: 10px;
 	webkit-border-radius: 10px;
+	padding: 15px;
+	color: #fcf9e4;
 }
 
 /* Header */
@@ -51,12 +43,13 @@ h1,h2,h3,h4,h5 {
 }
 
 .hero h1 {
-	color: #fff;
+	color: #4a4a4a;
 	font-size: 60px;
 	font-family: 'Roboto Condensed', sans-serif;
-	text-shadow: -1px 0 0 #000;
-	margin-top: 60px;
+	text-shadow: -1px 0 0 #fff;
+	margin-top: 30px;
 	line-height: 1em;
+	display: inline;
 }
 
 .hero h2 {
@@ -73,74 +66,36 @@ h1,h2,h3,h4,h5 {
 	margin-top: 30px;
 }
 
-.contact h1 {
-	color: #fff;
-	font-size: 30px;
-	margin-top: 100px;
-	margin-left: 10px;
-	line-height: 1em;
+.logo {
+	margin-top:12px;
+	margin-bottom:-40px;
 }
 
-.contact a{
-	color: #C4C4C4;
+.header-app-store-link { 
+	margin-top: 20px;
+	margin-right: 20px;
 }
 
-/* Email Sign up Form */
-
-#mc_embed_signup {background:none; font-family: "Roboto Condensed",Arial,sans-serif; height: 130px;}
-
-#mc_embed_signup label {color: #fff}
-
-#mc_embed_signup input {
-	font-size: 18px;
-	moz-border-radius: 5px;
-	border-radius: 5px;
-	webkit-border-radius: 5px;
+.app-store-link{
+	margin-top: 60px;
+	margin-left: 60px;
 }
 
-#mc_embed_signup input.email {
-	border: 0;
-	font-family: "Roboto Condensed",Arial,sans-serif
+.slide img{ 
+	margin-left:25px;
 }
 
-#mc_embed_signup input.button {
-	background-color: #cc5c32; 
-	border-right: 1px solid #a3431f;
-	border-bottom: 1px solid #a3431f;
-	border-radius:4px;
-	color: #FFFFFF;
-	font-size:18px;
-	font-weight: 400;
-	text-shadow: none;
-	font-family: "Roboto Condensed",Arial,sans-serif;
+.slide .text{
+	width: 535px;
+	font-size: 24px;
+	margin-top:55px;
+	line-height:28px;
+	margin-left:25px;
 }
 
-#mc_embed_signup input.button:hover {
-	background-color:#bbb;
-	color: #fff;
-	border-right: 1px solid #333;
-	border-bottom: 1px solid #333;
+.italics{
+	font-style:italic;
 }
-
-#mc_embed_signup input:focus {border-color:#333; border: none;}
-
-.thankyou {
-	margin: 50px 0;
-}
-
-.thankyou h2 {
-	color: #fff;
-	text-shadow: -1px 0 0 #000;
-	margin-top: 0px;
-}
-
-.thankyou h3 {
-	color: #bbb;
-	font-size: 18px;
-	margin-top: 10px;
-	line-height: 1em;
-}
-	
 
 /* Footer */
 
@@ -157,11 +112,10 @@ h1,h2,h3,h4,h5 {
 	display: inline;
 	top: -30px;
 	position: relative;
-	margin-left: 20px
+	margin-left: 20px;
 }
 
 /* Utility Styles */
 
-.right {
-	float: right;
-}
+.right { float: right; }
+.left{ float:left; }
