@@ -464,7 +464,8 @@ CREATE TABLE users (
     wants_question_created_notifications boolean DEFAULT true,
     fb_token_refreshed_at timestamp without time zone,
     publish_bets_to_fb boolean DEFAULT false,
-    publish_created_leagues_to_fb boolean DEFAULT false
+    publish_created_leagues_to_fb boolean DEFAULT false,
+    wants_judgement_notifications boolean DEFAULT true
 );
 
 
@@ -950,3 +951,5 @@ INSERT INTO schema_migrations (version) VALUES ('20130507183442');
 INSERT INTO schema_migrations (version) VALUES ('20130507235012');
 
 INSERT INTO schema_migrations (version) VALUES ('20130508002707');
+
+INSERT INTO schema_migrations (version) VALUES ('20130604190701');

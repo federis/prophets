@@ -88,6 +88,7 @@ class Answer < ActiveRecord::Base
   def process_bets_for_judgement(is_correct, known_at = nil)
     bets.made_after(known_at).each{|bet| bet.invalidate! } unless known_at.nil?
     is_correct ? pay_bettors! : zero_bet_payouts!
+    Resque.enqueue(SendNotificationsForJudgementJob, self.id, is_correct)
   end
 
   def undo_bet_judgements!
