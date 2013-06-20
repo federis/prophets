@@ -17,6 +17,11 @@ class Membership < ActiveRecord::Base
 
   before_validation :set_balance_to_league_initial, :on => :create
 
+  def reset_outstanding_bets_value!
+    self.outstanding_bets_value = bets.outstanding.map(&:amount).reduce(&:+)
+    save!
+  end
+
   def rank
     @rank ||= league.memberships.where(["memberships.balance + memberships.outstanding_bets_value > ?", balance + outstanding_bets_value]).count + 1
   end

@@ -22,4 +22,15 @@ describe Membership do
     membership.outstanding_bets_value.should == 17
   end
 
+  it "#reset_outstanding_bets_value! resets the obv to the sum of unjudged bets" do
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 2)
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 5)
+    FactoryGirl.create(:bet, :answer => answer, :membership => membership, :amount => 10)
+
+    membership.outstanding_bets_value.should == 17
+    membership.update_attribute :outstanding_bets_value, 20
+    membership.reset_outstanding_bets_value!
+    membership.reload.outstanding_bets_value.should == 17
+  end
+
 end
